@@ -43,3 +43,10 @@ config.properties
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Archivos generados por NetBeans
+build/
+dist/
+
+# Permitir las librerías compartidas de LostFind
+!/libs/*.jar
