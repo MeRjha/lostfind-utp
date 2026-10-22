@@ -16,7 +16,7 @@
                     <img class="logo" src="Imagenes/utpLogo.png" alt="logoUTP">
                     <div class="tituloLogo">
                         <h1>Lost Find</h1>
-                        <p>Universidad Tecnológica del Perú</p>
+                        <p>Universidad TecnolÃ³gica del PerÃº</p>
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
                     <ul class="nav-list">
                         <li><a href="">&#x2753; Preguntas frecuentes</a></li>
                         <li><a href="">&#x260E; Contacto</a></li>
-                        <li><a href="">&#x1F4D6; Guía de usuario</a></li>
+                        <li><a href="">&#x1F4D6; GuÃ­a de usuario</a></li>
                     </ul>
                 </nav>
             </div>
@@ -40,8 +40,8 @@
 
                                 <span class="badge">&#x1F6E1; Plataforma institucional</span>
                                 <h1>LostFind</h1>
-                                <p>Sistema de gestión de objetos perdidos y encontrados<br>
-                                    Reporta, busca y recupera tus pertenencias dentro del campus UTP de manera rápida,
+                                <p>Sistema de gestiÃ³n de objetos perdidos y encontrados<br>
+                                    Reporta, busca y recupera tus pertenencias dentro del campus UTP de manera rÃ¡pida,
                                     segura y
                                     sencilla.</p>
 
@@ -68,7 +68,7 @@
                                     <span>&#x1F4CE;</span>
                                 </div>
                                 <h1>Coincidencias</h1>
-                                <p>Recibe sugerencias automáticas.</p>
+                                <p>Recibe sugerencias automÃ¡ticas.</p>
                             </div>
                             <div class="text">
                                 <div class="circulo">
@@ -79,30 +79,31 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="cuadroIngreso">
-                        <span class="badge">&#x1F393; Acceso institucional</span>
-                        <h1><b>Ingresa a LostFind</b></h1>
-                        <h4>Accede con tus credenciales institucionales de la Universidad Tecnológica del Perú.</h4><br>
-                        <h4>Correo institucional</h4>
-                        <input type="text" placeholder="&#x1F4E7 usuario@utp.edu.pe"><br><br>
-                        <div class="contraseña">
-                            <h4>Contraseña</h4>
-                            <a href="">
-                                <p style="color:#0B8FEA; font-weight: 600;">¿Olvidaste tu contraseña?</p>
-                            </a>
-                        </div>
-                        <input type="password" placeholder="&#x1F512 contraseña"><br>
-                        <br>
-                        <a href="Estudiante.jsp"<button class="btn">Iniciar sesión &#x2192;</button></a>
-                        <br>
-                        <div class="cuadro">
-                            <div>&#x1F6E1 Acceso exclusivo para miembros de la comunidad UTP</div>
-                        </div> <br>
-                        <h5 style="color:#0B8FEA; font-weight: 600;">¿No tienes acceso?</h5>
-                        <h5 style="color:#0B8FEA; font-weight: 600;">Comunicate con el Servicio de Atención con el
-                            Estudiante</h5>
-                    </div>
+                    <form action="LoginServlet" method="POST">
+                        <div class="cuadroIngreso">
+                            <span class="badge">&#x1F393; Acceso institucional</span>
+                            <h1><b>Ingresa a LostFind</b></h1>
+                            <h4>Accede con tus credenciales institucionales de la Universidad TecnolÃ³gica del PerÃº.</h4><br>
+                            <h4>Correo institucional</h4>
+                            <input name="correo" type="text" placeholder="&#x1F4E7 usuario@utp.edu.pe"><br><br>
+                            <div class="contraseÃ±a">
+                                <h4>ContraseÃ±a</h4>
+                                <a href="">
+                                    <p style="color:#0B8FEA; font-weight: 600;">Â¿Olvidaste tu contraseÃ±a?</p>
+                                </a>
+                            </div>
+                            <input name="contraseÃ±a" type="password" placeholder="&#x1F512 contraseÃ±a"><br>
+                            <br>
+                            <button class="btn">Iniciar sesiÃ³n &#x2192;</button>
+                            <br>
+                            <div class="cuadro">
+                                <div>&#x1F6E1 Acceso exclusivo para miembros de la comunidad UTP</div>
+                            </div> <br>
+                            <h5 style="color:#0B8FEA; font-weight: 600;">Â¿No tienes acceso?</h5>
+                            <h5 style="color:#0B8FEA; font-weight: 600;">Comunicate con el Servicio de AtenciÃ³n con el
+                                Estudiante</h5>
+                        </div>    
+                    </form>
                 </div>
             </section>
         </main>
@@ -110,11 +111,11 @@
         <footer class="footer">
             <div class="contenedor footer-contenedor">
                 <div>
-                    <a href="">&#x1F4DE; SAE - Servicio de Atención al Estudiante</a>
+                    <a href="">&#x1F4DE; SAE - Servicio de AtenciÃ³n al Estudiante</a>
                 </div>
 
                 <div>
-                    <p>Política de privacidad | Términos y condiciones | &copy; 2026 UTP</p>
+                    <p>PolÃ­tica de privacidad | TÃ©rminos y condiciones | &copy; 2026 UTP</p>
                 </div>
             </div>
         </footer>

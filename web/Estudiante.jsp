@@ -18,7 +18,7 @@
                         <img class="logo" src="Imagenes/utpLogo.png" alt="logoUTP">
                         <div class="tituloLogo">
                             <h1>Lost Find</h1>
-                            <p>Universidad TecnolÛgica del Per˙</p>
+                            <p>Universidad Tecnol√≥gica del Per√∫</p>
                         </div>
                     </div>
 
@@ -48,13 +48,13 @@
                     <div class="contenedorBienvenida">
                         <div class="bienvenida">
                             <h1>Bienvenido a LostFind &#x1F44B</h1>
-                            <p>Consulta, reporta y encuentra tus objetos de manera r·pida.</p>
+                            <p>Consulta, reporta y encuentra tus objetos de manera r√°pida.</p>
                         </div>
 
                         <div class="cuadroJuntos">
                             <div class="ordenJuntos">
                                 <h1>&#x1F393;</h1>
-                                <p><b>Juntos hacemos un campus m·s seguro</b><br>Reporta, comparte y ayuda a otros estudiantes.</p>
+                                <p><b>Juntos hacemos un campus m√°s seguro</b><br>Reporta, comparte y ayuda a otros estudiantes.</p>
                             </div>
                         </div>
                     </div>
@@ -138,11 +138,11 @@
         <footer class="footer">
             <div class="contenedor footer-contenedor">
                 <div>
-                    <a href="">&#x1F4DE SAE - Servicio de AtenciÛn al Estudiante</a>
+                    <a href="">&#x1F4DE SAE - Servicio de Atenci√≥n al Estudiante</a>
                 </div>
 
                 <div>
-                    <p>PolÌtica de privacidad | TÈrminos y condiciones | &copy; 2026 UTP</p>
+                    <p>Pol√≠tica de privacidad | T√©rminos y condiciones | &copy; 2026 UTP</p>
                 </div>
             </div>
         </footer>
