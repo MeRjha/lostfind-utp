@@ -16,7 +16,7 @@
                     <img class="logo" src="Imagenes/utpLogo.png" alt="logoUTP">
                     <div class="tituloLogo">
                         <h1>Lost Find</h1>
-                        <p>Universidad Tecnol�gica del Per�</p>
+                        <p>Universidad Tecnológica del Perú</p>
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
                     <ul class="nav-list">
                         <li><a href="">&#x2753; Preguntas frecuentes</a></li>
                         <li><a href="">&#x260E; Contacto</a></li>
-                        <li><a href="">&#x1F4D6; Gu�a de usuario</a></li>
+                        <li><a href="">&#x1F4D6; Guía de usuario</a></li>
                     </ul>
                 </nav>
             </div>
@@ -40,8 +40,8 @@
 
                                 <span class="badge">&#x1F6E1; Plataforma institucional</span>
                                 <h1>LostFind</h1>
-                                <p>Sistema de gesti�n de objetos perdidos y encontrados<br>
-                                    Reporta, busca y recupera tus pertenencias dentro del campus UTP de manera r�pida,
+                                <p>Sistema de gestión de objetos perdidos y encontrados<br>
+                                    Reporta, busca y recupera tus pertenencias dentro del campus UTP de manera rápida,
                                     segura y
                                     sencilla.</p>
 
@@ -68,7 +68,7 @@
                                     <span>&#x1F4CE;</span>
                                 </div>
                                 <h1>Coincidencias</h1>
-                                <p>Recibe sugerencias autom�ticas.</p>
+                                <p>Recibe sugerencias automáticas.</p>
                             </div>
                             <div class="text">
                                 <div class="circulo">
@@ -83,24 +83,24 @@
                         <div class="cuadroIngreso">
                             <span class="badge">&#x1F393; Acceso institucional</span>
                             <h1><b>Ingresa a LostFind</b></h1>
-                            <h4>Accede con tus credenciales institucionales de la Universidad Tecnol�gica del Per�.</h4><br>
+                            <h4>Accede con tus credenciales institucionales de la Universidad Tecnológica del Perú.</h4><br>
                             <h4>Correo institucional</h4>
                             <input name="correo" type="text" placeholder="&#x1F4E7 usuario@utp.edu.pe"><br><br>
-                            <div class="contrase�a">
-                                <h4>Contrase�a</h4>
+                            <div class="contraseña">
+                                <h4>Contraseña</h4>
                                 <a href="">
-                                    <p style="color:#0B8FEA; font-weight: 600;">�Olvidaste tu contrase�a?</p>
+                                    <p style="color:#0B8FEA; font-weight: 600;">¿Olvidaste tu contraseña?</p>
                                 </a>
                             </div>
-                            <input name="contraseña" type="password" placeholder="&#x1F512 contrase�a"><br>
+                            <input name="contraseña" type="password" placeholder="&#x1F512 contraseña"><br>
                             <br>
-                            <button class="btn">Iniciar sesi�n &#x2192;</button>
+                            <button class="btn">Iniciar sesión &#x2192;</button>
                             <br>
                             <div class="cuadro">
                                 <div>&#x1F6E1 Acceso exclusivo para miembros de la comunidad UTP</div>
                             </div> <br>
-                            <h5 style="color:#0B8FEA; font-weight: 600;">�No tienes acceso?</h5>
-                            <h5 style="color:#0B8FEA; font-weight: 600;">Comunicate con el Servicio de Atenci�n con el
+                            <h5 style="color:#0B8FEA; font-weight: 600;">¿No tienes acceso?</h5>
+                            <h5 style="color:#0B8FEA; font-weight: 600;">Comunicate con el Servicio de Atención con el
                                 Estudiante</h5>
                         </div>    
                     </form>
@@ -111,11 +111,11 @@
         <footer class="footer">
             <div class="contenedor footer-contenedor">
                 <div>
-                    <a href="">&#x1F4DE; SAE - Servicio de Atenci�n al Estudiante</a>
+                    <a href="">&#x1F4DE; SAE - Servicio de Atención al Estudiante</a>
                 </div>
 
                 <div>
-                    <p>Pol�tica de privacidad | T�rminos y condiciones | &copy; 2026 UTP</p>
+                    <p>Política de privacidad | Términos y condiciones | &copy; 2026 UTP</p>
                 </div>
             </div>
         </footer>

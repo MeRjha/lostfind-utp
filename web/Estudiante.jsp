@@ -18,7 +18,7 @@
                         <img class="logo" src="Imagenes/utpLogo.png" alt="logoUTP">
                         <div class="tituloLogo">
                             <h1>Lost Find</h1>
-                            <p>Universidad Tecnol�gica del Per�</p>
+                            <p>Universidad Tecnológica del Perú</p>
                         </div>
                     </div>
 
@@ -54,7 +54,7 @@
                         <div class="cuadroJuntos">
                             <div class="ordenJuntos">
                                 <h1>&#x1F393;</h1>
-                                <p><b>Juntos hacemos un campus m�s seguro</b><br>Reporta, comparte y ayuda a otros estudiantes.</p>
+                                <p><b>Juntos hacemos un campus más seguro</b><br>Reporta, comparte y ayuda a otros estudiantes.</p>
                             </div>
                         </div>
                     </div>
@@ -138,11 +138,11 @@
         <footer class="footer">
             <div class="contenedor footer-contenedor">
                 <div>
-                    <a href="">&#x1F4DE SAE - Servicio de Atenci�n al Estudiante</a>
+                    <a href="">&#x1F4DE SAE - Servicio de Atención al Estudiante</a>
                 </div>
 
                 <div>
-                    <p>Pol�tica de privacidad | T�rminos y condiciones | &copy; 2026 UTP</p>
+                    <p>Política de privacidad | Términos y condiciones | &copy; 2026 UTP</p>
                 </div>
             </div>
         </footer>
