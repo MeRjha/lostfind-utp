@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -30,9 +29,9 @@
                 <nav class="nav">
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp" class="activo">Inicio</a></li>
-                        <li><a href="#">Objetos encontrados</a></li>
-                        <li><a href="#">Objetos perdidos</a></li>
-                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
+                        <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
+                        <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
+                        <li><a href="Coincidencias.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
@@ -100,7 +99,7 @@
                                     <p>Explora los objetos que han sido encontrados en el campus.</p>
                                 </div>
                             </div>
-                            <a href="Coincidencias.jsp" class="btn">Buscar ahora →</a>
+                            <a href="ObjetosEncontrados.jsp" class="btn">Buscar ahora →</a>
                         </article>
 
 
@@ -115,7 +114,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="btn">
+                            <a href="ObjetosPerdidos.jsp" class="btn">
                                 Ver mis reportes →
                             </a>
                         </article>
@@ -135,7 +134,7 @@
                             <h2>Objetos encontrados recientemente</h2>
                             <p>Estos son algunos de los objetos que han sido reportados en el campus.</p>
                         </div>
-                        <a href="#" class="verObjetos">
+                        <a href="ObjetosEncontrados.jsp" class="verObjetos">
                             Ver todos los objetos encontrados →
                         </a>
                     </div>

@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,18 +28,15 @@
                 <nav class="nav">
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp">Inicio</a></li>
-                        <li><a href="#">Objetos encontrados</a></li>
-                        <li><a href="ReportarObjeto.jsp">Objetos perdidos</a></li>
+                        <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
+                        <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
                         <li><a href="Coincidencias.jsp" class="activo">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
-
-                    <button type="button" class="botonUsuario"
-                            id="botonUsuario"
-                            aria-label="Abrir menú del usuario"
-                            aria-expanded="false">
+                    <button class="botonUsuario" id="botonUsuario" type="button"
+                            aria-label="Menú del usuario" aria-expanded="false">
 
                         <img class="fotoUsuario"
                              src="Imagenes/fotoUsuario.jpg"
@@ -48,21 +44,11 @@
                     </button>
 
                     <div class="menuUsuario" id="menuUsuario" hidden>
-                        <button type="button" id="verPerfil">
-                            👤 Mi perfil
-                        </button>
-
-                        <button type="button" id="verConfiguracion">
-                            ⚙️ Configuración
-                        </button>
-
+                        <button type="button" id="verPerfil">👤 Mi perfil</button>
+                        <button type="button" id="verConfiguracion">⚙️ Configuración</button>
                         <hr>
-
-                        <button type="button" id="cerrarSesion">
-                            🚪 Cerrar sesión
-                        </button>
+                        <button type="button" id="cerrarSesion">🚪 Cerrar sesión</button>
                     </div>
-
                 </div>
 
             </div>
@@ -185,7 +171,9 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="btn">Ver detalle →</a>
+                            <a href="DetalleCoincidencia.jsp" class="btn">
+                                Ver detalle →
+                            </a>
                         </article>
 
                         <article class="tarjetaCoincidenciaObjeto">
@@ -375,3 +363,4 @@
 
     </body>
 </html>
+

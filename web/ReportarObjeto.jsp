@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,18 +28,15 @@
                 <nav class="nav">
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp">Inicio</a></li>
-                        <li><a href="#">Objetos encontrados</a></li>
-                        <li><a href="ReportarObjeto.jsp">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp" class="activo">Buscar objeto</a></li>
+                        <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
+                        <li><a href="ObjetosPerdidos.jsp" class="activo">Objetos perdidos</a></li>
+                        <li><a href="Coincidencias.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
-
-                    <button type="button" class="botonUsuario"
-                            id="botonUsuario"
-                            aria-label="Abrir menú del usuario"
-                            aria-expanded="false">
+                    <button class="botonUsuario" id="botonUsuario" type="button"
+                            aria-label="Menú del usuario" aria-expanded="false">
 
                         <img class="fotoUsuario"
                              src="Imagenes/fotoUsuario.jpg"
@@ -56,8 +52,7 @@
                 </div>
 
             </div>
-        </div>
-    </header>
+        </header>
 
     <main>
         <div class="contenidoReporte">

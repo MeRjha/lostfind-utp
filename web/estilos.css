@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
 
 :root {
     --fondoPrincipal: #E9F7FE;
@@ -27,7 +26,7 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     background: var(--fondoPrincipal);
     color: var(--text);
     line-height: 1.6;
@@ -404,61 +403,6 @@ input {
     font-size: 0.9rem;
 }
 
-.descripcionIngreso {
-    font-size: 1rem;
-    margin-bottom: 20px;
-}
-
-.campoIngreso {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-bottom: 18px;
-}
-
-.campoIngreso label {
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-.enlaceIngreso,
-.ayudaIngreso {
-    color: var(--botones);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.ayudaIngreso {
-    margin-top: 15px;
-}
-
-.nav-dashboard {
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.superior {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 450px minmax(0, 1fr);
-    gap: 15px;
-    align-items: center;
-    width: 100%;
-}
-
-.superior > div:nth-child(2) {
-    width: 100%;
-}
-
-.superior > div:last-child {
-    justify-self: end;
-}
-
-.nav-dashboard > .nav {
-    margin-top: 3px;
-}
 
 .fotoUsuario {
     display: block;
@@ -666,6 +610,24 @@ input {
 
 .paginaEstudiante main {
     padding-bottom: 10px;
+}
+
+.paginaEstudiante .contenedorGrid > .cuadroTarjetas {
+    padding: 18px;
+}
+
+.paginaEstudiante .circuloTarjeta {
+    width: 88px;
+    height: 88px;
+    font-size: 2.6rem;
+}
+
+.paginaEstudiante .contenidoTarjetas h3 {
+    font-size: 1.05rem;
+}
+
+.paginaEstudiante .contenedorGrid .btn {
+    padding: 13px;
 }
 
 .paginaReportar main {
@@ -1575,7 +1537,1154 @@ body.temaOscuro {
     color: #b46a00;
 }
 
+.paginaDetalle .contenidoDetalle {
+    padding-top: 20px;
+    padding-bottom: 25px;
+}
+
+.paginaDetalle .volverDetalle {
+    display: inline-block;
+    color: var(--botones);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.paginaDetalle .volverDetalle:hover {
+    text-decoration: underline;
+}
+
+.paginaDetalle .tituloDetalle {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.paginaDetalle .descripcionDetalle {
+    font-size: 0.95rem;
+    color: #58709b;
+    margin-bottom: 14px;
+}
+
+.paginaDetalle .avisoSimilitud {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: var(--tarjetas);
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    align-items: center;
+}
+
+.paginaDetalle .resultadoSimilitud {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: #e3f9ee;
+    border-radius: 10px;
+}
+
+.paginaDetalle .iconoSimilitud {
+    font-size: 2.7rem;
+    flex-shrink: 0;
+}
+
+.paginaDetalle .resultadoSimilitud h2 {
+    color: #087c48;
+    font-size: 1.7rem;
+    line-height: 1.2;
+}
+
+.paginaDetalle .resultadoSimilitud p {
+    color: #198b62;
+    font-size: 0.83rem;
+}
+
+.paginaDetalle .explicacionSimilitud {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #eaf8ff;
+    border-radius: 10px;
+    color: #21466b;
+}
+
+.paginaDetalle .explicacionSimilitud > span {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.paginaDetalle .explicacionSimilitud p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.paginaDetalle .comparacionObjetos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.paginaDetalle .fichaObjeto {
+    min-width: 0;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--tarjetas);
+}
+
+.paginaDetalle .encabezadoFicha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.paginaDetalle .iconoFicha {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary);
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.paginaDetalle .encabezadoFicha h2 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.paginaDetalle .encabezadoFicha p {
+    font-size: 0.78rem;
+    color: #58709b;
+}
+
+.paginaDetalle .contenidoFicha {
+    display: grid;
+    grid-template-columns: 175px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+}
+
+.paginaDetalle .contenidoFicha > img {
+    display: block;
+    width: 100%;
+    max-width: 175px;
+    height: 190px;
+    max-height: 190px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f7fbff;
+}
+
+.paginaDetalle .datosFicha {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.paginaDetalle .datosFicha p {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 7px;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    min-width: 0;
+}
+
+.paginaDetalle .datosFicha b {
+    font-weight: 600;
+}
+
+.paginaDetalle .datosFicha span {
+    color: #58709b;
+    overflow-wrap: anywhere;
+}
+
+.paginaDetalle .seccionReclamo {
+    background: var(--tarjetas);
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.paginaDetalle .camposReclamo {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 0.9fr;
+    gap: 14px;
+    align-items: start;
+}
+
+.paginaDetalle .campoReclamo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.paginaDetalle .campoReclamo > label:first-child {
+    font-size: 0.83rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.paginaDetalle .campoReclamo textarea {
+    width: 100%;
+    height: 108px;
+    padding: 11px;
+    border: 1px solid #cbd8e8;
+    border-radius: 8px;
+    background: white;
+    color: #00085e;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.paginaDetalle .campoReclamo textarea:focus {
+    outline: 2px solid var(--primary);
+    border-color: var(--botones);
+}
+
+.paginaDetalle .campoReclamo textarea::placeholder {
+    color: #8a98b0;
+}
+
+.paginaDetalle .zonaEvidencia {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    min-height: 108px;
+    padding: 10px;
+    border: 2px dashed #8ad0ff;
+    border-radius: 8px;
+    background: #f7fcff;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.paginaDetalle .zonaEvidencia > span {
+    font-size: 2rem;
+}
+
+.paginaDetalle .zonaEvidencia strong {
+    color: #00085e;
+    font-size: 0.78rem;
+}
+
+.paginaDetalle .zonaEvidencia small {
+    color: #8797af;
+    font-size: 0.7rem;
+    overflow-wrap: anywhere;
+}
+
+.paginaDetalle .declaracionReclamo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 13px;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.paginaDetalle .declaracionReclamo input {
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    flex-shrink: 0;
+    accent-color: var(--botones);
+}
+
+.paginaDetalle .parteFinalReclamo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.paginaDetalle .mensajeReclamo {
+    padding: 12px;
+    border-radius: 8px;
+    background: #e1f4ff;
+    color: #1765ab;
+    font-size: 0.78rem;
+}
+
+.paginaDetalle .botonesReclamo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.paginaDetalle .botonCancelar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 16px;
+    border: 1px solid #b7c9df;
+    border-radius: 8px;
+    background: var(--tarjetas);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 110px;
+}
+
+.paginaDetalle .botonCancelar:hover {
+    background: var(--primary);
+}
+
+.paginaDetalle .botonesReclamo .btn {
+    width: auto;
+    padding: 11px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 220px;
+    border-radius: 8px;
+}
+
+.temaOscuro.paginaDetalle .descripcionDetalle,
+.temaOscuro.paginaDetalle .encabezadoFicha p,
+.temaOscuro.paginaDetalle .datosFicha span {
+    color: #c3d4ec;
+}
+
+.temaOscuro.paginaDetalle .campoReclamo textarea {
+    background: #293e5d;
+    color: white;
+    border-color: #506582;
+}
+
+.temaOscuro.paginaDetalle .zonaEvidencia {
+    background: #293e5d;
+}
+
+.temaOscuro.paginaDetalle .zonaEvidencia strong {
+    color: white;
+}
+
+.temaOscuro.paginaDetalle .botonCancelar {
+    color: white;
+}
+
+.paginaObjetos .contenidoObjetos {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.paginaObjetos .encabezadoObjetos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 14px;
+}
+
+.paginaObjetos .tituloObjetos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.paginaObjetos .iconoTituloObjetos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--primary);
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.paginaObjetos .tituloObjetos h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.paginaObjetos .tituloObjetos p {
+    color: #58709b;
+    font-size: 0.9rem;
+}
+
+.paginaObjetos .avisoObjetos {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 290px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #d6f2ff;
+    flex-shrink: 0;
+}
+
+.paginaObjetos .avisoObjetos > span {
+    font-size: 2.2rem;
+}
+
+.paginaObjetos .avisoObjetos h3 {
+    font-size: 0.85rem;
+}
+
+.paginaObjetos .avisoObjetos p {
+    color: #58709b;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.paginaObjetos .avisoObjetos a {
+    color: #007ee0;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.paginaObjetos .avisoObjetos a:hover {
+    text-decoration: underline;
+}
+
+.paginaObjetos .filtrosObjetos {
+    padding: 13px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+}
+
+.paginaObjetos .busquedaObjetos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 145px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.paginaObjetos .busquedaObjetos input {
+    width: 100%;
+    height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #cbd8e8;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #00085e;
+    font-size: 0.85rem;
+}
+
+.paginaObjetos .busquedaObjetos .btn {
+    height: 42px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.paginaObjetos .opcionesFiltros {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) 145px;
+    align-items: end;
+    gap: 12px;
+}
+
+.paginaObjetos .campoFiltro {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.paginaObjetos .campoFiltro label {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.paginaObjetos .campoFiltro select {
+    width: 100%;
+    height: 38px;
+    padding: 7px 10px;
+    border: 1px solid #cbd8e8;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #00085e;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.paginaObjetos .botonLimpiarObjetos {
+    width: 100%;
+    height: 38px;
+    padding: 7px;
+    border: 1px solid var(--botones);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--botones);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.paginaObjetos .botonLimpiarObjetos:hover {
+    background: var(--primary);
+}
+
+.paginaObjetos .barraResultadosObjetos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.paginaObjetos #cantidadObjetos {
+    color: #007ee0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.paginaObjetos .ordenarObjetos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.paginaObjetos .ordenarObjetos label {
+    color: #58709b;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.paginaObjetos .ordenarObjetos select {
+    min-width: 140px;
+    padding: 5px 10px;
+    border: 1px solid #cbd8e8;
+    border-radius: 7px;
+    background: var(--tarjetas);
+    color: var(--text);
+    font-size: 0.8rem;
+}
+
+.paginaObjetos .listaObjetosEncontrados {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.paginaObjetos .tarjetaObjetoEncontrado {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 9px;
+    border-radius: 10px;
+    background: var(--tarjetas);
+}
+
+.paginaObjetos .imagenListaObjeto {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 95px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #f4f9fc;
+}
+
+.paginaObjetos .emojiListaObjeto {
+    font-size: 3rem;
+}
+
+.paginaObjetos .imagenListaObjeto img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #f4f9fc;
+}
+
+.paginaObjetos .tarjetaObjetoEncontrado h3 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.paginaObjetos .tarjetaObjetoEncontrado p {
+    color: #58709b;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.paginaObjetos .tarjetaObjetoEncontrado .enlaceDetalle {
+    margin-top: auto;
+    padding: 7px 5px;
+    border-radius: 7px;
+    background: var(--primary);
+    color: #00085e;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.paginaObjetos .tarjetaObjetoEncontrado .enlaceDetalle:hover {
+    background: var(--cuadro);
+}
+
+.paginaObjetos .sinObjetos {
+    margin-top: 20px;
+    padding: 30px;
+    border-radius: 10px;
+    background: var(--tarjetas);
+    text-align: center;
+    font-size: 1rem;
+}
+
+.paginaObjetos .paginacionObjetos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.paginaObjetos .paginacionObjetos button {
+    min-width: 34px;
+    height: 34px;
+    padding: 5px 9px;
+    border: 1px solid var(--borde);
+    border-radius: 7px;
+    background: var(--tarjetas);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.paginaObjetos .paginacionObjetos button:hover {
+    background: var(--primary);
+}
+
+.paginaObjetos .paginacionObjetos button.actual {
+    background: var(--botones);
+    color: white;
+}
+
+.paginaObjetos .paginacionObjetos button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.temaOscuro.paginaObjetos .tituloObjetos p,
+.temaOscuro.paginaObjetos .tarjetaObjetoEncontrado p,
+.temaOscuro.paginaObjetos .ordenarObjetos label {
+    color: #c3d4ec;
+}
+
+.temaOscuro.paginaObjetos .busquedaObjetos input,
+.temaOscuro.paginaObjetos .campoFiltro select,
+.temaOscuro.paginaObjetos .ordenarObjetos select {
+    background: #293e5d;
+    color: white;
+    border-color: #506582;
+}
+
+.temaOscuro.paginaObjetos .avisoObjetos {
+    background: #29466a;
+}
+
+.temaOscuro.paginaObjetos .avisoObjetos h3,
+.temaOscuro.paginaObjetos .avisoObjetos p {
+    color: white;
+}
+
+.temaOscuro.paginaObjetos .avisoObjetos a {
+    color: #93dbff;
+}
+
+.temaOscuro.paginaObjetos .botonLimpiarObjetos {
+    color: #93dbff;
+}
+
+.temaOscuro.paginaObjetos .tarjetaObjetoEncontrado {
+    background: var(--tarjetas);
+}
+
+.temaOscuro.paginaObjetos .tarjetaObjetoEncontrado .enlaceDetalle {
+    color: white;
+}
+
+
+.paginaPerdidos .contenidoPerdidos {
+    padding-top: 18px;
+    padding-bottom: 20px;
+}
+
+.paginaPerdidos .encabezadoPerdidos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 14px;
+}
+
+.paginaPerdidos .tituloPerdidos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.paginaPerdidos .iconoTituloPerdidos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--primary);
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.paginaPerdidos .tituloPerdidos h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.paginaPerdidos .tituloPerdidos p {
+    color: #58709b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.paginaPerdidos .avisoPerdidos {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 290px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #d6f2ff;
+    flex-shrink: 0;
+}
+
+.paginaPerdidos .avisoPerdidos > span {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.paginaPerdidos .avisoPerdidos h3 {
+    font-size: 0.85rem;
+}
+
+.paginaPerdidos .avisoPerdidos p {
+    color: #58709b;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.paginaPerdidos .opcionesPerdidos {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.paginaPerdidos .opcionesPerdidos a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 170px;
+    padding: 10px 16px;
+    border: 1px solid #cbd8e8;
+    border-radius: 8px;
+    background: var(--tarjetas);
+    color: var(--botones);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.paginaPerdidos .opcionesPerdidos a.opcionActiva {
+    background: var(--botones);
+    color: white;
+    border-color: var(--botones);
+}
+
+.paginaPerdidos .opcionesPerdidos a:hover {
+    border-color: var(--botones);
+}
+
+.paginaPerdidos .buscadorPerdidos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+}
+
+.paginaPerdidos .buscadorPerdidos input {
+    width: 100%;
+    height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #cbd8e8;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #00085e;
+    font-size: 0.85rem;
+}
+
+.paginaPerdidos .buscadorPerdidos .btn {
+    height: 42px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.paginaPerdidos .notificacionPerdidos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border: 1px solid #7be8b6;
+    border-radius: 10px;
+    background: #e3f9ee;
+    color: #087c48;
+}
+
+.paginaPerdidos .iconoNotificacion {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.paginaPerdidos .textoNotificacion {
+    flex: 1;
+    min-width: 0;
+}
+
+.paginaPerdidos .textoNotificacion h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.paginaPerdidos .textoNotificacion p {
+    font-size: 0.8rem;
+    color: #42645b;
+}
+
+.paginaPerdidos .botonCoincidencia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 180px;
+    padding: 9px 14px;
+    border: 1px solid #27b36f;
+    border-radius: 8px;
+    background: transparent;
+    color: #087c48;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.paginaPerdidos .botonCoincidencia:hover {
+    background: #c9f2db;
+}
+
+.paginaPerdidos .cerrarNotificacion {
+    border: none;
+    background: transparent;
+    color: #58709b;
+    font-size: 1.2rem;
+    padding: 3px;
+}
+
+.paginaPerdidos .barraReportes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.paginaPerdidos #cantidadReportes {
+    color: var(--botones);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.paginaPerdidos .ordenarReportes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.paginaPerdidos .ordenarReportes label {
+    font-size: 0.8rem;
+    color: #58709b;
+}
+
+.paginaPerdidos .ordenarReportes select {
+    padding: 6px 10px;
+    min-width: 140px;
+    border: 1px solid #cbd8e8;
+    border-radius: 7px;
+    background: var(--tarjetas);
+    color: var(--text);
+    font-size: 0.8rem;
+}
+
+.paginaPerdidos .listaReportes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paginaPerdidos .reportePerdido {
+    display: grid;
+    grid-template-columns: 165px minmax(0, 1fr) 280px 190px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    min-width: 0;
+}
+
+.paginaPerdidos .imagenReportePerdido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    background: #f4f9fc;
+    overflow: hidden;
+}
+
+.paginaPerdidos .imagenReportePerdido img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.paginaPerdidos .informacionReportePerdido {
+    min-width: 0;
+}
+
+.paginaPerdidos .informacionReportePerdido h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.paginaPerdidos .informacionReportePerdido p {
+    color: #58709b;
+    font-size: 0.8rem;
+    line-height: 1.45;
+}
+
+.paginaPerdidos .estadoReporte {
+    align-self: center;
+    min-width: 0;
+}
+
+.paginaPerdidos .etiquetaEstado {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.paginaPerdidos .etiquetaEstado.enBusqueda {
+    background: #fff0d6;
+    color: #d67700;
+}
+
+.paginaPerdidos .etiquetaEstado.coincidenciaEncontrada {
+    background: #dff7e8;
+    color: #148a4b;
+}
+
+.paginaPerdidos .etiquetaEstado.reporteCerrado {
+    background: #ececec;
+    color: #555555;
+}
+
+.paginaPerdidos .etiquetaEstado.reporteCancelado {
+    background: #ffe4e6;
+    color: #c02535;
+}
+
+.paginaPerdidos .descripcionEstado {
+    max-width: 260px;
+    margin-top: 6px;
+    padding-left: 8px;
+    color: #58709b;
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.paginaPerdidos .accionesReporte {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+}
+
+.paginaPerdidos .detalleReportePerdido {
+    width: 100%;
+}
+
+.paginaPerdidos .detalleReportePerdido summary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 1px solid var(--botones);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--botones);
+    font-size: 0.85rem;
+    font-weight: 600;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.paginaPerdidos .detalleReportePerdido summary::-webkit-details-marker {
+    display: none;
+}
+
+.paginaPerdidos .detalleReportePerdido summary:hover {
+    background: var(--primary);
+}
+
+.paginaPerdidos .informacionDetalle {
+    margin-top: 7px;
+    padding: 10px;
+    border: 1px solid var(--borde);
+    border-radius: 7px;
+    background: var(--input);
+}
+
+.paginaPerdidos .informacionDetalle p {
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.paginaPerdidos .botonCancelarReporte,
+.paginaPerdidos .botonVerCoincidencia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 36px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.paginaPerdidos .botonCancelarReporte {
+    border: 1px solid #ff4961;
+    background: #fff0f2;
+    color: #e82942;
+}
+
+.paginaPerdidos .botonCancelarReporte:hover {
+    background: #ffe0e5;
+}
+
+.paginaPerdidos .botonVerCoincidencia {
+    border: 1px solid #29b974;
+    background: #e1f9ed;
+    color: #087c48;
+}
+
+.paginaPerdidos .botonVerCoincidencia:hover {
+    background: #c9f2db;
+}
+
+.paginaPerdidos .sinReportes {
+    padding: 25px;
+    margin-top: 15px;
+    border-radius: 10px;
+    background: var(--tarjetas);
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.temaOscuro.paginaPerdidos .tituloPerdidos p,
+.temaOscuro.paginaPerdidos .informacionReportePerdido p,
+.temaOscuro.paginaPerdidos .descripcionEstado,
+.temaOscuro.paginaPerdidos .ordenarReportes label {
+    color: #c3d4ec;
+}
+
+.temaOscuro.paginaPerdidos .avisoPerdidos {
+    background: #29466a;
+}
+
+.temaOscuro.paginaPerdidos .avisoPerdidos h3,
+.temaOscuro.paginaPerdidos .avisoPerdidos p {
+    color: white;
+}
+
+.temaOscuro.paginaPerdidos .buscadorPerdidos input,
+.temaOscuro.paginaPerdidos .ordenarReportes select {
+    background: #293e5d;
+    border-color: #506582;
+    color: white;
+}
+
+.temaOscuro.paginaPerdidos .notificacionPerdidos {
+    background: #1d493e;
+    border-color: #397d65;
+}
+
+.temaOscuro.paginaPerdidos .textoNotificacion p {
+    color: #d2f0e3;
+}
+
+.temaOscuro.paginaPerdidos .botonCoincidencia {
+    color: #aff1ca;
+}
+
+.temaOscuro.paginaPerdidos .informacionDetalle {
+    background: var(--input);
+}
+
+.temaOscuro.paginaPerdidos .detalleReportePerdido summary {
+    color: #93dbff;
+}
+
+.temaOscuro.paginaPerdidos .detalleReportePerdido summary:hover {
+    background: #36577d;
+}
+
+.temaOscuro.paginaPerdidos .opcionesPerdidos a:not(.opcionActiva) {
+    color: #93dbff;
+}
+
+
 @media (max-width: 1350px) {
+
     .hero-grid {
         grid-template-columns: minmax(0, 1fr) 430px;
         gap: 20px;
@@ -1612,6 +2721,7 @@ body.temaOscuro {
 }
 
 @media (max-width: 1250px) {
+
     .barraCoincidencias {
         grid-template-columns: minmax(0, 1fr) auto;
         padding-top: 10px;
@@ -1647,28 +2757,23 @@ body.temaOscuro {
     }
 }
 
-@media (max-width: 1100px) {
-    .superior {
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 12px;
+@media (max-width: 1200px) {
+
+    .paginaObjetos .listaObjetosEncontrados {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .superior > div:nth-child(2) {
+    .paginaObjetos .opcionesFiltros {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .paginaObjetos .botonLimpiarObjetos {
         grid-column: 1 / -1;
-        grid-row: 2;
-        width: min(100%, 550px);
-        justify-self: center;
     }
+}
 
-    .superior > div:last-child {
-        grid-column: 2;
-        grid-row: 1;
-    }
+@media (max-width: 1100px) {
 
-    .nav-dashboard {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
 
     .nav-list {
         flex-wrap: wrap;
@@ -1695,9 +2800,22 @@ body.temaOscuro {
     .objetosEncontrados {
         flex-wrap: wrap;
     }
+
+    .paginaDetalle .comparacionObjetos {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaDetalle .contenidoFicha {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+
+    .paginaDetalle .avisoSimilitud {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 1050px) {
+
     .hero-grid {
         grid-template-columns: 1fr;
         max-width: 850px;
@@ -1723,6 +2841,7 @@ body.temaOscuro {
 }
 
 @media (max-width: 900px) {
+
     .contenidoReporte {
         grid-template-columns: 1fr;
         width: min(92%, 650px);
@@ -1736,9 +2855,43 @@ body.temaOscuro {
     .informacionReporte {
         gap: 10px;
     }
+
+    .paginaDetalle .camposReclamo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .paginaDetalle .campoReclamo:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .paginaDetalle .parteFinalReclamo {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaDetalle .botonesReclamo {
+        justify-content: flex-end;
+    }
+
+    .paginaObjetos .encabezadoObjetos {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginaObjetos .avisoObjetos {
+        width: 100%;
+    }
+
+    .paginaObjetos .listaObjetosEncontrados {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .paginaObjetos .opcionesFiltros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
+
     .nav-contenedor {
         flex-wrap: wrap;
         justify-content: center;
@@ -1785,9 +2938,92 @@ body.temaOscuro {
     .filaCoincidencia {
         grid-template-columns: 180px minmax(0, 1fr);
     }
+
+    .barraCoincidencias .nav-list {
+        gap: 28px;
+    }
+
+    .barraCoincidencias .nav-list a {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .paginaDetalle .tituloDetalle {
+        font-size: 1.65rem;
+    }
+
+    .paginaDetalle .contenidoFicha {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaDetalle .contenidoFicha > img {
+        max-width: 100%;
+        width: 100%;
+        height: 200px;
+    }
+
+    .paginaDetalle .datosFicha p {
+        grid-template-columns: 120px minmax(0, 1fr);
+    }
+
+    .paginaDetalle .camposReclamo {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaDetalle .campoReclamo:last-child {
+        grid-column: auto;
+    }
+
+    .paginaDetalle .botonesReclamo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginaDetalle .botonesReclamo .btn,
+    .paginaDetalle .botonCancelar {
+        width: 100%;
+    }
+
+    .paginaObjetos .tituloObjetos {
+        align-items: flex-start;
+    }
+
+    .paginaObjetos .tituloObjetos h1 {
+        font-size: 1.6rem;
+    }
+
+    .paginaObjetos .iconoTituloObjetos {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .paginaObjetos .busquedaObjetos {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaObjetos .opcionesFiltros {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaObjetos .listaObjetosEncontrados {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .paginaObjetos .barraResultadosObjetos {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginaObjetos .ordenarObjetos {
+        justify-content: space-between;
+    }
 }
 
 @media (max-width: 550px) {
+
     .contenedor {
         padding: 0 15px;
     }
@@ -1818,9 +3054,6 @@ body.temaOscuro {
         font-size: 0.8rem;
     }
 
-    .superior {
-        grid-template-columns: minmax(0, 1fr) auto;
-    }
 
     .fotoUsuario {
         width: 45px;
@@ -1931,38 +3164,270 @@ body.temaOscuro {
     }
 }
 
-.barraCoincidencias .nav-list {
-    gap: 30px;
-}
-
-.barraCoincidencias .nav-list a {
-    font-size: 1.05rem;
-}
-
-.paginaEstudiante .contenedorGrid > .cuadroTarjetas {
-    padding: 18px;
-}
-
-.paginaEstudiante .circuloTarjeta {
-    width: 88px;
-    height: 88px;
-    font-size: 2.6rem;
-}
-
-.paginaEstudiante .contenidoTarjetas h3 {
-    font-size: 1.05rem;
-}
-
-.paginaEstudiante .contenedorGrid .btn {
-    padding: 13px;
-}
-
-@media (max-width: 768px) {
-    .barraCoincidencias .nav-list {
-        gap: 12px;
+@media (max-width: 1100px) {
+    .paginaPerdidos .reportePerdido {
+        grid-template-columns: 145px minmax(0, 1fr) 240px;
     }
 
-    .barraCoincidencias .nav-list a {
-        font-size: 0.85rem;
+    .paginaPerdidos .accionesReporte {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .paginaPerdidos .accionesReporte > * {
+        width: min(100%, 200px);
+    }
+}
+
+@media (max-width: 850px) {
+    .paginaPerdidos .encabezadoPerdidos {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginaPerdidos .avisoPerdidos {
+        width: 100%;
+    }
+
+    .paginaPerdidos .reportePerdido {
+        grid-template-columns: 140px minmax(0, 1fr);
+    }
+
+    .paginaPerdidos .estadoReporte {
+        grid-column: 1 / -1;
+    }
+
+    .paginaPerdidos .accionesReporte {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .paginaPerdidos .tituloPerdidos h1 {
+        font-size: 1.6rem;
+    }
+
+    .paginaPerdidos .iconoTituloPerdidos {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .paginaPerdidos .opcionesPerdidos {
+        flex-direction: column;
+    }
+
+    .paginaPerdidos .opcionesPerdidos a {
+        width: 100%;
+    }
+
+    .paginaPerdidos .buscadorPerdidos {
+        grid-template-columns: 1fr;
+    }
+
+    .paginaPerdidos .notificacionPerdidos {
+        flex-wrap: wrap;
+    }
+
+    .paginaPerdidos .botonCoincidencia {
+        width: 100%;
+    }
+
+    .paginaPerdidos .barraReportes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginaPerdidos .ordenarReportes {
+        justify-content: space-between;
+    }
+
+    .paginaPerdidos .reportePerdido {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .paginaPerdidos .imagenReportePerdido {
+        height: 160px;
+    }
+
+    .paginaPerdidos .accionesReporte {
+        flex-direction: column;
+    }
+
+    .paginaPerdidos .accionesReporte > * {
+        width: 100%;
+    }
+}
+
+
+.paginaInicio .modalAyudaInicio {
+    width: min(92%, 580px);
+}
+
+.paginaInicio .modalAyudaInicio .tituloModal {
+    margin-bottom: 15px;
+}
+
+.paginaInicio .modalAyudaInicio .panelAyudaInicio {
+    color: var(--text);
+}
+
+.paginaInicio .modalAyudaInicio .introduccionAyuda {
+    margin-bottom: 16px;
+    color: var(--text);
+    font-size: 0.92rem;
+}
+
+.paginaInicio .modalAyudaInicio .preguntaAyudaInicio {
+    margin-bottom: 10px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--input);
+}
+
+.paginaInicio .modalAyudaInicio .preguntaAyudaInicio summary {
+    padding: 13px 15px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.paginaInicio .modalAyudaInicio .preguntaAyudaInicio p {
+    padding: 0 15px 14px;
+    font-size: 0.86rem;
+    line-height: 1.6;
+}
+
+.paginaInicio .modalAyudaInicio .bloqueContactoInicio {
+    padding: 20px 16px;
+    border-radius: 12px;
+    background: var(--input);
+    text-align: center;
+}
+
+.paginaInicio .modalAyudaInicio .iconoContactoInicio {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+.paginaInicio .modalAyudaInicio .bloqueContactoInicio h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.paginaInicio .modalAyudaInicio .bloqueContactoInicio p,
+.paginaInicio .modalAyudaInicio .mensajeContactoInicio p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.paginaInicio .modalAyudaInicio .mensajeContactoInicio {
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--primary);
+}
+
+.paginaInicio .modalAyudaInicio .mensajeContactoInicio strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.paginaInicio .modalAyudaInicio .pasoGuiaInicio {
+    min-height: 200px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--input);
+    text-align: center;
+}
+
+.paginaInicio .modalAyudaInicio .iconoPasoGuiaInicio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    font-size: 2.4rem;
+}
+
+.paginaInicio .modalAyudaInicio .pasoGuiaInicio h3 {
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.paginaInicio .modalAyudaInicio .pasoGuiaInicio p {
+    max-width: 390px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.paginaInicio .modalAyudaInicio .indicadoresGuiaInicio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0 5px;
+}
+
+.paginaInicio .modalAyudaInicio .puntoGuiaInicio {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--borde);
+}
+
+.paginaInicio .modalAyudaInicio .puntoGuiaInicio.activo {
+    background: var(--botones);
+}
+
+.paginaInicio .modalAyudaInicio .contadorGuiaInicio {
+    margin-bottom: 14px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.paginaInicio .modalAyudaInicio .controlesGuiaInicio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.paginaInicio .modalAyudaInicio .controlesGuiaInicio button {
+    width: auto;
+    min-width: 120px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.paginaInicio .modalAyudaInicio .botonAnteriorGuiaInicio {
+    border: 1px solid var(--borde);
+    background: var(--input);
+    color: var(--text);
+}
+
+.paginaInicio .modalAyudaInicio .botonAnteriorGuiaInicio:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+@media (max-width: 480px) {
+    .paginaInicio .modalAyudaInicio {
+        padding: 20px 16px;
+    }
+
+    .paginaInicio .modalAyudaInicio .controlesGuiaInicio button {
+        min-width: 0;
+        flex: 1;
     }
 }
