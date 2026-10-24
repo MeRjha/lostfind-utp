@@ -1,151 +1,301 @@
+
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lost Find - Ingresar</title>
+        <title>LostFind - Estudiante</title>
         <link rel="stylesheet" href="estilos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     </head>
 
-    <body>
+    <body class="paginaEstudiante">
+
+
         <header class="header">
-            <div class="contenedor nav-dashboard">
-                <div class="superior">
-                    <div class="logoContenedor">
-                        <img class="logo" src="Imagenes/utpLogo.png" alt="logoUTP">
-                        <div class="tituloLogo">
-                            <h1>Lost Find</h1>
-                            <p>Universidad Tecnológica del Perú</p>
-                        </div>
-                    </div>
+            <div class="contenedor barraCoincidencias">
 
-                    <div>
-                        <input class="input" type="text" placeholder="&#x1F50D Buscar, lugares o descripciones...">
-                    </div>
+                <div class="logoContenedor">
+                    <img class="logo" src="Imagenes/utpLogo.png" alt="Logo UTP">
 
-                    <div>
-                        <img class="fotoUsuario" src="Imagenes/fotoUsuario.jpg" alt="fotoUsuario">
+                    <div class="tituloLogo">
+                        <h1>Lost Find</h1>
+                        <p>Universidad Tecnológica del Perú</p>
                     </div>
                 </div>
 
-
                 <nav class="nav">
                     <ul class="nav-list">
-                        <li><a href="" class="activo">Inicio</a></li>
-                        <li><a href="">Objetos encontrados</a></li>
-                        <li><a href="">Objetos perdidos</a></li>
-                        <li><a href="">Buscar objeto</a></li>
+                        <li><a href="Estudiante.jsp" class="activo">Inicio</a></li>
+                        <li><a href="#">Objetos encontrados</a></li>
+                        <li><a href="#">Objetos perdidos</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
+
+                <div class="contenedorUsuario">
+                    <button class="botonUsuario" id="botonUsuario" type="button"
+                            aria-label="Menú del usuario" aria-expanded="false">
+
+                        <img class="fotoUsuario"
+                             src="Imagenes/fotoUsuario.jpg"
+                             alt="Foto del usuario">
+                    </button>
+
+                    <div class="menuUsuario" id="menuUsuario" hidden>
+                        <button type="button" id="verPerfil">👤 Mi perfil</button>
+                        <button type="button" id="verConfiguracion">⚙️ Configuración</button>
+                        <hr>
+                        <button type="button" id="cerrarSesion">🚪 Cerrar sesión</button>
+                    </div>
+                </div>
+
             </div>
         </header>
+
+
         <main>
             <section>
                 <div class="contenedorDashboard">
+
                     <div class="contenedorBienvenida">
                         <div class="bienvenida">
-                            <h1>Bienvenido a LostFind &#x1F44B</h1>
+                            <h1>Bienvenido a LostFind 👋</h1>
                             <p>Consulta, reporta y encuentra tus objetos de manera rápida.</p>
                         </div>
 
                         <div class="cuadroJuntos">
                             <div class="ordenJuntos">
-                                <h1>&#x1F393;</h1>
-                                <p><b>Juntos hacemos un campus más seguro</b><br>Reporta, comparte y ayuda a otros estudiantes.</p>
+                                <span>🎓</span>
+                                <p>
+                                    <b>Juntos hacemos un campus más seguro</b>
+                                    <br>
+                                    Reporta, comparte y ayuda a otros estudiantes.
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="contenedorGrid">
-                        <div class="cuadroTarjetas">
+
+                        <article class="cuadroTarjetas">
                             <div class="contenidoTarjetas">
-                                <div class="circuloTarjeta rojo">
-                                    &#x1F4DD;
-                                </div>
+                                <div class="circuloTarjeta rojo">📝</div>
                                 <div>
                                     <h3>Reportar objeto perdido</h3>
                                     <p>Registra los detalles de tu objeto para recibir ayuda de la comunidad.</p>
                                 </div>
                             </div>
-                            <div>
-                                <a href="" <button class="btn">Reportar ahora &#x2192;</button></a>
-                            </div>
-                        </div>
-                        <div class="cuadroTarjetas azul">
+                            <a href="ReportarObjeto.jsp" class="btn">Reportar ahora →</a>
+                        </article>
+
+                        <article class="cuadroTarjetas">
                             <div class="contenidoTarjetas">
-                                <div class="circuloTarjeta azul">
-                                    &#x1F50E;
-                                </div>
+                                <div class="circuloTarjeta azul">🔎</div>
                                 <div>
                                     <h3>Buscar objetos encontrados</h3>
                                     <p>Explora los objetos que han sido encontrados en el campus.</p>
                                 </div>
                             </div>
-                            <div>
-                                <a href="" <button class="btn">Buscar ahora &#x2192;</button> </a>
-                            </div>
-                        </div>
-                        <div class="cuadroTarjetas verde">
+                            <a href="Coincidencias.jsp" class="btn">Buscar ahora →</a>
+                        </article>
+
+
+                        <article class="cuadroTarjetas">
                             <div class="contenidoTarjetas">
                                 <div class="circuloTarjeta verde">
-                                    &#x1F465;
+                                    📋
                                 </div>
                                 <div>
-                                    <h3>Ver coincidencias</h3>
-                                    <p>Revisa posibles coincidencias con tus objetos reportados.</p>
+                                    <h3>Mis objetos reportados</h3>
+                                    <p>Consulta los objetos perdidos que reportaste y revisa su estado.</p>
                                 </div>
                             </div>
-                            <div>
-                                <a href="" <button class="btn">Ver coincidencias &#x2192;</button></a>
-                            </div>
-                        </div>
+
+                            <a href="#" class="btn">
+                                Ver mis reportes →
+                            </a>
+                        </article>
+
+
                     </div>
+
                     <hr class="lineaSeparadora">
                 </div>
             </section>
 
             <section>
                 <div class="contenedorDashboard">
+
                     <div class="objetosEncontrados">
                         <div>
-                            <h1>Objetos encontrados recientemente</h1>
+                            <h2>Objetos encontrados recientemente</h2>
                             <p>Estos son algunos de los objetos que han sido reportados en el campus.</p>
                         </div>
-                        <div>
-                            <button class="verObjetos">Ver todos los objetos encontrados &#x2192;</button>
-                        </div>
+                        <a href="#" class="verObjetos">
+                            Ver todos los objetos encontrados →
+                        </a>
                     </div>
+
                     <div class="contenedorObjetos">
-                        <article class="cuadroTarjetas">
 
+                        <article class="cuadroTarjetas tarjetaObjeto">
+                            <img class="fotoObjeto"
+                                 src="Imagenes/audifonos.jfif"
+                                 alt="Audífonos azules">
+                            <h3>Audífonos Sony celestes</h3>
+                            <p>📍 Encontrados en biblioteca, sede Lima Sur.</p>
+                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
                         </article>
-                        <article class="cuadroTarjetas">
 
+                        <article class="cuadroTarjetas tarjetaObjeto">
+                            <img class="fotoObjeto"
+                                 src="Imagenes/cargador.jfif"
+                                 alt="Cargador Samsung">
+                            <h3>Cargador de celular Samsung</h3>
+                            <p>📍 Encontrado en el aula A0207, sede Lima Sur.</p>
+                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
                         </article>
-                        <article class="cuadroTarjetas">
 
+                        <article class="cuadroTarjetas tarjetaObjeto">
+                            <img class="fotoObjeto"
+                                 src="Imagenes/fisica.jfif"
+                                 alt="Libro de Física">
+                            <h3>Libro de Física</h3>
+                            <p>📍 Encontrado en el comedor, sede Lima Sur.</p>
+                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
                         </article>
-                        <article class="cuadroTarjetas">
 
+                        <article class="cuadroTarjetas tarjetaObjeto">
+                            <img class="fotoObjeto"
+                                 src="Imagenes/mochila.jfif"
+                                 alt="Mochila negra">
+                            <h3>Mochila negra</h3>
+                            <p>📍 Encontrada en el aula B0304, sede Lima Centro.</p>
+                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
                         </article>
+
                     </div>
                 </div>
             </section>
         </main>
+
         <footer class="footer">
             <div class="contenedor footer-contenedor">
                 <div>
-                    <a href="">&#x1F4DE SAE - Servicio de Atención al Estudiante</a>
+                    <a href="#">📞 SAE - Servicio de Atención al Estudiante</a>
                 </div>
-
                 <div>
                     <p>Política de privacidad | Términos y condiciones | &copy; 2026 UTP</p>
                 </div>
             </div>
         </footer>
-    </body>
 
+        <dialog class="modalUsuario" id="modalUsuario">
+
+            <div class="tituloModal">
+                <h2 id="tituloModal">Mi perfil</h2>
+                <button type="button" id="cerrarModal" aria-label="Cerrar">✕</button>
+            </div>
+
+            <div id="vistaPerfil">
+
+                <div class="datosPerfil">
+                    <img src="Imagenes/fotoUsuario.jpg" alt="Foto de perfil">
+                    <h3 class="nombreUsuario">Nombre del usuario</h3>
+                    <p>correo@utp.edu.pe</p>
+                    <span class="badge">Estudiante UTP</span>
+                </div>
+
+                <h3 class="subtituloModal">Información personal</h3>
+
+                <div class="informacionPersonal">
+                    <p><b>Nombre:</b> <span class="nombreUsuario">Nombre del usuario</span></p>
+                    <p><b>Correo:</b> correo@utp.edu.pe</p>
+                    <p><b>Código:</b> Pendiente</p>
+                    <p><b>Sede:</b> Pendiente</p>
+                    <p><b>Tipo:</b> Estudiante UTP</p>
+                </div>
+
+                <h3 class="subtituloModal">Mi actividad</h3>
+
+                <div class="actividadPerfil">
+                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
+                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
+                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
+                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
+                </div>
+
+                <button type="button" class="btn" id="editarPerfil">
+                    ⚙️ Editar perfil
+                </button>
+            </div>
+
+
+            <div id="vistaConfiguracion" hidden>
+
+                <div class="cuadroAjustes">
+
+                    <div class="tituloAjustes">
+                        <span class="iconoAjustes">🔔</span>
+
+                        <div>
+                            <h3>Notificaciones</h3>
+                            <p>Elige qué notificaciones deseas recibir.</p>
+                        </div>
+                    </div>
+
+                    <label class="opcionNotificacion">
+                        <span>Nuevas coincidencias de mis objetos</span>
+                        <input type="checkbox" class="interruptor"
+                               id="avisosCoincidencias" checked>
+                    </label>
+
+                    <label class="opcionNotificacion">
+                        <span>Nuevos objetos encontrados en mi campus</span>
+                        <input type="checkbox" class="interruptor"
+                               id="avisosObjetos">
+                    </label>
+
+                </div>
+
+                <div class="cuadroAjustes">
+
+                    <div class="tituloAjustes">
+                        <span class="iconoAjustes">🎨</span>
+
+                        <div>
+                            <h3>Tema</h3>
+                            <p>Selecciona el tema de la aplicación.</p>
+                        </div>
+                    </div>
+
+                    <div class="opcionesTema">
+
+                        <label>
+                            <input type="radio" name="tema"
+                                   value="claro" checked>
+                            Claro
+                        </label>
+
+                        <label>
+                            <input type="radio" name="tema"
+                                   value="oscuro">
+                            Oscuro
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </dialog>
+
+        <script src="script.js" defer></script>
+    </body>
 </html>
