@@ -1,3 +1,4 @@
+<%@page import="Objetos.Usuario"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,16 +32,22 @@
                         <li><a href="Estudiante.jsp" class="activo">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp">Buscar objeto</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
-
+                        <%
+                            Usuario usuario = (Usuario) session.getAttribute("usuario");
+                            String perfil = "Imagenes/fotoUsuario.jpg";
+                            if (usuario!=null) {
+                                perfil=usuario.getFotoPerfil();
+                            }
+                        %>
                         <img class="fotoUsuario"
-                             src="Imagenes/fotoUsuario.jpg"
+                             src="<%=perfil%>"
                              alt="Foto del usuario">
                     </button>
 
@@ -139,43 +146,9 @@
                         </a>
                     </div>
 
-                    <div class="contenedorObjetos">
+                    <div id="objetosRecientes" class="contenedorObjetos">
 
-                        <article class="cuadroTarjetas tarjetaObjeto">
-                            <img class="fotoObjeto"
-                                 src="Imagenes/audifonos.jfif"
-                                 alt="Audífonos azules">
-                            <h3>Audífonos Sony celestes</h3>
-                            <p>📍 Encontrados en biblioteca, sede Lima Sur.</p>
-                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
-                        </article>
-
-                        <article class="cuadroTarjetas tarjetaObjeto">
-                            <img class="fotoObjeto"
-                                 src="Imagenes/cargador.jfif"
-                                 alt="Cargador Samsung">
-                            <h3>Cargador de celular Samsung</h3>
-                            <p>📍 Encontrado en el aula A0207, sede Lima Sur.</p>
-                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
-                        </article>
-
-                        <article class="cuadroTarjetas tarjetaObjeto">
-                            <img class="fotoObjeto"
-                                 src="Imagenes/fisica.jfif"
-                                 alt="Libro de Física">
-                            <h3>Libro de Física</h3>
-                            <p>📍 Encontrado en el comedor, sede Lima Sur.</p>
-                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
-                        </article>
-
-                        <article class="cuadroTarjetas tarjetaObjeto">
-                            <img class="fotoObjeto"
-                                 src="Imagenes/mochila.jfif"
-                                 alt="Mochila negra">
-                            <h3>Mochila negra</h3>
-                            <p>📍 Encontrada en el aula B0304, sede Lima Centro.</p>
-                            <a href="#" class="enlaceDetalle">Ver detalle →</a>
-                        </article>
+                       
 
                     </div>
                 </div>
@@ -295,6 +268,7 @@
 
         </dialog>
 
-        <script src="script.js" defer></script>
+        <script src="script.js"></script>
+        <script>mostrarObjetosEncontradosRecientemente();</script>
     </body>
 </html>

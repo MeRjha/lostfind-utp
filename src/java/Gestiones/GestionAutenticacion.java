@@ -6,7 +6,6 @@ package Gestiones;
 
 import ClasesDAO.UsuarioDAO;
 import Objetos.Usuario;
-import java.io.Console;
 
 /**
  *

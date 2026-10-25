@@ -4,6 +4,7 @@
  */
 package ClasesDAO;
 
+import Objetos.Docente;
 import Objetos.Estudiante;
 import Objetos.PersonalSAE;
 import Objetos.Usuario;
@@ -28,7 +29,7 @@ public class UsuarioDAO {
         try {
             PreparedStatement ps;
             ResultSet res;
-            ps = con.prepareStatement("select idUsuario,nombre,apellido,correoInstitucional,contraseña,rol,activo from usuario where correoInstitucional=?;");
+            ps = con.prepareStatement("select idUsuario,nombre,apellido,correoInstitucional,contraseña,fotoPerfil,rol,activo,idSede from usuario where correoInstitucional=?;");
             ps.setString(1, correo);
             res = ps.executeQuery();
             if (res.next()) {
@@ -37,12 +38,16 @@ public class UsuarioDAO {
                 String apellido = res.getString("apellido");
                 String correoInstitucional = res.getString("correoInstitucional");
                 String contraseña = res.getString("contraseña");
+                String fotoPerfil = res.getString("fotoPerfil");
                 String rol = res.getString("rol");
                 boolean activo = res.getBoolean("activo");
+                int idSede = res.getInt("idSede");
                 if (rol.equals("Estudiante")) {
-                    return new Estudiante(idUsuario, nombre, apellido, correoInstitucional, contraseña, rol, activo);
+                    return new Estudiante(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
                 } else if (rol.equals("PersonalSae")) {
-                    return new PersonalSAE(idUsuario, nombre, apellido, correoInstitucional, contraseña, rol, activo);
+                    return new PersonalSAE(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
+                } else {
+                    return new Docente(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
                 }
             }
         } catch (SQLException e) {

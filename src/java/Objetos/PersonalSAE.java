@@ -10,8 +10,12 @@ package Objetos;
  */
 public class PersonalSAE extends Usuario{
     
-    public PersonalSAE(int idUsuario, String nombre, String apellido, String correoInstitucional, String contraseña, String rol, boolean activo) {
-        super(idUsuario, nombre, apellido, correoInstitucional, contraseña, rol, activo);
+    public PersonalSAE(int idUsuario, int idSede, String nombre, String apellido, String correoInstitucional, String contraseña, String fotoPerfil, String rol, boolean activo) {
+        super(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
     }
+    
+    
+    
+
     
 }

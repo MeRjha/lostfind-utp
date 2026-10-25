@@ -75,7 +75,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String correo = (String) request.getParameter("correo");
         String contraseña = (String) request.getParameter("contraseña");
-        System.out.println("Se abrio la paginaaaaaaaaaaa");
         if (correo != null && contraseña != null) {
             System.out.println("entro");
             Usuario usuario = new GestionAutenticacion().autenticar(correo, contraseña);
@@ -83,9 +82,10 @@ public class LoginServlet extends HttpServlet {
             if (usuario != null) {
                 request.changeSessionId();
                 request.getSession().setAttribute("usuario", usuario);
-                response.getWriter().println("<script> alert('Bienvenido a LostFind'); window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
+                response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
             } else {
                 response.getWriter().println("<script> alert('Correo y/o contraseña equivocadas');</script>");
+                
                 response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "'; </script>");
             }
         }
