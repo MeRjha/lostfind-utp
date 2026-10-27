@@ -14,8 +14,8 @@ public class ObjetoEncontrado extends Objeto {
 
     private Date fechaHallazgo;
 
-    public ObjetoEncontrado(Date fechaHallazgo, int idObjeto, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, Date fechaRegistro, String estado) {
-        super(idObjeto, categoria, imagen, nombre, color, marca, descripcion, lugarReferencia, fechaRegistro, estado);
+    public ObjetoEncontrado(Date fechaHallazgo, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, String estado) {
+        super(categoria, imagen, nombre, color, marca, descripcion, lugarReferencia, estado);
         this.fechaHallazgo = fechaHallazgo;
     }
 

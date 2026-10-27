@@ -1,3 +1,4 @@
+<%@page import="Objetos.Usuario"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,7 +30,7 @@
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp" class="activo">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp">Buscar objeto</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
@@ -37,8 +38,15 @@
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
 
+                        <%
+                            Usuario usuario = (Usuario) session.getAttribute("usuario");
+                            String perfil = "Imagenes/fotoUsuario.jpg";
+                            if (usuario!=null) {
+                                perfil=usuario.getFotoPerfil();
+                            }
+                        %>
                         <img class="fotoUsuario"
-                             src="Imagenes/fotoUsuario.jpg"
+                             src="<%=perfil%>"
                              alt="Foto del usuario">
                     </button>
 
@@ -110,31 +118,7 @@
 
                 </form>
 
-                <div class="notificacionPerdidos" id="notificacionPerdidos">
-
-                    <span class="iconoNotificacion">✅</span>
-
-                    <div class="textoNotificacion">
-                        <h3>¡Nueva coincidencia encontrada!</h3>
-                        <p>
-                            Encontramos un objeto similar a tu reporte de
-                            "Audífonos Sony celestes".
-                        </p>
-                    </div>
-
-                    <a href="Coincidencias.jsp"
-                       class="botonCoincidencia">
-                        Ver coincidencia →
-                    </a>
-
-                    <button type="button"
-                            class="cerrarNotificacion"
-                            id="cerrarNotificacion"
-                            aria-label="Cerrar notificación">
-                        ✕
-                    </button>
-
-                </div>
+                
 
                 <div class="barraReportes">
                     <p id="cantidadReportes">Mis reportes</p>
@@ -150,195 +134,6 @@
                 </div>
 
                 <section class="listaReportes" id="listaReportes">
-
-                    <article class="cuadroTarjetas reportePerdido"
-                             data-nombre="Mochila negra"
-                             data-fecha="2026-09-14">
-
-                        <div class="imagenReportePerdido">
-                            <img src="Imagenes/mochila.jfif"
-                                 alt="Mochila negra">
-                        </div>
-
-                        <div class="informacionReportePerdido">
-                            <h3>Mochila negra</h3>
-                            <p>🏷️ Mochilas</p>
-                            <p>📍 Aula A-207</p>
-                            <p>📅 14 sep 2026</p>
-                        </div>
-
-                        <div class="estadoReporte">
-                            <span class="etiquetaEstado enBusqueda">
-                                🕒 En búsqueda
-                            </span>
-
-                            <p class="descripcionEstado">
-                                Tu reporte está activo. Te notificaremos si hay coincidencias.
-                            </p>
-                        </div>
-
-                        <div class="accionesReporte">
-
-                            <details class="detalleReportePerdido">
-                                <summary>Ver detalle →</summary>
-
-                                <div class="informacionDetalle">
-                                    <p><b>Objeto:</b> Mochila negra</p>
-                                    <p><b>Fecha:</b> 14 sep 2026</p>
-                                    <p><b>Lugar:</b> Aula A-207</p>
-                                    <p><b>Estado:</b> En búsqueda</p>
-                                </div>
-                            </details>
-
-                            <button type="button"
-                                    class="botonCancelarReporte"
-                                    data-cancelar>
-                                🚫 Cancelar reporte
-                            </button>
-
-                        </div>
-
-                    </article>
-
-                    <article class="cuadroTarjetas reportePerdido"
-                             data-nombre="iPhone 13"
-                             data-fecha="2026-09-13">
-
-                        <div class="imagenReportePerdido">
-                            <img src="Imagenes/iphone.jpg"
-                                 alt="iPhone 13">
-                        </div>
-
-                        <div class="informacionReportePerdido">
-                            <h3>iPhone 13</h3>
-                            <p>🏷️ Celulares</p>
-                            <p>📍 Cafetería central</p>
-                            <p>📅 13 sep 2026</p>
-                        </div>
-
-                        <div class="estadoReporte">
-                            <span class="etiquetaEstado coincidenciaEncontrada">
-                                ✅ Coincidencia encontrada
-                            </span>
-
-                            <p class="descripcionEstado">
-                                Se encontró un objeto que coincide con tu descripción.
-                            </p>
-                        </div>
-
-                        <div class="accionesReporte">
-
-                            <details class="detalleReportePerdido">
-                                <summary>Ver detalle →</summary>
-
-                                <div class="informacionDetalle">
-                                    <p><b>Objeto:</b> iPhone 13</p>
-                                    <p><b>Fecha:</b> 13 sep 2026</p>
-                                    <p><b>Lugar:</b> Cafetería central</p>
-                                    <p><b>Estado:</b> Coincidencia encontrada</p>
-                                </div>
-                            </details>
-
-                            <a href="Coincidencias.jsp"
-                               class="botonVerCoincidencia">
-                                💬 Ver coincidencia
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                    <article class="cuadroTarjetas reportePerdido"
-                             data-nombre="Lentes con montura negra"
-                             data-fecha="2026-09-10">
-
-                        <div class="imagenReportePerdido">
-                            <img src="Imagenes/lentes.jpg"
-                                 alt="Lentes con montura negra">
-                        </div>
-
-                        <div class="informacionReportePerdido">
-                            <h3>Lentes con montura negra</h3>
-                            <p>🏷️ Accesorios</p>
-                            <p>📍 Biblioteca - piso 4</p>
-                            <p>📅 10 sep 2026</p>
-                        </div>
-
-                        <div class="estadoReporte">
-                            <span class="etiquetaEstado reporteCerrado">
-                                ⛔ Cerrado
-                            </span>
-
-                            <p class="descripcionEstado">
-                                El reporte fue cerrado.
-                            </p>
-                        </div>
-
-                        <div class="accionesReporte">
-
-                            <details class="detalleReportePerdido">
-                                <summary>Ver detalle →</summary>
-
-                                <div class="informacionDetalle">
-                                    <p><b>Objeto:</b> Lentes con montura negra</p>
-                                    <p><b>Fecha:</b> 10 sep 2026</p>
-                                    <p><b>Lugar:</b> Biblioteca - piso 4</p>
-                                    <p><b>Estado:</b> Cerrado</p>
-                                </div>
-                            </details>
-
-                        </div>
-
-                    </article>
-
-                    <article class="cuadroTarjetas reportePerdido"
-                             data-nombre="Gorra negra"
-                             data-fecha="2026-09-09">
-
-                        <div class="imagenReportePerdido">
-                            <img src="Imagenes/gorra.jpg"
-                                 alt="Gorra negra">
-                        </div>
-
-                        <div class="informacionReportePerdido">
-                            <h3>Gorra negra</h3>
-                            <p>🏷️ Accesorios</p>
-                            <p>📍 Zona deportiva</p>
-                            <p>📅 9 sep 2026</p>
-                        </div>
-
-                        <div class="estadoReporte">
-                            <span class="etiquetaEstado enBusqueda">
-                                🕒 En búsqueda
-                            </span>
-
-                            <p class="descripcionEstado">
-                                Tu reporte está activo. Te notificaremos si hay coincidencias.
-                            </p>
-                        </div>
-
-                        <div class="accionesReporte">
-
-                            <details class="detalleReportePerdido">
-                                <summary>Ver detalle →</summary>
-
-                                <div class="informacionDetalle">
-                                    <p><b>Objeto:</b> Gorra negra</p>
-                                    <p><b>Fecha:</b> 9 sep 2026</p>
-                                    <p><b>Lugar:</b> Zona deportiva</p>
-                                    <p><b>Estado:</b> En búsqueda</p>
-                                </div>
-                            </details>
-
-                            <button type="button"
-                                    class="botonCancelarReporte"
-                                    data-cancelar>
-                                🚫 Cancelar reporte
-                            </button>
-
-                        </div>
-
-                    </article>
 
                 </section>
 
@@ -379,42 +174,10 @@
                 </button>
             </div>
 
-            <div id="vistaPerfil">
+            <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' >
+                <div id="vistaPerfil">
 
-                <div class="datosPerfil">
-
-                    <img src="Imagenes/fotoUsuario.jpg"
-                         alt="Foto de perfil">
-
-                    <h3 class="nombreUsuario">Nombre del usuario</h3>
-                    <p>correo@utp.edu.pe</p>
-
-                    <span class="badge">Estudiante UTP</span>
                 </div>
-
-                <h3 class="subtituloModal">Información personal</h3>
-
-                <div class="informacionPersonal">
-                    <p><b>Nombre:</b> <span class="nombreUsuario">Nombre del usuario</span></p>
-                    <p><b>Correo:</b> correo@utp.edu.pe</p>
-                    <p><b>Código:</b> Pendiente</p>
-                    <p><b>Sede:</b> Pendiente</p>
-                    <p><b>Tipo:</b> Estudiante UTP</p>
-                </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
-                <button type="button" class="btn" id="editarPerfil">
-                    ⚙️ Configuración
-                </button>
-
             </div>
 
             <div id="vistaConfiguracion" hidden>
@@ -485,7 +248,7 @@
 
         </dialog>
 
-        <script src="script.js" defer></script>
-
+        <script src="script.js"></script>
+        <script>mostrarReportes();</script>
     </body>
 </html>

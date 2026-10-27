@@ -7,6 +7,7 @@ package ClasesDAO;
 import Objetos.Docente;
 import Objetos.Estudiante;
 import Objetos.PersonalSAE;
+import Objetos.Sede;
 import Objetos.Usuario;
 import Singlenton.ConexionBD;
 import java.sql.Connection;
@@ -29,25 +30,27 @@ public class UsuarioDAO {
         try {
             PreparedStatement ps;
             ResultSet res;
-            ps = con.prepareStatement("select idUsuario,nombre,apellido,correoInstitucional,contraseña,fotoPerfil,rol,activo,idSede from usuario where correoInstitucional=?;");
+            ps = con.prepareStatement("select u.idUsuario,u.nombre,u.apellido,u.correoInstitucional,u.contraseña,u.fotoPerfil,u.rol,u.activo,u.idSede,s.nombre,s.ubicacion from usuario as u inner join Sede as s on u.idSede=s.idSede where correoInstitucional=?;");
             ps.setString(1, correo);
             res = ps.executeQuery();
             if (res.next()) {
-                int idUsuario = res.getInt("idUsuario");
-                String nombre = res.getString("nombre");
-                String apellido = res.getString("apellido");
-                String correoInstitucional = res.getString("correoInstitucional");
-                String contraseña = res.getString("contraseña");
-                String fotoPerfil = res.getString("fotoPerfil");
-                String rol = res.getString("rol");
-                boolean activo = res.getBoolean("activo");
-                int idSede = res.getInt("idSede");
+                int idUsuario = res.getInt("u.idUsuario");
+                String nombre = res.getString("u.nombre");
+                String apellido = res.getString("u.apellido");
+                String correoInstitucional = res.getString("u.correoInstitucional");
+                String contraseña = res.getString("u.contraseña");
+                String fotoPerfil = res.getString("u.fotoPerfil");
+                String rol = res.getString("u.rol");
+                boolean activo = res.getBoolean("u.activo");
+                int idSede = res.getInt("u.idSede");
+                String nombreSede = res.getString("s.nombre");
+                String ubicacion = res.getString("s.ubicacion");
                 if (rol.equals("Estudiante")) {
-                    return new Estudiante(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
+                    return new Estudiante(idUsuario, new Sede(idSede, nombreSede, ubicacion), nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
                 } else if (rol.equals("PersonalSae")) {
-                    return new PersonalSAE(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
+                    return new PersonalSAE(idUsuario, new Sede(idSede, nombreSede, ubicacion), nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
                 } else {
-                    return new Docente(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
+                    return new Docente(idUsuario, new Sede(idSede, nombreSede, ubicacion), nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
                 }
             }
         } catch (SQLException e) {

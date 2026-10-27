@@ -1,3 +1,4 @@
+<%@page import="Objetos.Usuario"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -30,16 +31,22 @@
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp" class="activo">Buscar objeto</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
-
+                        <%
+                            Usuario usuario = (Usuario) session.getAttribute("usuario");
+                            String perfil = "Imagenes/fotoUsuario.jpg";
+                            if (usuario != null) {
+                                perfil = usuario.getFotoPerfil();
+                            }
+                        %>
                         <img class="fotoUsuario"
-                             src="Imagenes/fotoUsuario.jpg"
+                             src="<%=perfil%>"
                              alt="Foto del usuario">
                     </button>
 
@@ -74,65 +81,9 @@
                         </div>
                     </div>
 
-                    <div class="tarjetaReporteCoincidencia">
+                    <div id="tuObjetoPerdido" class="tarjetaReporteCoincidencia">
 
-                        <div class="resumenReporte">
-                            <div class="iconoReporteCoincidencia">📄</div>
 
-                            <div>
-                                <h2>Tu objeto reportado</h2>
-                                <p>Aquí tienes un resumen del objeto que reportaste como perdido.</p>
-                            </div>
-                        </div>
-
-                        <div class="detalleReporteCoincidencia">
-
-                            <div class="imagenReporteCoincidencia">
-                                <img src="Imagenes/audifonos.jfif"
-                                     alt="Audífonos Sony celestes">
-                            </div>
-
-                            <div class="infoReporteCoincidencia">
-
-                                <h3>Audífonos Sony celestes</h3>
-
-                                <div class="datosReporteCoincidencia">
-
-                                    <div class="datoCoincidencia">
-                                        <span>🏷️</span>
-                                        <div>
-                                            <strong>Categoría</strong>
-                                            <p>Accesorios</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="datoCoincidencia">
-                                        <span>🎨</span>
-                                        <div>
-                                            <strong>Color</strong>
-                                            <p>Celeste</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="datoCoincidencia">
-                                        <span>📅</span>
-                                        <div>
-                                            <strong>Fecha de pérdida</strong>
-                                            <p>12 sep 2026</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="datoCoincidencia">
-                                        <span>📍</span>
-                                        <div>
-                                            <strong>Lugar</strong>
-                                            <p>Biblioteca - piso 4</p>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
 
@@ -143,96 +94,7 @@
                         <p>Estos objetos fueron encontrados y podrían coincidir con tu reporte.</p>
                     </div>
 
-                    <div class="gridCoincidencias">
-
-                        <article class="tarjetaCoincidenciaObjeto">
-
-                            <div class="filaCoincidencia">
-
-                                <img class="imagenCoincidenciaObjeto"
-                                     src="Imagenes/audifonos.jfif"
-                                     alt="Audífonos Sony inalámbricos celestes">
-
-                                <div class="contenidoCoincidenciaObjeto">
-
-                                    <h3>Audífonos Sony inalámbricos celestes</h3>
-
-                                    <div class="estadoCoincidencia">
-                                        <span class="porcentajeCoincidencia alta">92%</span>
-                                        <span class="textoCoincidencia altaTexto">Coincidencia alta</span>
-                                    </div>
-
-                                    <div class="detalleCoincidenciaLista">
-                                        <p>📍 Biblioteca piso 4</p>
-                                        <p>🏫 Sede Lima Sur</p>
-                                        <p>📅 13 sep 2026</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <a href="DetalleCoincidencia.jsp" class="btn">
-                                Ver detalle →
-                            </a>
-                        </article>
-
-                        <article class="tarjetaCoincidenciaObjeto">
-
-                            <div class="filaCoincidencia">
-
-                                <img class="imagenCoincidenciaObjeto"
-                                     src="Imagenes/audifonos.jfif"
-                                     alt="Audífonos Bluetooth azules">
-
-                                <div class="contenidoCoincidenciaObjeto">
-
-                                    <h3>Audífonos Bluetooth color azul</h3>
-
-                                    <div class="estadoCoincidencia">
-                                        <span class="porcentajeCoincidencia alta">88%</span>
-                                        <span class="textoCoincidencia altaTexto">Coincidencia alta</span>
-                                    </div>
-
-                                    <div class="detalleCoincidenciaLista">
-                                        <p>📍 Aula A-207</p>
-                                        <p>🏫 Sede Lima Sur</p>
-                                        <p>📅 14 sep 2026</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <a href="#" class="btn">Ver detalle →</a>
-                        </article>
-
-                        <article class="tarjetaCoincidenciaObjeto">
-
-                            <div class="filaCoincidencia">
-
-                                <img class="imagenCoincidenciaObjeto"
-                                     src="Imagenes/audifonos.jfif"
-                                     alt="Audífonos deportivos celestes">
-
-                                <div class="contenidoCoincidenciaObjeto">
-
-                                    <h3>Audífonos deportivos celestes</h3>
-
-                                    <div class="estadoCoincidencia">
-                                        <span class="porcentajeCoincidencia media">81%</span>
-                                        <span class="textoCoincidencia mediaTexto">Coincidencia media</span>
-                                    </div>
-
-                                    <div class="detalleCoincidenciaLista">
-                                        <p>📍 Cafetería central</p>
-                                        <p>🏫 Sede Lima Sur</p>
-                                        <p>📅 15 sep 2026</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <a href="#" class="btn">Ver detalle →</a>
-                        </article>
+                    <div id="listaDeCoincidencias" class="gridCoincidencias">
 
                     </div>
 
@@ -265,36 +127,10 @@
                 </button>
             </div>
 
-            <div id="vistaPerfil">
+            <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' >
+                <div id="vistaPerfil">
 
-                <div class="datosPerfil">
-                    <img src="Imagenes/fotoUsuario.jpg"
-                         alt="Foto de perfil">
-
-                    <h3>Nombre del usuario</h3>
-                    <p>correo@utp.edu.pe</p>
-                    <span class="badge">Estudiante UTP</span>
                 </div>
-
-                <h3 class="subtituloModal">Información personal</h3>
-
-                <div class="informacionPersonal">
-                    <p><b>Nombre:</b> Nombre del usuario</p>
-                    <p><b>Correo:</b> correo@utp.edu.pe</p>
-                    <p><b>Código:</b> Pendiente</p>
-                    <p><b>Sede:</b> Pendiente</p>
-                    <p><b>Tipo:</b> Estudiante UTP</p>
-                </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
             </div>
 
             <div id="vistaConfiguracion" hidden>
@@ -359,8 +195,7 @@
 
         </dialog>
 
-        <script src="script.js"></script>
-
+        <script src="script.js"></script> 
     </body>
 </html>
 

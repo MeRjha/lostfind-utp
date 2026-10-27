@@ -23,8 +23,7 @@ public abstract class Objeto {
     private Date fechaRegistro;
     private String estado;
 
-    public Objeto(int idObjeto, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, Date fechaRegistro, String estado) {
-        this.idObjeto = idObjeto;
+    public Objeto( String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, String estado) {
         this.categoria = categoria;
         this.imagen = imagen;
         this.nombre = nombre;
@@ -32,7 +31,6 @@ public abstract class Objeto {
         this.marca = marca;
         this.descripcion = descripcion;
         this.lugarReferencia = lugarReferencia;
-        this.fechaRegistro = fechaRegistro;
         this.estado = estado;
     }
 

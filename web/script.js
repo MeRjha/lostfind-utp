@@ -1,7 +1,18 @@
 document.addEventListener("DOMContentLoaded", iniciarPerfilYReporte);
 document.addEventListener("DOMContentLoaded", iniciarReclamo);
 document.addEventListener("DOMContentLoaded", iniciarObjetosEncontrados);
-document.addEventListener("DOMContentLoaded", iniciarObjetosPerdidos);
+document.addEventListener("DOMContentLoaded", function () {
+
+    const parametros = new URLSearchParams(window.location.search);
+
+    const accion = parametros.get("accion");
+
+    if (accion === "coincidenciasPerdidos") {
+        mostrarCoincidenciasDesdeObjetosPerdidos();
+    } else if (accion === "coincidenciasReportes") {
+        mostrarCoincidenciasDesdeReporte();
+    }
+});
 
 function iniciarPerfilYReporte() {
     const botonUsuario = document.getElementById("botonUsuario");
@@ -31,6 +42,44 @@ function iniciarPerfilYReporte() {
 
             if (tipo === "perfil") {
                 tituloModal.textContent = "Mi perfil";
+                const divUsuario = document.getElementById("InfoUsuario");
+                const usuario = JSON.parse(divUsuario.dataset.usuario);
+                let correo = usuario.correoInstitucional;
+                let codigo = correo.split("@")[0];
+                let sede = usuario.sede.nombre;
+                console.log("aqui" + usuario.fotoPerfil);
+                vistaPerfil.innerHTML = `
+
+                <div class="datosPerfil">
+                    <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
+                    <h3 class="nombreUsuario">${usuario.nombre} ${usuario.apellido}</h3>
+                    <p>${correo}</p>
+                    <span class="badge">${usuario.rol} UTP</span>
+                </div>
+
+                <h3 class="subtituloModal">Información personal</h3>
+
+                <div class="informacionPersonal">
+                    <p><b>Nombre:</b> <span class="nombreUsuario">${usuario.nombre} ${usuario.apellido}</span></p>
+                    <p><b>Correo:</b> ${correo}</p>
+                    <p><b>Código:</b>  ${codigo}</p>
+                    <p><b>Sede:</b> ${sede}</p>
+                    <p><b>Tipo:</b> ${usuario.rol} UTP</p>
+                </div>
+
+                <h3 class="subtituloModal">Mi actividad</h3>
+
+                <div class="actividadPerfil">
+                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
+                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
+                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
+                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
+                </div>
+
+                <button type="button" class="btn" id="editarPerfil">
+                    ⚙️ Editar perfil
+                </button>
+            `;
             } else {
                 tituloModal.textContent = "Configuración";
             }
@@ -67,7 +116,7 @@ function iniciarPerfilYReporte() {
 
         document.getElementById("cerrarSesion").addEventListener("click", function () {
             cerrarMenu();
-            alert("Falta conectar el cierre de sesión con el servidor.");
+            window.location.href = "Inicio.jsp";
         });
 
         document.addEventListener("click", function (event) {
@@ -195,12 +244,414 @@ function iniciarPerfilYReporte() {
             nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
         });
 
-        formulario.addEventListener("submit", function (event) {
-            event.preventDefault();
-            alert("Falta conectar el formulario con el servidor para guardar el reporte.");
-        });
 
     }
+}
+
+function botonVerCoincidencias(boton) {
+    let idObjetoPerdido = boton.dataset.idObjetoPerdido;
+    sessionStorage.setItem("idObjetoPerdido", idObjetoPerdido);
+    window.location.href = "Coincidencias.jsp?accion=coincidenciasPerdidos";
+}
+
+async function mostrarCoincidenciasDesdeObjetosPerdidos() {
+    let idObjetoPerdido = sessionStorage.getItem("idObjetoPerdido");
+    const datos = new URLSearchParams();
+    datos.append("idObjetoPerdido", idObjetoPerdido);
+    const respuesta = await fetch("CoincidenciaDesdeObjetosPerdidosServlet", {
+        method: "POST",
+        body: datos
+    });
+    if (!respuesta.ok) {
+        throw new Error("Error al actualizar el reporte");
+    }
+    const listaReportes = await respuesta.json();
+    let reporte = listaReportes[0];
+    let resultado = `<div class="resumenReporte">
+                            <div class="iconoReporteCoincidencia">📄</div>
+
+                            <div>
+                                <h2>Tu objeto reportado</h2>
+                                <p>Aquí tienes un resumen del objeto que reportaste como perdido.</p>
+                            </div>
+                        </div>
+
+                        <div class="detalleReporteCoincidencia">
+
+                            <div class="imagenReporteCoincidencia">
+                                <img src="${reporte.objetoPerdido.imagen}"
+                                     alt="${reporte.objetoPerdido.nombre} ${reporte.objetoPerdido.marca} ${reporte.objetoPerdido.color}">
+                            </div>
+
+                            <div class="infoReporteCoincidencia">
+
+                                <h3>${reporte.objetoPerdido.nombre} ${reporte.objetoPerdido.marca} ${reporte.objetoPerdido.color}</h3>
+
+                                <div class="datosReporteCoincidencia">
+
+                                    <div class="datoCoincidencia">
+                                        <span>🏷️</span>
+                                        <div>
+                                            <strong>Categoría</strong>
+                                            <p>${reporte.objetoPerdido.categoria}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>🎨</span>
+                                        <div>
+                                            <strong>Color</strong>
+                                            <p>${reporte.objetoPerdido.color}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>📅</span>
+                                        <div>
+                                            <strong>Fecha de pérdida</strong>
+                                            <p>${reporte.objetoPerdido.fechaPerdida}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>📍</span>
+                                        <div>
+                                            <strong>Lugar</strong>
+                                            <p>${reporte.objetoPerdido.lugarReferencia}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>`;
+    document.getElementById("tuObjetoPerdido").innerHTML = resultado;
+    verCoincidenciaDelObjetoPerdido(reporte.objetoPerdido);
+}
+
+async function verCoincidenciaDelObjetoPerdido(objetoPerdido) {
+    const objetoEnviar = {
+        ...objetoPerdido,
+        fechaPerdida: convertirFecha(objetoPerdido.fechaPerdida),
+        fechaRegistro: convertirFecha(objetoPerdido.fechaRegistro)
+    };
+    const datos = new URLSearchParams();
+    datos.append("objetoPerdido", JSON.stringify(objetoEnviar));
+    const respuesta = await fetch("VerCoincideciasDeUnObjetoPerdidoServlet", {
+        method: "POST",
+        body: datos
+    }
+    );
+    if (!respuesta.ok) {
+        throw new Error("Error al actualizar el reporte");
+    }
+    const listaCoincidencias = await respuesta.json();
+    let resultado = "";
+    for (let coincidencia of listaCoincidencias) {
+        const coincidenciaJSON = encodeURIComponent(
+                JSON.stringify(coincidencia)
+                ).replace(/'/g, "%27");
+        resultado += `
+<article class="tarjetaCoincidenciaObjeto">
+
+                            <div class="filaCoincidencia">
+
+                                <img class="imagenCoincidenciaObjeto"
+                                     src="${coincidencia.objetoEncontrado.imagen}"
+                                     alt="${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca} ${coincidencia.objetoEncontrado.color}">
+
+                                <div class="contenidoCoincidenciaObjeto">
+
+                                    <h3>${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca} ${coincidencia.objetoEncontrado.color}</h3>
+
+                                    <div class="estadoCoincidencia">
+                                        <span class="porcentajeCoincidencia ${textoCoincidencia(coincidencia.porcentajeSimilitud)}">${coincidencia.porcentajeSimilitud}%</span>
+                                        <span class="textoCoincidencia ${textoCoincidencia(coincidencia.porcentajeSimilitud)}Texto">Coincidencia ${textoCoincidencia(coincidencia.porcentajeSimilitud)}</span>
+                                    </div>
+
+                                    <div class="detalleCoincidenciaLista">
+                                        <p>📍 ${coincidencia.objetoEncontrado.lugarReferencia}</p>
+                                        <p>📅${coincidencia.objetoEncontrado.fechaHallazgo}</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="verDetalleCoincidencia('${coincidenciaJSON}')" class="btn">
+                                Ver detalle →
+                            </button>
+                        </article>
+`;
+        document.getElementById("listaDeCoincidencias").innerHTML = resultado;
+    }
+}
+
+function verDetalleCoincidencia(datos) {
+    const coincidencia = JSON.parse(decodeURIComponent(datos));
+    sessionStorage.setItem("coincidencia", JSON.stringify(coincidencia));
+    window.location.href = "DetalleCoincidencia.jsp";
+}
+function mostrarBotonVolver(idPerdido) {
+    document.getElementById("BotonVolver").innerHTML = `
+<button onclick="botonVerCoincidencias(this)" class="volverDetalle" data-id-objeto-perdido="${idPerdido}">
+                    ← Volver a coincidencias
+                </button>
+`;
+}
+function coincidenciaVer(coincidencia) {
+    let porcentaje = coincidencia.porcentajeSimilitud;
+    let texto = "";
+    if (porcentaje > 80) {
+        texto = "Coincidencia alta detectada por el sistema.";
+    } else {
+        texto = "Coincidencia media detectada por el sistema.";
+    }
+    document.getElementById("coincidenciaSistema").innerHTML = `
+<h2>${porcentaje}% de similitud</h2>
+                            <p>${texto}</p>
+`;
+}
+function verCoincidenciaIndividual() {
+    const coincidencia = JSON.parse(
+            sessionStorage.getItem("coincidencia") || "null"
+            );
+    mostrarBotonVolver(coincidencia.objetoPerdido.idObjeto);
+    coincidenciaVer(coincidencia);
+    let resultado = `
+ <article class="cuadroTarjetas fichaObjeto">
+
+                        <div class="encabezadoFicha">
+                            <span class="iconoFicha">📄</span>
+
+                            <div>
+                                <h2>Tu objeto reportado</h2>
+                                <p>Información que registraste como objeto perdido.</p>
+                            </div>
+                        </div>
+
+                        <div class="contenidoFicha">
+
+                            <img src="${coincidencia.objetoPerdido.imagen}"
+                                 alt="${coincidencia.objetoPerdido.nombre} ${coincidencia.objetoPerdido.marca} ${coincidencia.objetoPerdido.color}">
+
+                            <div class="datosFicha">
+
+                                <p>
+                                    <b>🏷️ Nombre:</b>
+                                    <span>${coincidencia.objetoPerdido.nombre} ${coincidencia.objetoPerdido.marca}</span>
+                                </p>
+
+                                <p>
+                                    <b>📦 Categoría:</b>
+                                    <span> ${coincidencia.objetoPerdido.categoria}</span>
+                                </p>
+
+                                <p>
+                                    <b>🎨 Color:</b>
+                                    <span>${coincidencia.objetoPerdido.color}</span>
+                                </p>
+
+                                <p>
+                                    <b>📅 Fecha de pérdida:</b>
+                                    <span>${coincidencia.objetoPerdido.fechaPerdida}</span>
+                                </p>
+
+                                <p>
+                                    <b>📍 Lugar:</b>
+                                    <span>${coincidencia.objetoPerdido.lugarReferencia}</span>
+                                </p>
+
+                                <p>
+                                    <b>📝 Descripción:</b>
+                                    <span>
+                                       ${coincidencia.objetoPerdido.descripcion}
+                                    </span>
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </article>
+
+                    <article class="cuadroTarjetas fichaObjeto">
+
+                        <div class="encabezadoFicha">
+                            <span class="iconoFicha">👥</span>
+
+                            <div>
+                                <h2>Objeto encontrado</h2>
+                                <p>Información registrada por el SAE.</p>
+                            </div>
+                        </div>
+
+                        <div class="contenidoFicha">
+
+                            <img src="${coincidencia.objetoEncontrado.imagen}"
+                                 alt="${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca} ${coincidencia.objetoEncontrado.color}">
+
+                            <div class="datosFicha">
+
+                                <p>
+                                    <b>🏷️ Nombre:</b>
+                                    <span>${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca}</span>
+                                </p>
+
+                                <p>
+                                    <b>📦 Categoría:</b>
+                                    <span>${coincidencia.objetoEncontrado.categoria}</span>
+                                </p>
+
+                                <p>
+                                    <b>🎨 Color:</b>
+                                    <span>${coincidencia.objetoEncontrado.color}</span>
+                                </p>
+
+                                <p>
+                                    <b>📅 Fecha de hallazgo:</b>
+                                    <span>${coincidencia.objetoEncontrado.fechaHallazgo}</span>
+                                </p>
+
+                                <p>
+                                    <b>📍 Lugar encontrado:</b>
+                                    <span>${coincidencia.objetoEncontrado.lugarReferencia}</span>
+                                </p>
+
+                                <p>
+                                    <b>📝 Descripción:</b>
+                                    <span>
+                                        ${coincidencia.objetoEncontrado.descripcion}
+                                    </span>
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </article>
+
+`;
+
+    document.getElementById("comparacionObjetos").innerHTML = resultado;
+    crearBotonesEnDetalle(coincidencia.objetoEncontrado);
+}
+
+function textoCoincidencia(porcentaje) {
+    if (porcentaje > 80) {
+        return "alta";
+    } else {
+        return "media";
+    }
+}
+async function mostrarCoincidenciasDesdeReporte() {
+    const respuesta = await fetch("CoincidenciaServlet", {
+        method: "POST"
+    });
+
+    if (!respuesta.ok) {
+        throw new Error("Error al obtener las coincidencias");
+    }
+
+    const listaCoincidencias = await respuesta.json();
+
+    console.log(listaCoincidencias);
+
+    let resultado2 = "";
+    for (let coincidencia of listaCoincidencias) {
+        const coincidenciaJSON = encodeURIComponent(
+                JSON.stringify(coincidencia)
+                ).replace(/'/g, "%27");
+        let porcentaje = coincidencia.porcentajeSimilitud;
+
+        resultado2 += `
+<article class="tarjetaCoincidenciaObjeto">
+
+                            <div class="filaCoincidencia">
+
+                                <img class="imagenCoincidenciaObjeto"
+                                     src="${coincidencia.objetoEncontrado.imagen}"
+                                     alt="${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca} ${coincidencia.objetoEncontrado.color}">
+
+                                <div class="contenidoCoincidenciaObjeto">
+
+                                    <h3>${coincidencia.objetoEncontrado.nombre} ${coincidencia.objetoEncontrado.marca} ${coincidencia.objetoEncontrado.color}</h3>
+
+                                    <div class="estadoCoincidencia">
+                                        <span class="porcentajeCoincidencia ${textoCoincidencia(porcentaje)}">${porcentaje}%</span>
+                                        <span class="textoCoincidencia ${textoCoincidencia(porcentaje)}Texto">Coincidencia ${textoCoincidencia(porcentaje)}</span>
+                                    </div>
+
+                                    <div class="detalleCoincidenciaLista">
+                                        <p>📍 ${coincidencia.objetoEncontrado.lugarReferencia}</p>
+                                        <p>📅${coincidencia.objetoEncontrado.fechaHallazgo}</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="verDetalleCoincidencia('${coincidenciaJSON}')" class="btn">
+                                Ver detalle →
+                            </button>
+                        </article>
+`;
+    }
+    let reporte = listaCoincidencias[0];
+    let resultado = `<div class="resumenReporte">
+                            <div class="iconoReporteCoincidencia">📄</div>
+
+                            <div>
+                                <h2>Tu objeto reportado</h2>
+                                <p>Aquí tienes un resumen del objeto que reportaste como perdido.</p>
+                            </div>
+                        </div>
+
+                        <div class="detalleReporteCoincidencia">
+
+                            <div class="imagenReporteCoincidencia">
+                                <img src="${reporte.objetoPerdido.imagen}"
+                                     alt="${reporte.objetoPerdido.nombre} ${reporte.objetoPerdido.marca} ${reporte.objetoPerdido.color}">
+                            </div>
+
+                            <div class="infoReporteCoincidencia">
+
+                                <h3>${reporte.objetoPerdido.nombre} ${reporte.objetoPerdido.marca} ${reporte.objetoPerdido.color}</h3>
+
+                                <div class="datosReporteCoincidencia">
+
+                                    <div class="datoCoincidencia">
+                                        <span>🏷️</span>
+                                        <div>
+                                            <strong>Categoría</strong>
+                                            <p>${reporte.objetoPerdido.categoria}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>🎨</span>
+                                        <div>
+                                            <strong>Color</strong>
+                                            <p>${reporte.objetoPerdido.color}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>📅</span>
+                                        <div>
+                                            <strong>Fecha de pérdida</strong>
+                                            <p>${reporte.objetoPerdido.fechaPerdida}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="datoCoincidencia">
+                                        <span>📍</span>
+                                        <div>
+                                            <strong>Lugar</strong>
+                                            <p>${reporte.objetoPerdido.lugarReferencia}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>`;
+    document.getElementById("tuObjetoPerdido").innerHTML = resultado;
+    document.getElementById("listaDeCoincidencias").innerHTML = resultado2;
 }
 
 function iniciarReclamo() {
@@ -240,8 +691,7 @@ function iniciarReclamo() {
     if (formReclamo) {
         formReclamo.addEventListener("submit", function (event) {
             event.preventDefault();
-
-            alert("Formulario validado. Falta conectar el envío del reclamo con el servidor.");
+            
         });
     }
 
@@ -276,16 +726,12 @@ async function iniciarObjetosEncontrados() {
     }
 
     function mostrarFecha(valor) {
-        const partes = valor.split("-");
-        const meses = [
-            "ene", "feb", "mar", "abr", "may", "jun",
-            "jul", "ago", "sep", "oct", "nov", "dic"
-        ];
+        const partes = valor.split(" ");
 
-        const dia = Number(partes[2]);
-        const mes = meses[Number(partes[1]) - 1];
-
-        return dia + " " + mes + " " + partes[0];
+        return partes[0] + " " + partes[2];
+        console.log(partes[0]);
+        console.log(partes[0] + " " + partes[2]);
+        console.log(partes[2]);
     }
 
     function mostrarObjetos() {
@@ -310,7 +756,7 @@ async function iniciarObjetosEncontrados() {
                     normalizar(objeto.lugarReferencia).includes(normalizar(lugar.value));
 
             const coincideFecha = fecha.value === "" ||
-                    objeto.fechaHallazgo.startsWith(fecha.value);
+                    mostrarFecha(objeto.fechaHallazgo) === fecha.value.toLowerCase();
 
             return coincideNombre &&
                     coincideCategoria &&
@@ -372,8 +818,8 @@ async function iniciarObjetosEncontrados() {
                         <p>📅 ${mostrarFecha(objeto.fechaHallazgo)}</p>
 
                         <a class="enlaceDetalle"
-                           href="DetalleCoincidencia.jsp?objeto=${objeto.id}">
-                            Ver detalle →
+                           href="ReportarObjeto.jsp">
+                            Solicitar Reclamo →
                         </a>
 
                     </article>
@@ -492,17 +938,25 @@ function iniciarObjetosPerdidos() {
 
         const resultados = reportes.filter(function (reporte) {
             const nombre = normalizarReporte(reporte.dataset.nombre);
-
             return nombre.includes(palabra);
         });
-
+        console.table(resultados.map(function (reporte) {
+            return {
+                nombre: reporte.dataset.nombre,
+                fechaOriginal: reporte.dataset.fecha,
+                fechaConvertida: convertirFecha(reporte.dataset.fecha)
+            };
+        }));
         if (ordenReportes.value === "recientes") {
             resultados.sort(function (a, b) {
-                return b.dataset.fechaHallazgo.localeCompare(a.dataset.fechaHallazgo);
+                console.log(convertirFecha(b.dataset.fecha));
+                console.log(convertirFecha(a.dataset.fecha));
+
+                return convertirFecha(b.dataset.fecha).localeCompare(convertirFecha(a.dataset.fecha));
             });
         } else {
             resultados.sort(function (a, b) {
-                return a.dataset.fechaHallazgo.localeCompare(b.dataset.fechaHallazgo);
+                return convertirFecha(a.dataset.fecha).localeCompare(convertirFecha(b.dataset.fecha));
             });
         }
 
@@ -560,7 +1014,8 @@ function iniciarObjetosPerdidos() {
 
             estado.className = "etiquetaEstado reporteCancelado";
             estado.textContent = "🚫 Cancelado";
-
+            console.log("ID del botón:", boton.dataset.idObjetoPerdido);
+            cambiarEstadoReserva("🚫 Cancelado", boton.dataset.idObjetoPerdido);
             descripcion.textContent =
                     "El reporte fue cancelado en esta demostración.";
 
@@ -605,9 +1060,29 @@ function iniciarObjetosPerdidos() {
 
     mostrarReportes();
 }
+function cambiarEstadoReserva(estado, idObjeto) {
+    const datos = new URLSearchParams();
+    datos.append("idObjetoPerdido", idObjeto);
+    datos.append("estado", estado);
 
+    fetch("CambiaEstadoReporteServlet", {
+        method: "POST",
+        body: datos
+    });
+}
 //modales del nav
 document.addEventListener("DOMContentLoaded", iniciarAyudaInicio);
+function convertirFecha(fecha) {
+    const meses = {
+        ene: "01", feb: "02", mar: "03", abr: "04",
+        may: "05", jun: "06", jul: "07", ago: "08",
+        sep: "09", oct: "10", nov: "11", dic: "12"
+    };
+
+    const [mes, dia, anio] = fecha.replace(/[.,]/g, "").split(" ");
+
+    return `${anio}-${meses[mes]}-${dia.padStart(2, "0")}`;
+}
 
 function iniciarAyudaInicio() {
     const modalAyuda = document.getElementById("modalAyudaInicio");
@@ -730,5 +1205,183 @@ async function mostrarObjetosEncontradosRecientemente() {
         document.getElementById("objetosRecientes").innerHTML = resultado;
     } catch (error) {
         console.error("Error: ", error);
+    }
+}
+function nuevaCoincidenciaEncontrada(reportes) {
+    let noti = document.getElementById("notificacionPerdidos");
+    let resultado = "";
+    for (let reporte of reportes) {
+        if (reporte.estado === "✅ Coincidencia encontrada") {
+            resultado += `<div class="notificacionPerdidos" id="notificacionPerdidos">
+
+                <span class="iconoNotificacion">✅</span>
+
+                    <div class="textoNotificacion">
+                        <h3>¡Nueva coincidencia encontrada!</h3>
+                        <p>
+                            Encontramos un objeto similar a tu reporte de
+                            "${reporte.objetoPerdido.nombre} ${reporte.objetoPerdido.marca} ${reporte.objetoPerdido.color}" .
+                        </p>
+                    </div>
+
+                    <a href="Coincidencias.jsp"
+                       class="botonCoincidencia">
+                        Ver coincidencia →
+                    </a>
+
+                    <button type="button"
+                            class="cerrarNotificacion"
+                            id="cerrarNotificacion"
+                            aria-label="Cerrar notificación">
+                        ✕
+                    </button>
+</div>`;
+        }
+    }
+    noti.innerHTML = resultado;
+}
+async function mostrarReportes() {
+    try {
+        const respuesta = await fetch("ReportesRealizadosServlet", {method: "POST"});
+        if (!respuesta.ok) {
+            throw new Error("Error al obtener los objetos perdidos");
+        }
+        const reportesUsuario = await respuesta.json();
+        console.log("Este es el primero :" + reportesUsuario[0].fechaReporte);
+        let resultado = "";
+        for (let reporte of reportesUsuario) {
+            resultado += `<article class="cuadroTarjetas reportePerdido" data-nombre="${reporte.objetoPerdido.nombre}" data-fecha="${reporte.objetoPerdido.fechaPerdida}">
+
+                        <div class="imagenReportePerdido">
+                            <img src="${reporte.objetoPerdido.imagen}"
+                                 alt="${reporte.objetoPerdido.nombre}">
+                        </div>
+
+                        <div class="informacionReportePerdido">
+                            <h3>${reporte.objetoPerdido.nombre}</h3>
+                            <p>${reporte.objetoPerdido.categoria}</p>
+                            <p>📍 ${reporte.objetoPerdido.lugarReferencia}</p>
+                            <p>📅 ${reporte.objetoPerdido.fechaPerdida}</p>
+                        </div>
+
+                        <div class="estadoReporte">
+                            <span class="etiquetaEstado ${cambiarClaseEstado(reporte.estado)}">
+                                ${reporte.estado}
+                            </span>
+
+                            <p class="descripcionEstado">
+                                ${mostrarDescripcionEstado(reporte.estado)}
+                            </p>
+                        </div>
+
+                        <div class="accionesReporte">
+
+                            <details class="detalleReportePerdido">
+                                <summary>Ver detalle →</summary>
+
+                                <div class="informacionDetalle">
+                                    <p><b>Objeto:</b> ${reporte.objetoPerdido.nombre}</p>
+                                    <p><b>Fecha:</b>${reporte.objetoPerdido.fechaPerdida}</p>
+                                    <p><b>Lugar:</b> ${reporte.objetoPerdido.lugarReferencia}</p>
+                                    <p><b>Estado:</b> ${reporte.estado}</p>
+                                </div>
+                            </details>
+
+                            ${botonSegunEstado(reporte.estado, reporte.objetoPerdido.idObjeto)}
+
+                        </div>
+
+                    </article>`;
+        }
+        document.getElementById("listaReportes").innerHTML = resultado;
+        iniciarObjetosPerdidos();
+
+    } catch (error) {
+        console.error("Error: ", error);
+    }
+}
+
+async function descargarConstanciaWord() {
+
+    const formulario = document.getElementById("formReclamo");
+
+    const datos = new FormData(formulario);
+
+    const respuesta = await fetch("CreacionConstanciaWord", {
+        method: "POST",
+        body: datos
+    });
+
+    if (!respuesta.ok) {
+        throw new Error("No se pudo generar la constancia");
+    }
+
+    const archivo = await respuesta.blob();
+
+    const url = URL.createObjectURL(archivo);
+
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "Constancia_LostFind.docx";
+    enlace.click();
+
+    URL.revokeObjectURL(url);
+}
+
+async function crearBotonesEnDetalle(objetoEncontrado) {
+    const datos = new URLSearchParams();
+
+    datos.append("objetoPerdido", JSON.stringify(objetoEncontrado));
+
+    await fetch("GuardarObjetoServlet", {
+        method: "POST",
+        body: datos
+    });
+
+    document.getElementById("botonesDetalles").innerHTML = `
+                                <button type="submit" class="btn" onclick="descargarConstanciaWord()">
+                                    Enviar solicitud de reclamo →
+                                </button>
+`;
+}
+
+function mostrarDescripcionEstado(estado) {
+    if (estado === "🕒 En búsqueda") {
+        return "Tu reporte está activo. Te notificaremos si hay coincidencias.";
+    } else if (estado === "⛔ Cerrado") {
+        return "El reporte fue cerrado.";
+    } else if (estado === "✅ Coincidencia encontrada") {
+        return "Se encontró un objeto que coincide con tu descripción.";
+    } else {
+        return "El reporte fue cancelado.";
+    }
+}
+
+function cambiarClaseEstado(estado) {
+    if (estado === "🕒 En búsqueda") {
+        return "enBusqueda";
+    } else if (estado === "⛔ Cerrado") {
+        return "reporteCerrado";
+    } else if (estado === "✅ Coincidencia encontrada") {
+        return "coincidenciaEncontrada";
+    } else {
+        return "reporteCancelado";
+    }
+}
+
+function botonSegunEstado(estado, idObjeto) {
+    if (estado === "🕒 En búsqueda") {
+        return `<button type="button"
+                                    class="botonCancelarReporte"
+                                    data-cancelar data-id-objeto-perdido="${idObjeto}">
+                                🚫 Cancelar reporte
+                            </button>`;
+    } else if (estado === "⛔ Cerrado" || estado === "🚫 Cancelado") {
+        return "";
+    } else {
+        return `<button type="button" 
+                               class="botonVerCoincidencia" onclick="botonVerCoincidencias(this)" data-id-objeto-perdido="${idObjeto}">
+                                💬 Ver coincidencia
+                            </button>`;
     }
 }

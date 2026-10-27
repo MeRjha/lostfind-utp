@@ -12,8 +12,21 @@ import java.util.Date;
  */
 public class ObjetoPerdido extends Objeto {
 
-    public ObjetoPerdido(int idObjeto, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, Date fechaRegistro, String estado) {
-        super(idObjeto, categoria, imagen, nombre, color, marca, descripcion, lugarReferencia, fechaRegistro, estado);
+    private Date fechaPerdida;
+
+    public ObjetoPerdido(Date fechaPerdida, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, String estado) {
+        super(categoria, imagen, nombre, color, marca, descripcion, lugarReferencia, estado);
+        this.fechaPerdida = fechaPerdida;
+    } 
+
+    public Date getFechaPerdida() {
+        return fechaPerdida;
     }
+
+    public void setFechaPerdida(Date fechaPerdida) {
+        this.fechaPerdida = fechaPerdida;
+    }
+
+    
 
 }

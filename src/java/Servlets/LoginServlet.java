@@ -6,6 +6,7 @@ package Servlets;
 
 import Gestiones.GestionAutenticacion;
 import Objetos.Usuario;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -81,11 +82,14 @@ public class LoginServlet extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             if (usuario != null) {
                 request.changeSessionId();
+                Gson gson = new Gson();
+
                 request.getSession().setAttribute("usuario", usuario);
+                request.getSession().setAttribute("usuarioJson", gson.toJson(usuario));
                 response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
             } else {
                 response.getWriter().println("<script> alert('Correo y/o contraseña equivocadas');</script>");
-                
+
                 response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "'; </script>");
             }
         }

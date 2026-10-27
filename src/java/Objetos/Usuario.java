@@ -7,7 +7,7 @@ package Objetos;
  */
 public abstract class Usuario {
     private int idUsuario;
-    private int idSede;
+    private Sede sede;
     private String nombre;
     private String apellido;
     private String correoInstitucional;
@@ -16,9 +16,9 @@ public abstract class Usuario {
     private String rol; 
     private boolean activo;
 
-    public Usuario(int idUsuario, int idSede, String nombre, String apellido, String correoInstitucional, String contraseña, String fotoPerfil, String rol, boolean activo) {
+    public Usuario(int idUsuario, Sede sede, String nombre, String apellido, String correoInstitucional, String contraseña, String fotoPerfil, String rol, boolean activo) {
         this.idUsuario = idUsuario;
-        this.idSede = idSede;
+        this.sede = sede;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correoInstitucional = correoInstitucional;
@@ -36,12 +36,12 @@ public abstract class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdSede() {
-        return idSede;
+    public Sede getSede() {
+        return sede;
     }
 
-    public void setIdSede(int idSede) {
-        this.idSede = idSede;
+    public void setSede(Sede sede) {
+        this.sede = sede;
     }
 
     public String getNombre() {

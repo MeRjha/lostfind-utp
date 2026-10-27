@@ -1,3 +1,4 @@
+<%@page import="Objetos.Usuario"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -30,16 +31,22 @@
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp" class="activo">Buscar objeto</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
-
+ <%
+                            Usuario usuario = (Usuario) session.getAttribute("usuario");
+                            String perfil = "Imagenes/fotoUsuario.jpg";
+                            if (usuario!=null) {
+                                perfil=usuario.getFotoPerfil();
+                            }
+                        %>
                         <img class="fotoUsuario"
-                             src="Imagenes/fotoUsuario.jpg"
+                             src="<%=perfil%>"
                              alt="Foto del usuario">
                     </button>
 
@@ -93,7 +100,7 @@
                     Completa todos los campos para un mejor resultado.
                 </p>
 
-                <form id="formReporte" method="post" enctype="multipart/form-data">
+                <form id="formReporte" action="ReporteServlet" method="post" enctype="multipart/form-data">
 
                     <div class="camposReporte">
 
@@ -104,6 +111,7 @@
                                 <option value="Tecnología">Tecnología</option>
                                 <option value="Documentos">Documentos</option>
                                 <option value="Accesorios">Accesorios</option>
+                                <option value="Mochilas">Mochilas</option>
                                 <option value="Ropa">Ropa</option>
                                 <option value="Otros">Otros</option>
                             </select>
@@ -124,7 +132,7 @@
                         <div class="campoReporte">
                             <label for="marca">Marca</label>
                             <input type="text" id="marca" name="marca"
-                                   placeholder="Ej. Sony" maxlength="50">
+                                   placeholder="Ej. Sony" maxlength="50" required>
                         </div>
 
                         <div class="campoReporte">
@@ -198,38 +206,11 @@
             <button type="button" id="cerrarModal" aria-label="Cerrar">✕</button>
         </div>
 
-        <div id="vistaPerfil">
+        <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' >
+                <div id="vistaPerfil">
 
-            <div class="datosPerfil">
-                <img src="Imagenes/fotoUsuario.jpg" alt="Foto de perfil">
-                <h3 class="nombreUsuario">Nombre del usuario</h3>
-                <p>correo@utp.edu.pe</p>
-                <span class="badge">Estudiante UTP</span>
+                </div>
             </div>
-
-            <h3 class="subtituloModal">Información personal</h3>
-
-            <div class="informacionPersonal">
-                <p><b>Nombre:</b> <span class="nombreUsuario">Nombre del usuario</span></p>
-                <p><b>Correo:</b> correo@utp.edu.pe</p>
-                <p><b>Código:</b> Pendiente</p>
-                <p><b>Sede:</b> Pendiente</p>
-                <p><b>Tipo:</b> Estudiante UTP</p>
-            </div>
-
-            <h3 class="subtituloModal">Mi actividad</h3>
-
-            <div class="actividadPerfil">
-                <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                <div class="cuadroTarjetas">📦 Recuperados: —</div>
-            </div>
-
-            <button type="button" class="btn" id="editarPerfil">
-                ⚙️ Editar perfil
-            </button>
-        </div>
 
 
         <div id="vistaConfiguracion" hidden>

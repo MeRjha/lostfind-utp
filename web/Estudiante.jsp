@@ -42,8 +42,8 @@
                         <%
                             Usuario usuario = (Usuario) session.getAttribute("usuario");
                             String perfil = "Imagenes/fotoUsuario.jpg";
-                            if (usuario!=null) {
-                                perfil=usuario.getFotoPerfil();
+                            if (usuario != null) {
+                                perfil = usuario.getFotoPerfil();
                             }
                         %>
                         <img class="fotoUsuario"
@@ -148,7 +148,7 @@
 
                     <div id="objetosRecientes" class="contenedorObjetos">
 
-                       
+
 
                     </div>
                 </div>
@@ -172,41 +172,11 @@
                 <h2 id="tituloModal">Mi perfil</h2>
                 <button type="button" id="cerrarModal" aria-label="Cerrar">✕</button>
             </div>
+            <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' >
+                <div id="vistaPerfil">
 
-            <div id="vistaPerfil">
-
-                <div class="datosPerfil">
-                    <img src="Imagenes/fotoUsuario.jpg" alt="Foto de perfil">
-                    <h3 class="nombreUsuario">Nombre del usuario</h3>
-                    <p>correo@utp.edu.pe</p>
-                    <span class="badge">Estudiante UTP</span>
                 </div>
-
-                <h3 class="subtituloModal">Información personal</h3>
-
-                <div class="informacionPersonal">
-                    <p><b>Nombre:</b> <span class="nombreUsuario">Nombre del usuario</span></p>
-                    <p><b>Correo:</b> correo@utp.edu.pe</p>
-                    <p><b>Código:</b> Pendiente</p>
-                    <p><b>Sede:</b> Pendiente</p>
-                    <p><b>Tipo:</b> Estudiante UTP</p>
-                </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
-                <button type="button" class="btn" id="editarPerfil">
-                    ⚙️ Editar perfil
-                </button>
             </div>
-
-
             <div id="vistaConfiguracion" hidden>
 
                 <div class="cuadroAjustes">
@@ -264,7 +234,6 @@
                 </div>
 
             </div>
-
 
         </dialog>
 

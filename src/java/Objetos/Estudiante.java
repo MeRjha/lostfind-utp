@@ -9,10 +9,14 @@ package Objetos;
  * @author Axel
  */
 public class Estudiante extends Usuario {
-    
-    public Estudiante(int idUsuario, int idSede, String nombre, String apellido, String correoInstitucional, String contraseña, String fotoPerfil, String rol, boolean activo) {
-        super(idUsuario, idSede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
+
+    public Estudiante(int idUsuario, Sede sede, String nombre, String apellido, String correoInstitucional, String contraseña, String fotoPerfil, String rol, boolean activo) {
+        super(idUsuario, sede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
     }
+
+    
+    
+    
     
     
     

@@ -77,9 +77,9 @@ public class ObjetosEncontradosServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
-        System.out.println("La sede es: "+usuario.getIdSede());
-        List<ObjetoEncontrado> objetosEncontrados = new ObjetosEncontradosDAO().obtenerObjetos(usuario.getIdSede());
-        System.out.println("La sede es: "+usuario.getIdSede());
+        System.out.println("La sede es: "+usuario.getSede().getIdSede());
+        List<ObjetoEncontrado> objetosEncontrados = new ObjetosEncontradosDAO().obtenerObjetos(usuario.getSede().getIdSede());
+        System.out.println("La sede es: "+usuario.getSede().getIdSede());
         Gson gson = new Gson();
         response.setContentType("application/json;charset=UTF-8");
         gson.toJson(objetosEncontrados, response.getWriter());

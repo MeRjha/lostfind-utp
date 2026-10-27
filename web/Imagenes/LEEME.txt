@@ -1,0 +1,1 @@
+Las fotografias descargadas apareceran aqui al ejecutar DESCARGAR_FOTOS.bat.

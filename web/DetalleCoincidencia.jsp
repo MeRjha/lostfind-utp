@@ -1,3 +1,4 @@
+<%@page import="Objetos.Usuario"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,16 +30,22 @@
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="Coincidencias.jsp" class="activo">Buscar objeto</a></li>
+                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
                 <div class="contenedorUsuario">
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
-
+                        <%
+                            Usuario usuario = (Usuario) session.getAttribute("usuario");
+                            String perfil = "Imagenes/fotoUsuario.jpg";
+                            if (usuario != null) {
+                                perfil = usuario.getFotoPerfil();
+                            }
+                        %>
                         <img class="fotoUsuario"
-                             src="Imagenes/fotoUsuario.jpg"
+                             src="<%=perfil%>"
                              alt="Foto del usuario">
                     </button>
 
@@ -56,10 +63,9 @@
         <main>
             <div class="contenedorDashboard contenidoDetalle">
 
-                <a href="Coincidencias.jsp" class="volverDetalle">
-                    ← Volver a coincidencias
-                </a>
-
+                <div id="BotonVolver">
+                    
+                </div>
                 <h1 class="tituloDetalle">
                     Detalle del objeto y solicitud de reclamo
                 </h1>
@@ -75,9 +81,8 @@
                     <div class="resultadoSimilitud">
                         <span class="iconoSimilitud">✅</span>
 
-                        <div>
-                            <h2>92% de similitud</h2>
-                            <p>Coincidencia alta detectada por el sistema.</p>
+                        <div id="coincidenciaSistema">
+                            
                         </div>
                     </div>
 
@@ -95,135 +100,8 @@
 
                 </section>
 
-                <section class="comparacionObjetos">
+                <section id="comparacionObjetos" class="comparacionObjetos">
 
-                    <article class="cuadroTarjetas fichaObjeto">
-
-                        <div class="encabezadoFicha">
-                            <span class="iconoFicha">📄</span>
-
-                            <div>
-                                <h2>Tu objeto reportado</h2>
-                                <p>Información que registraste como objeto perdido.</p>
-                            </div>
-                        </div>
-
-                        <div class="contenidoFicha">
-
-                            <img src="Imagenes/audifonos.jfif"
-                                 alt="Audífonos Sony celestes reportados">
-
-                            <div class="datosFicha">
-
-                                <p>
-                                    <b>🏷️ Nombre:</b>
-                                    <span>Audífonos Sony celestes</span>
-                                </p>
-
-                                <p>
-                                    <b>📦 Categoría:</b>
-                                    <span>Accesorios</span>
-                                </p>
-
-                                <p>
-                                    <b>🎨 Color:</b>
-                                    <span>Celeste</span>
-                                </p>
-
-                                <p>
-                                    <b>📅 Fecha de pérdida:</b>
-                                    <span>12 sep 2026</span>
-                                </p>
-
-                                <p>
-                                    <b>📍 Lugar:</b>
-                                    <span>Biblioteca - piso 4</span>
-                                </p>
-
-                                <p>
-                                    <b>🏢 Sede:</b>
-                                    <span>Lima Sur</span>
-                                </p>
-
-                                <p>
-                                    <b>📝 Descripción:</b>
-                                    <span>
-                                        Audífonos inalámbricos color celeste
-                                        reportados como perdidos por el estudiante.
-                                    </span>
-                                </p>
-
-                            </div>
-                        </div>
-
-                    </article>
-
-                    <article class="cuadroTarjetas fichaObjeto">
-
-                        <div class="encabezadoFicha">
-                            <span class="iconoFicha">👥</span>
-
-                            <div>
-                                <h2>Objeto encontrado</h2>
-                                <p>Información registrada por el SAE.</p>
-                            </div>
-                        </div>
-
-                        <div class="contenidoFicha">
-
-                            <img src="Imagenes/audifonos.jfif"
-                                 alt="Audífonos Sony celestes encontrados">
-
-                            <div class="datosFicha">
-
-                                <p>
-                                    <b>🏷️ Nombre:</b>
-                                    <span>Audífonos Sony inalámbricos celestes</span>
-                                </p>
-
-                                <p>
-                                    <b>📦 Categoría:</b>
-                                    <span>Accesorios</span>
-                                </p>
-
-                                <p>
-                                    <b>🎨 Color:</b>
-                                    <span>Celeste</span>
-                                </p>
-
-                                <p>
-                                    <b>📅 Fecha de hallazgo:</b>
-                                    <span>13 sep 2026</span>
-                                </p>
-
-                                <p>
-                                    <b>📍 Lugar encontrado:</b>
-                                    <span>Biblioteca - piso 4</span>
-                                </p>
-
-                                <p>
-                                    <b>🏢 Sede:</b>
-                                    <span>Lima Sur</span>
-                                </p>
-
-                                <p>
-                                    <b>🛡️ Estado:</b>
-                                    <span>Bajo custodia del SAE</span>
-                                </p>
-
-                                <p>
-                                    <b>📝 Descripción:</b>
-                                    <span>
-                                        Objeto registrado por el SAE con
-                                        características muy similares al reporte
-                                        del estudiante.
-                                    </span>
-                                </p>
-
-                            </div>
-                        </div>
-
-                    </article>
 
                 </section>
 
@@ -241,8 +119,7 @@
                         </div>
                     </div>
 
-                    <form id="formReclamo" method="post"
-                          enctype="multipart/form-data">
+                    <form id="formReclamo" action="CreacionConstanciaWord" method="post" enctype="multipart/form-data">
 
                         <div class="camposReclamo">
 
@@ -310,16 +187,9 @@
                                 una notificación con el resultado.
                             </div>
 
-                            <div class="botonesReclamo">
+                            <div id="botonesDetalles" class="botonesReclamo">
 
-                                <a href="Coincidencias.jsp"
-                                   class="botonCancelar">
-                                    Cancelar
-                                </a>
-
-                                <button type="submit" class="btn">
-                                    Enviar solicitud de reclamo →
-                                </button>
+                              
 
                             </div>
 
@@ -358,38 +228,10 @@
                 <button type="button" id="cerrarModal" aria-label="Cerrar">✕</button>
             </div>
 
-            <div id="vistaPerfil">
+            <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' >
+                <div id="vistaPerfil">
 
-                <div class="datosPerfil">
-                    <img src="Imagenes/fotoUsuario.jpg" alt="Foto de perfil">
-                    <h3 class="nombreUsuario">Nombre del usuario</h3>
-                    <p>correo@utp.edu.pe</p>
-                    <span class="badge">Estudiante UTP</span>
                 </div>
-
-                <h3 class="subtituloModal">Información personal</h3>
-
-                <div class="informacionPersonal">
-                    <p><b>Nombre:</b> <span class="nombreUsuario">Nombre del usuario</span></p>
-                    <p><b>Correo:</b> correo@utp.edu.pe</p>
-                    <p><b>Código:</b> Pendiente</p>
-                    <p><b>Sede:</b> Pendiente</p>
-                    <p><b>Tipo:</b> Estudiante UTP</p>
-                </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
-                <button type="button" class="btn" id="editarPerfil">
-                    ⚙️ Editar perfil
-                </button>
-
             </div>
 
             <div id="vistaConfiguracion" hidden>
@@ -452,7 +294,7 @@
 
         </dialog>
 
-        <script src="script.js" defer></script>
-
+        <script src="script.js"></script>
+        <script>verCoincidenciaIndividual();</script>
     </body>
 </html>
