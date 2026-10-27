@@ -44,6 +44,7 @@ function iniciarPerfilYReporte() {
                 tituloModal.textContent = "Mi perfil";
                 const divUsuario = document.getElementById("InfoUsuario");
                 const usuario = JSON.parse(divUsuario.dataset.usuario);
+                
                 let correo = usuario.correoInstitucional;
                 let codigo = correo.split("@")[0];
                 let sede = usuario.sede.nombre;
@@ -66,19 +67,6 @@ function iniciarPerfilYReporte() {
                     <p><b>Sede:</b> ${sede}</p>
                     <p><b>Tipo:</b> ${usuario.rol} UTP</p>
                 </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
-                <button type="button" class="btn" id="editarPerfil">
-                    ⚙️ Editar perfil
-                </button>
             `;
             } else {
                 tituloModal.textContent = "Configuración";
@@ -92,6 +80,7 @@ function iniciarPerfilYReporte() {
         botonUsuario.addEventListener("click", function () {
             menuUsuario.hidden = !menuUsuario.hidden;
             botonUsuario.setAttribute("aria-expanded", String(!menuUsuario.hidden));
+            menuNotificaciones.hidden = true;
         });
 
         document.getElementById("verPerfil").addEventListener("click", function () {
@@ -383,6 +372,9 @@ async function verCoincidenciaDelObjetoPerdido(objetoPerdido) {
 `;
         document.getElementById("listaDeCoincidencias").innerHTML = resultado;
     }
+}
+function mostrarBienvenida(){
+    
 }
 
 function verDetalleCoincidencia(datos) {
@@ -1385,3 +1377,12 @@ function botonSegunEstado(estado, idObjeto) {
                             </button>`;
     }
 }
+
+const botonNotificaciones = document.getElementById("botonNotificaciones");
+const menuNotificaciones = document.getElementById("menuNotificaciones");
+const menuUsuario = document.getElementById("menuUsuario");
+
+botonNotificaciones.addEventListener("click", function () {
+    menuNotificaciones.hidden = !menuNotificaciones.hidden;
+    menuUsuario.hidden = true;
+});

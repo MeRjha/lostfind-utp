@@ -118,7 +118,7 @@ public class ReporteServlet extends HttpServlet {
 
             String nombre = UUID.randomUUID().toString() + extension;
 
-            String carpeta = "C:/Users/Axel/Documents/NetBeansProjects/lostfind-utp/web/Imagenes";
+            String carpeta = getServletContext().getRealPath("/Imagenes");;
 
             Path destino = Paths.get(carpeta, nombre);
 
