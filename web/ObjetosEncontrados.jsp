@@ -27,8 +27,8 @@
 
                 <nav class="nav">
                     <ul class="nav-list">
-                        <li><a href="Estudiante.jsp" class="activo">Inicio</a></li>
-                        <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
+                        <li><a href="Estudiante.jsp">Inicio</a></li>
+                        <li><a href="ObjetosEncontrados.jsp" class="activo">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
                         <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>

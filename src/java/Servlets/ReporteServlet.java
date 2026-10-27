@@ -31,6 +31,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -39,6 +43,9 @@ import java.util.UUID;
 @WebServlet(name = "ReporteServlet", urlPatterns = {"/ReporteServlet"})
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class ReporteServlet extends HttpServlet {
+
+    private static final Logger logger
+            = LoggerFactory.getLogger(ReporteServlet.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -93,99 +100,203 @@ public class ReporteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setContentType("text/html;charset=UTF-8");
+
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+
+        if (usuario == null) {
+            logger.warn("Intento de registrar un objeto sin una sesion activa");
+            response.sendError(401, "Debe iniciar sesion");
+            return;
+        }
+
+        String categoria = request.getParameter("categoria");
+        String nombreObjeto = request.getParameter("nombreObjeto");
+        String color = request.getParameter("color");
+        String marca = request.getParameter("marca");
+        String fechaPerdidaString = request.getParameter("fechaPerdida");
+        String ubicacion = request.getParameter("ubicacion");
+        String descripcion = request.getParameter("descripcion");
+
+        if (StringUtils.isAnyBlank(
+                categoria,
+                nombreObjeto,
+                fechaPerdidaString,
+                ubicacion,
+                descripcion)) {
+
+            logger.warn("Intento de registrar un objeto con campos obligatorios incompletos");
+            response.sendError(400, "Complete los campos obligatorios");
+            return;
+        }
+
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        formato.setLenient(false);
+
+        java.util.Date fechaPerdida;
+
+        try {
+            fechaPerdida = formato.parse(fechaPerdidaString);
+        } catch (ParseException e) {
+            logger.warn("Fecha de perdida invalida", e);
+            response.sendError(400, "Fecha de perdida invalida");
+            return;
+        }
+
         Part foto = request.getPart("foto");
 
         String rutaImagen = null;
 
         if (foto != null && foto.getSize() > 0) {
 
-            String extension;
+            ImmutableMap<String, String> formatosPermitidos = ImmutableMap.of(
+                    "image/jpeg", ".jpg",
+                    "image/png", ".png",
+                    "image/webp", ".webp"
+            );
 
-            switch (foto.getContentType()) {
-                case "image/jpeg":
-                    extension = ".jpg";
-                    break;
-                case "image/png":
-                    extension = ".png";
-                    break;
-                case "image/webp":
-                    extension = ".webp";
-                    break;
-                default:
-                    response.sendError(400, "Formato no permitido");
-                    return;
+            String extension = formatosPermitidos.get(foto.getContentType());
+
+            if (extension == null) {
+                logger.warn("Intento de subir una fotografia con formato no permitido");
+                response.sendError(400, "Formato no permitido");
+                return;
             }
 
             String nombre = UUID.randomUUID().toString() + extension;
 
-           String carpeta = System.getProperty("user.home") + "/Documents/NetBeansProjects/lostfind-utp/web/Imagenes";
+            String carpeta = System.getProperty("user.home")
+                    + "/Documents/NetBeansProjects/lostfind-utp/web/Imagenes";
 
             Path destino = Paths.get(carpeta, nombre);
 
-            Files.createDirectories(destino.getParent());
+            try {
+                Files.createDirectories(destino.getParent());
 
-            try (var entrada = foto.getInputStream()) {
-                Files.copy(entrada, destino, StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            rutaImagen = "Imagenes/" + nombre;
-        }
-
-        System.out.println("Imagen: " + rutaImagen);
-
-        try {
-            Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
-            String categoria = (String) request.getParameter("categoria");
-            String nombreObjeto = (String) request.getParameter("nombreObjeto");
-            String color = (String) request.getParameter("color");
-            String marca = (String) request.getParameter("marca");
-            String fechaPerdidaString = ((String) request.getParameter("fechaPerdida"));
-            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date fechaPerdida = formato.parse(fechaPerdidaString);
-            String ubicacion = (String) request.getParameter("ubicacion");
-            String descripcion = (String) request.getParameter("descripcion");
-            ObjetoPerdido objetoPerdido = new ObjetoPerdido(fechaPerdida, categoria, rutaImagen, nombreObjeto, color, marca, descripcion, ubicacion, "PERDIDO");
-            String respuestaObjeto = new ObjetoDAO().crearObjeto(usuario, objetoPerdido);
-            System.out.println(respuestaObjeto);
-            List<Coincidencia> listaCoincidencia = new ArrayList<>();
-            if (respuestaObjeto != null) {
-                String respuesta = new ObjetoPerdidoDAO().crearObjetoPerdido(usuario.getIdUsuario(), objetoPerdido);
-                System.out.println(respuesta);
-                String estado = "🕒 En búsqueda";
-
-                List<ObjetoEncontrado> objetosSimilares = new ObjetosEncontradosDAO().obtenerObjetosEncontradosSimilares(objetoPerdido);
-                List<ObjetoEncontrado> objetosSimilaresMasDe80 = new ArrayList<>();
-                objetosSimilares.forEach(objeto -> {
-                    try {
-                        double coincidencia = GestionGemini.compararObjetos(objetoPerdido.getDescripcion(), objetoPerdido.getImagen(), objeto.getDescripcion(), objeto.getImagen());
-                        coincidencia = coincidencia * 100;
-                        coincidencia = Math.round(coincidencia * 100.0) / 100.0;
-                        if (coincidencia >= 75) {
-                            objetosSimilaresMasDe80.add(objeto);
-                            Coincidencia coincidencias = new Coincidencia(objetoPerdido, objeto, coincidencia);
-                            listaCoincidencia.add(coincidencias);
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                });
-
-                if (objetosSimilaresMasDe80.isEmpty()) {
-                    boolean estadoReporte = new ReporteDAO().crearReporte(usuario, objetoPerdido, estado);
-                    response.getWriter().println("<script> alert('Reporte realizado');</script>");
-                    response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "/ReportarObjeto.jsp'; </script>");
-                } else {
-                    estado = "✅ Coincidencia encontrada";
-                    boolean estadoReporte = new ReporteDAO().crearReporte(usuario, objetoPerdido, estado);
-                    request.getSession().setAttribute("listaCoincidencia", listaCoincidencia);
-                    response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "/Coincidencias.jsp?accion=coincidenciasReportes'; </script>");
+                try (var entrada = foto.getInputStream()) {
+                    Files.copy(entrada, destino, StandardCopyOption.REPLACE_EXISTING);
                 }
-                
-            }
-        } catch (ParseException e) {
 
+                rutaImagen = "Imagenes/" + nombre;
+
+                logger.info("Fotografia del reporte guardada correctamente");
+
+            } catch (IOException e) {
+                logger.error("Error al guardar la fotografia del reporte", e);
+                throw e;
+            }
         }
 
+        logger.info("Reporte con fotografia adjunta: {}", rutaImagen != null);
+
+        ObjetoPerdido objetoPerdido = new ObjetoPerdido(
+                fechaPerdida,
+                categoria,
+                rutaImagen,
+                nombreObjeto,
+                color,
+                marca,
+                descripcion,
+                ubicacion,
+                "PERDIDO"
+        );
+
+        String respuestaObjeto = new ObjetoDAO().crearObjeto(usuario, objetoPerdido);
+
+        logger.info("Resultado del registro del objeto: {}", respuestaObjeto);
+
+        List<Coincidencia> listaCoincidencia = new ArrayList<>();
+
+        if (respuestaObjeto != null) {
+
+            String respuesta = new ObjetoPerdidoDAO().crearObjetoPerdido(
+                    usuario.getIdUsuario(),
+                    objetoPerdido
+            );
+
+            logger.info("Resultado del registro de objeto perdido: {}", respuesta);
+
+            String estado = "🕒 En búsqueda";
+
+            List<ObjetoEncontrado> objetosSimilares
+                    = new ObjetosEncontradosDAO().obtenerObjetosEncontradosSimilares(objetoPerdido);
+
+            List<ObjetoEncontrado> objetosSimilaresMasDe80 = new ArrayList<>();
+
+            objetosSimilares.forEach(objeto -> {
+                try {
+                    double coincidencia = GestionGemini.compararObjetos(
+                            objetoPerdido.getDescripcion(),
+                            objetoPerdido.getImagen(),
+                            objeto.getDescripcion(),
+                            objeto.getImagen()
+                    );
+
+                    coincidencia = coincidencia * 100;
+                    coincidencia = Math.round(coincidencia * 100.0) / 100.0;
+
+                    if (coincidencia >= 75) {
+
+                        objetosSimilaresMasDe80.add(objeto);
+
+                        Coincidencia coincidencias = new Coincidencia(
+                                objetoPerdido,
+                                objeto,
+                                coincidencia
+                        );
+
+                        listaCoincidencia.add(coincidencias);
+                    }
+
+                } catch (Exception e) {
+                    logger.error("Error al calcular la coincidencia con Gemini", e);
+                }
+            });
+
+            if (objetosSimilaresMasDe80.isEmpty()) {
+
+                boolean estadoReporte = new ReporteDAO().crearReporte(
+                        usuario,
+                        objetoPerdido,
+                        estado
+                );
+
+                logger.info("Registro del reporte sin coincidencias. Resultado: {}", estadoReporte);
+
+                response.getWriter().println(
+                        "<script> alert('Reporte realizado');</script>"
+                );
+
+                response.getWriter().println(
+                        "<script>window.location.href='"
+                        + request.getContextPath()
+                        + "/ReportarObjeto.jsp'; </script>"
+                );
+
+            } else {
+
+                estado = "✅ Coincidencia encontrada";
+
+                boolean estadoReporte = new ReporteDAO().crearReporte(
+                        usuario,
+                        objetoPerdido,
+                        estado
+                );
+
+                logger.info("Registro del reporte con coincidencias. Resultado: {}", estadoReporte);
+
+                request.getSession().setAttribute("listaCoincidencia", listaCoincidencia);
+
+                response.getWriter().println(
+                        "<script>window.location.href='"
+                        + request.getContextPath()
+                        + "/Coincidencias.jsp?accion=coincidenciasReportes'; </script>"
+                );
+            }
+
+        } else {
+            logger.error("No se pudo registrar el objeto en la base de datos");
+        }
     }
 
     /**
