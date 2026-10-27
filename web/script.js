@@ -66,19 +66,6 @@ function iniciarPerfilYReporte() {
                     <p><b>Sede:</b> ${sede}</p>
                     <p><b>Tipo:</b> ${usuario.rol} UTP</p>
                 </div>
-
-                <h3 class="subtituloModal">Mi actividad</h3>
-
-                <div class="actividadPerfil">
-                    <div class="cuadroTarjetas">📝 Mis reportes: —</div>
-                    <div class="cuadroTarjetas">🔎 Coincidencias: —</div>
-                    <div class="cuadroTarjetas">💬 Mis reclamos: —</div>
-                    <div class="cuadroTarjetas">📦 Recuperados: —</div>
-                </div>
-
-                <button type="button" class="btn" id="editarPerfil">
-                    ⚙️ Editar perfil
-                </button>
             `;
             } else {
                 tituloModal.textContent = "Configuración";
@@ -257,6 +244,7 @@ function botonVerCoincidencias(boton) {
 
 async function mostrarCoincidenciasDesdeObjetosPerdidos() {
     let idObjetoPerdido = sessionStorage.getItem("idObjetoPerdido");
+    console.log("ID del ojeto Perdido: "+idObjetoPerdido);
     const datos = new URLSearchParams();
     datos.append("idObjetoPerdido", idObjetoPerdido);
     const respuesta = await fetch("CoincidenciaDesdeObjetosPerdidosServlet", {

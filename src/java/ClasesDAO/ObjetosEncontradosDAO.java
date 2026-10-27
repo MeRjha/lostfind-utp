@@ -112,12 +112,12 @@ public class ObjetosEncontradosDAO {
             List<ObjetoEncontrado> objetosEncontrados = new ArrayList<>();
             PreparedStatement ps;
             ResultSet res;
-            ps = con.prepareStatement("select o.idObjeto, o.imagen,o.categoria, o.nombre, o.color, o.marca, o.descripcion, o.lugarReferencia, o.fechaRegistro, o.estado,oe.fechaHallazgo from objeto as o inner join objeto_encontrado as oe on o.idObjeto=oe.idObjeto where o.categoria=? and o.nombre=?;");
+            ps = con.prepareStatement("select oe.idObjetoEncontrado, o.imagen,o.categoria, o.nombre, o.color, o.marca, o.descripcion, o.lugarReferencia, o.fechaRegistro, o.estado,oe.fechaHallazgo from objeto as o inner join objeto_encontrado as oe on o.idObjeto=oe.idObjeto where o.categoria=? and o.nombre=?;");
             ps.setString(1, objetoPerdido.getCategoria());
             ps.setString(2, objetoPerdido.getNombre());
             res = ps.executeQuery();
             while (res.next()) {
-                int idObjeto = res.getInt("o.idObjeto");
+                int idObjeto = res.getInt("oe.idObjetoEncontrado");
                 String imagen = res.getString("o.imagen");
                 String categoria = res.getString("o.categoria");
                 String nombre = res.getString("o.nombre");

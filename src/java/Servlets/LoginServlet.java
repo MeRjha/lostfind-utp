@@ -14,13 +14,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author Axel
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
+
+    private static final Logger logger =
+        LoggerFactory.getLogger(LoginServlet.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -71,30 +75,44 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String correo = (String) request.getParameter("correo");
-        String contraseña = (String) request.getParameter("contraseña");
-        if (correo != null && contraseña != null) {
-            System.out.println("entro");
-            Usuario usuario = new GestionAutenticacion().autenticar(correo, contraseña);
-            response.setContentType("text/html;charset=UTF-8");
-            if (usuario != null) {
-                request.changeSessionId();
-                Gson gson = new Gson();
+    
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-                request.getSession().setAttribute("usuario", usuario);
-                request.getSession().setAttribute("usuarioJson", gson.toJson(usuario));
-                response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
-            } else {
-                response.getWriter().println("<script> alert('Correo y/o contraseña equivocadas');</script>");
+    String correo = (String) request.getParameter("correo");
+    String contraseña = (String) request.getParameter("contraseña");
 
-                response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "'; </script>");
-            }
+    if (correo != null && contraseña != null) {
+
+        Usuario usuario = new GestionAutenticacion().autenticar(correo, contraseña);
+        response.setContentType("text/html;charset=UTF-8");
+
+        if (usuario != null) {
+
+            request.changeSessionId();
+            Gson gson = new Gson();
+
+            request.getSession().setAttribute("usuario", usuario);
+            request.getSession().setAttribute("usuarioJson", gson.toJson(usuario));
+
+            logger.info("Inicio de sesion exitoso");
+
+            response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
+
+        } else {
+
+            logger.warn("Intento de inicio de sesion fallido");
+
+            response.getWriter().println("<script> alert('Correo y/o contraseña equivocadas');</script>");
+            response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "'; </script>");
         }
 
+    } else {
+        logger.warn("Intento de inicio de sesion con campos incompletos");
     }
+}
+
 
     /**
      * Returns a short description of the servlet.

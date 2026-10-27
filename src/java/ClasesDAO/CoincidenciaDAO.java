@@ -54,7 +54,7 @@ public class CoincidenciaDAO {
             List<Coincidencia> coincidencias = new ArrayList<>();
             PreparedStatement ps;
             ResultSet res;
-            ps = con.prepareStatement("SELECT oe.idObjetoEncontrado, o.imagen, o.categoria, o.nombre, o.color, o.marca, o.descripcion, o.lugarReferencia, o.fechaRegistro, o.estado, oe.fechaHallazgo, c.porcentajeSimilitud,c.fechaGeneracion FROM objeto_perdido AS op INNER JOIN coincidencia AS c ON c.idObjetoPerdido = op.idObjetoPerdido INNER JOIN objeto_encontrado AS oe ON oe.idObjetoEncontrado = c.idObjetoEncontrado INNER JOIN objeto AS o ON o.idObjeto = oe.idObjeto WHERE op.idObjetoPerdido = ? ORDER BY o.fechaRegistro DESC;");
+            ps = con.prepareStatement("SELECT oe.idObjetoEncontrado, o.imagen, o.categoria, o.nombre, o.color, o.marca, o.descripcion, o.lugarReferencia, o.fechaRegistro, o.estado, oe.fechaHallazgo, c.porcentajeSimilitud,c.fechaGeneracion FROM objeto_perdido AS op INNER JOIN coincidencia AS c ON c.idObjetoPerdido = op.idObjetoPerdido INNER JOIN objeto_encontrado AS oe ON oe.idObjetoEncontrado = c.idObjetoEncontrado INNER JOIN objeto AS o ON o.idObjeto = oe.idObjeto WHERE op.idObjetoPerdido = ? ORDER BY c.porcentajeSimilitud DESC;");
             ps.setInt(1, objetoPerdido.getIdObjeto());
             res = ps.executeQuery();
             while (res.next()) {

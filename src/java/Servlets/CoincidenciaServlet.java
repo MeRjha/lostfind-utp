@@ -78,6 +78,7 @@ public class CoincidenciaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Coincidencia> listaCoincidencia = (List<Coincidencia>) request.getSession().getAttribute("listaCoincidencia");
+        
         System.out.println("Cantidad de coincidencias: " + listaCoincidencia.size());
         listaCoincidencia.forEach(coincidencia -> {
             String resultado = new CoincidenciaDAO().crearCoincidencia(coincidencia);
