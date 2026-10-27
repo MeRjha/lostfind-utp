@@ -28,23 +28,36 @@
 
                 <nav class="nav">
                     <ul class="nav-list">
-                        <li><a href="Estudiante.jsp">Inicio</a></li>
+                        <li><a href="Estudiante.jsp" class="activo">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
                         <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
                         <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
                     </ul>
                 </nav>
 
+                <%
+                    Usuario usuario = (Usuario) session.getAttribute("usuario");
+                    String perfil = "Imagenes/fotoUsuario.jpg";
+                    String nombre = "???";
+                    String rol = "???";
+                    if (usuario != null) {
+                        perfil = usuario.getFotoPerfil();
+                        nombre = usuario.getNombre();
+                        rol = usuario.getRol();
+                    }
+
+                %>
                 <div class="contenedorUsuario">
+                    <div class="campanita" id="botonNotificaciones"> 
+                        <button type="button">🔔</button>
+                    </div>
+                    <div class="nombreRol" id="nombreUsuario">
+                        <span>Hola, <b><%=nombre%></b></span>
+                        <p><%=rol%> UTP</p>
+                    </div>
                     <button class="botonUsuario" id="botonUsuario" type="button"
                             aria-label="Menú del usuario" aria-expanded="false">
-                        <%
-                            Usuario usuario = (Usuario) session.getAttribute("usuario");
-                            String perfil = "Imagenes/fotoUsuario.jpg";
-                            if (usuario != null) {
-                                perfil = usuario.getFotoPerfil();
-                            }
-                        %>
+
                         <img class="fotoUsuario"
                              src="<%=perfil%>"
                              alt="Foto del usuario">
@@ -56,8 +69,11 @@
                         <hr>
                         <button type="button" id="cerrarSesion">🚪 Cerrar sesión</button>
                     </div>
-                </div>
 
+                    <div class="menuNotificaciones" id="menuNotificaciones" hidden>
+                        Proximamente
+                    </div>
+                </div>
             </div>
         </header>
 

@@ -92,6 +92,7 @@ function iniciarPerfilYReporte() {
         botonUsuario.addEventListener("click", function () {
             menuUsuario.hidden = !menuUsuario.hidden;
             botonUsuario.setAttribute("aria-expanded", String(!menuUsuario.hidden));
+            menuNotificaciones.hidden = true;
         });
 
         document.getElementById("verPerfil").addEventListener("click", function () {
@@ -691,7 +692,7 @@ function iniciarReclamo() {
     if (formReclamo) {
         formReclamo.addEventListener("submit", function (event) {
             event.preventDefault();
-            
+
         });
     }
 
@@ -1385,3 +1386,10 @@ function botonSegunEstado(estado, idObjeto) {
                             </button>`;
     }
 }
+const botonNotificaciones = document.getElementById("botonNotificaciones");
+const menuNotificaciones = document.getElementById("menuNotificaciones");
+const menuUsuario = document.getElementById("menuUsuario");
+botonNotificaciones.addEventListener("click", function () {
+    menuNotificaciones.hidden = !menuNotificaciones.hidden;
+    menuUsuario.hidden = true;
+});
