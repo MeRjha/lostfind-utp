@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>LostFind - Detalle de coincidencia</title>
         <link rel="stylesheet" href="estilos.css?v=5">
+        <link rel="stylesheet" href="efectos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
 
@@ -70,7 +71,7 @@
                     </div>
 
                     <div class="menuNotificaciones" id="menuNotificaciones" hidden>
-                        Proximamente
+                        Cargando…
                     </div>
                 </div>
             </div>
@@ -311,6 +312,7 @@
         </dialog>
 
         <script src="script.js"></script>
+          <script src="notificaciones.js" defer></script>
         <script>verCoincidenciaIndividual();</script>
     </body>
 </html>

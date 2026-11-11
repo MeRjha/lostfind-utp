@@ -1,0 +1,17 @@
+
+
+.notiGlobo { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px;
+             display: grid; place-items: center; border-radius: 999px; background: #d64545; color: #fff;
+             font-size: 0.72rem; font-weight: 700; border: 2px solid var(--tarjetas); pointer-events: none; }
+.notiGlobo[hidden] { display: none; }
+
+.notiTitulo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.notiTitulo h3 { font-size: 1rem; }
+.notiTitulo small { opacity: 0.7; }
+
+.notiLista { display: flex; flex-direction: column; gap: 8px; }
+.notiItem { padding: 10px 12px; border-radius: 0.7rem; background: var(--input); border: 1px solid var(--borde);
+            font-size: 0.9rem; line-height: 1.35; }
+.notiItem span { display: block; margin-top: 4px; font-size: 0.78rem; opacity: 0.7; }
+.notiItem.noLeida { border-left: 4px solid var(--botones); font-weight: 600; }
+.notiVacio { padding: 24px 10px; text-align: center; opacity: 0.7; font-size: 0.9rem; }
