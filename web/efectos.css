@@ -1,0 +1,109 @@
+/* Efectos y transiciones de LostFind. Se carga DESPUÉS de estilos.css y no cambia colores ni tamaños:
+   solo agrega movimiento y detalles. Para quitarlo basta con borrar el <link> de efectos.css. */
+
+@keyframes fxAparecer { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fxDesplegar { from { opacity: 0; transform: translateY(-8px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes fxModal { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes fxFondo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fxFlotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes fxCampana { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-12deg); } 60% { transform: rotate(8deg); } 80% { transform: rotate(-5deg); } }
+@keyframes fxPulso { 0%, 100% { box-shadow: 0 0 0 0 #d6454566; } 50% { box-shadow: 0 0 0 7px #d6454500; } }
+
+::selection { background: var(--primary); color: var(--text); }
+
+/* Entrada de la página */
+main { animation: fxAparecer 0.5s ease both; }
+
+/* Encabezado */
+.header { box-shadow: 0 3px 14px #0e2e5d33; }
+.nav-list a { position: relative; }
+.nav-list a:not(.activo)::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+                                  background: var(--soft); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+.nav-list a:not(.activo):hover::after { transform: scaleX(1); }
+.logo { transition: transform 0.3s ease; }
+.logoContenedor:hover .logo { transform: scale(1.04); }
+
+/* Menús desplegables y ventanas */
+.menuUsuario:not([hidden]), .menuNotificaciones:not([hidden]) { animation: fxDesplegar 0.2s ease both; }
+.modalUsuario[open] { animation: fxModal 0.28s ease both; }
+.modalUsuario[open]::backdrop { animation: fxFondo 0.28s ease both; }
+.menuUsuario button { transition: background 0.2s ease, padding-left 0.2s ease; }
+.menuUsuario button:hover { padding-left: 16px; }
+
+/* Campanita */
+.campanita button { transition: background 0.2s ease, transform 0.2s ease; }
+.campanita button:hover { background: var(--soft); transform: scale(1.06); }
+.campanita button:hover { animation: fxCampana 0.6s ease; }
+.notiGlobo { animation: fxPulso 2s ease-in-out infinite; }
+.fotoUsuario { transition: box-shadow 0.25s ease; }
+.botonUsuario:hover .fotoUsuario { box-shadow: 0 0 0 3px var(--soft); }
+.botonUsuario { transition: transform 0.2s ease; }
+
+/* Tarjetas pequeñas: entran escalonadas y se elevan al pasar el mouse */
+.contenedorGrid > *, .contenedorObjetos > *, .listaObjetosEncontrados > *, .gridCoincidencias > *,
+.listaReportes > *, .contenedorCirculos > *, .comparacionObjetos > *, .saeGrid4 > *, .saeLista > *,
+#indicadores > * { animation: fxAparecer 0.5s ease both; }
+.contenedorGrid > :nth-child(2), .contenedorObjetos > :nth-child(2), .listaObjetosEncontrados > :nth-child(2),
+.gridCoincidencias > :nth-child(2), .listaReportes > :nth-child(2), .contenedorCirculos > :nth-child(2),
+.saeGrid4 > :nth-child(2), .saeLista > :nth-child(2), #indicadores > :nth-child(2) { animation-delay: 0.06s; }
+.contenedorGrid > :nth-child(3), .contenedorObjetos > :nth-child(3), .listaObjetosEncontrados > :nth-child(3),
+.gridCoincidencias > :nth-child(3), .listaReportes > :nth-child(3), .contenedorCirculos > :nth-child(3),
+.saeGrid4 > :nth-child(3), .saeLista > :nth-child(3), #indicadores > :nth-child(3) { animation-delay: 0.12s; }
+.contenedorObjetos > :nth-child(n+4), .listaObjetosEncontrados > :nth-child(n+4), .gridCoincidencias > :nth-child(n+4),
+.listaReportes > :nth-child(n+4), .contenedorCirculos > :nth-child(n+4), .saeGrid4 > :nth-child(n+4),
+.saeLista > :nth-child(n+4), #indicadores > :nth-child(n+4) { animation-delay: 0.18s; }
+
+.contenedorGrid > .cuadroTarjetas, .tarjetaObjeto, .tarjetaObjetoEncontrado, .tarjetaCoincidenciaObjeto,
+.reportePerdido, .saeStat, .tarjetaReporteCoincidencia, .fichaObjeto {
+    transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.contenedorGrid > .cuadroTarjetas:hover, .tarjetaObjeto:hover, .tarjetaObjetoEncontrado:hover,
+.tarjetaCoincidenciaObjeto:hover, .reportePerdido:hover, .saeStat:hover {
+    transform: translateY(-4px); box-shadow: 0 10px 24px #0e2e5d26; }
+
+.circulo, .circuloTarjeta, .saeStatIcono, .iconoTituloObjetos, .iconoTituloPerdidos, .iconoTituloCoincidencias, .saeIcono {
+    transition: transform 0.3s ease; }
+.text:hover .circulo, .cuadroTarjetas:hover .circuloTarjeta, .saeStat:hover .saeStatIcono { transform: scale(1.1) rotate(-4deg); }
+.textImg > img, .imagenAvion { animation: fxFlotar 6s ease-in-out infinite; }
+
+/* Imágenes de objetos */
+.fotoObjeto, .imagenListaObjeto img, .imagenCoincidenciaObjeto, .imagenReportePerdido img { transition: transform 0.35s ease; }
+.tarjetaObjetoEncontrado:hover .imagenListaObjeto img, .reportePerdido:hover .imagenReportePerdido img,
+.tarjetaCoincidenciaObjeto:hover .imagenCoincidenciaObjeto { transform: scale(1.06); }
+
+/* Botones y enlaces */
+.btn, .enlaceDetalle, .verObjetos, .botonVolver, .botonEnviarReporte, .botonLimpiarReporte, .botonLimpiarObjetos,
+.botonCancelar, .botonCancelarReporte, .botonVerCoincidencia, .botonCoincidencia, .saeBtn, .opcionesPerdidos a,
+.paginacionObjetos button {
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+.btn:hover, .botonEnviarReporte:hover, .saeBtn:hover { box-shadow: 0 6px 16px #0b8fea40; }
+.enlaceDetalle:hover, .verObjetos:hover, .botonVolver:hover { transform: translateY(-2px); }
+.btn:active, .enlaceDetalle:active, .botonEnviarReporte:active, .botonLimpiarReporte:active, .saeBtn:active,
+.botonVolver:active { transform: scale(0.97); box-shadow: none; }
+
+/* Formularios */
+input, select, textarea { transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
+input:focus, select:focus, textarea:focus { border-color: var(--botones); box-shadow: 0 0 0 4px #0b8fea26; }
+.zonaFoto, .zonaEvidencia { transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
+.zonaFoto:hover, .zonaEvidencia:hover { border-color: var(--botones); transform: translateY(-2px); }
+.interruptor { transition: background 0.2s ease; }
+
+/* Detalles desplegables y paginación */
+.detalleReportePerdido[open] .informacionDetalle { animation: fxDesplegar 0.2s ease both; }
+.paginacionObjetos button:hover:not(:disabled) { transform: translateY(-2px); }
+
+/* Pantalla de inicio */
+.cuadroIngreso { animation: fxAparecer 0.6s 0.1s ease both; box-shadow: 0 12px 34px #0e2e5d1f; }
+.hero-text { animation: fxAparecer 0.6s ease both; }
+
+/* Pie de página */
+.footer a { transition: color 0.2s ease; }
+.footer a:hover { color: var(--primary); }
+
+/* Barras de desplazamiento discretas */
+.menuNotificaciones, .modalUsuario { scrollbar-width: thin; scrollbar-color: var(--cuadro) transparent; }
+
+/* Si el equipo del usuario pide menos movimiento, se desactiva todo */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+                             animation-delay: 0s !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
