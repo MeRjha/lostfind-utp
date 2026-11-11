@@ -37,7 +37,7 @@ public class ConexionBD {
             // Si la conexión nunca se creó, o si algún proceso ya la cerró, abrimos una nueva
             if (conexion == null || conexion.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bd_LostFind", "root", "root");
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bd_LostFind", "root", "123mydata");
                 System.out.println("🔌 [ConexionBD] ¡Nueva conexión física establecida con éxito!");
             }
         } catch (Exception e) {

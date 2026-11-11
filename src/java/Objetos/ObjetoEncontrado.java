@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author Axel
  */
-public class ObjetoEncontrado extends Objeto {
+    public class ObjetoEncontrado extends Objeto {
 
     private Date fechaHallazgo;
 
