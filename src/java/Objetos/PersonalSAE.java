@@ -14,4 +14,12 @@ public class PersonalSAE extends Usuario{
         super(idUsuario, sede, nombre, apellido, correoInstitucional, contraseña, fotoPerfil, rol, activo);
     }
 
+    
+    
+    
+    
+    
+    
+
+    
 }
