@@ -44,12 +44,13 @@ public class GestionGemini {
         return compararObjetos(texto1, "", texto2, "");
     }
 
+    //CompararObjetoPerdidoConEncontrado (Estudiante)
     public static double compararObjetos(
             String descripcionPerdido, String imagenPerdido,
             String descripcionEncontrado, String imagenEncontrado) throws Exception {
 
-        Path fotoPerdida = buscarImagen(imagenPerdido);
-        Path fotoEncontrada = buscarImagen(imagenEncontrado);
+        Path fotoPerdida = buscarImagen(imagenPerdido, CARPETA_IMAGENES);
+        Path fotoEncontrada = buscarImagen(imagenEncontrado, CARPETA_IMAGENES);
         boolean soloTexto = fotoPerdida == null && fotoEncontrada == null;
 
         logger.debug("Iniciando comparacion de objetos. Solo texto: {}", soloTexto);
@@ -100,8 +101,54 @@ public class GestionGemini {
         return generarEmbedding(descripcion, null, true);
     }
 
-    private static Path buscarImagen(String rutaGuardada) throws Exception {
+    //CompararObjetoEncontradoConPerdido (SAE)
+    public static double compararObjetos(
+            String descripcionPerdido, String imagenPerdido,
+            String descripcionEncontrado, String imagenEncontrado,
+            Path carpetaImagenes) throws Exception {
 
+        Path fotoPerdida = buscarImagen(imagenPerdido, carpetaImagenes);
+        Path fotoEncontrada = buscarImagen(imagenEncontrado, carpetaImagenes);
+
+        boolean soloTexto = fotoPerdida == null && fotoEncontrada == null;
+
+        if ((descripcionPerdido == null || descripcionPerdido.isBlank())
+                && fotoPerdida == null) {
+            return 0;
+        }
+
+        if ((descripcionEncontrado == null || descripcionEncontrado.isBlank())
+                && fotoEncontrada == null) {
+            return 0;
+        }
+
+        double[] a = generarEmbedding(descripcionPerdido, fotoPerdida, soloTexto);
+        double[] b = generarEmbedding(descripcionEncontrado, fotoEncontrada, soloTexto);
+
+        if (a.length != b.length) {
+            throw new IllegalStateException("Los embeddings tienen dimensiones diferentes");
+        }
+
+        double producto = 0;
+        double magnitudA = 0;
+        double magnitudB = 0;
+
+        for (int i = 0; i < a.length; i++) {
+            producto += a[i] * b[i];
+            magnitudA += a[i] * a[i];
+            magnitudB += b[i] * b[i];
+        }
+
+        if (magnitudA == 0 || magnitudB == 0) {
+            return 0;
+        }
+
+        double coseno = producto / (Math.sqrt(magnitudA) * Math.sqrt(magnitudB));
+
+        return Math.max(0, Math.min(1, coseno));
+    }
+    
+    private static Path buscarImagen(String rutaGuardada, Path carpetaImagenes) throws Exception{
         if (rutaGuardada == null || rutaGuardada.isBlank()) {
             return null;
         }
@@ -122,9 +169,11 @@ public class GestionGemini {
             throw new IllegalArgumentException("Ruta de imagen no permitida: " + rutaGuardada);
         }
 
-        Path archivo = CARPETA_IMAGENES.resolve(archivoRelativo).normalize();
+        //Path archivo = CARPETA_IMAGENES.resolve(archivoRelativo).normalize();
+        Path carpetaBase = carpetaImagenes.toAbsolutePath().normalize();
+        Path archivo = carpetaBase.resolve(archivoRelativo).normalize();
 
-        if (!archivo.startsWith(CARPETA_IMAGENES)) {
+        if (!archivo.startsWith(carpetaBase)) {
             logger.warn("La ruta de imagen esta fuera de la carpeta permitida");
             throw new IllegalArgumentException("Ruta de imagen no permitida");
         }
@@ -242,4 +291,3 @@ public class GestionGemini {
     }
 
 }
-

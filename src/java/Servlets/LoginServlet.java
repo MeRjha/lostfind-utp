@@ -89,17 +89,31 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         response.setContentType("text/html;charset=UTF-8");
 
         if (usuario != null) {
+            
+            jakarta.servlet.http.HttpSession sesion = request.getSession(true);
 
             request.changeSessionId();
             Gson gson = new Gson();
 
-            request.getSession().setAttribute("usuario", usuario);
-            request.getSession().setAttribute("usuarioJson", gson.toJson(usuario));
+            sesion.setAttribute("usuario", usuario);
+            sesion.setAttribute("usuarioJson", gson.toJson(usuario));
+            
+            //request.getSession().setAttribute("usuario", usuario);
+            //request.getSession().setAttribute("usuarioJson", gson.toJson(usuario));
 
             logger.info("Inicio de sesion exitoso");
 
-            response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
-
+            //response.getWriter().println("<script> window.location.href='" + request.getContextPath() + "/Estudiante.jsp'; </script>");
+            String rol = usuario.getRol();
+            
+            if ("PersonalSae".equalsIgnoreCase(rol)) {
+                response.sendRedirect(request.getContextPath() + "/Sae.jsp");
+            }else if ("Estudiante".equalsIgnoreCase(rol) || "Docente".equalsIgnoreCase(rol)) {
+                response.sendRedirect(request.getContextPath() + "/Estudiante.jsp");
+            }else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "No tienes permisos para acceder.");
+            }
         } else {
 
             logger.warn("Intento de inicio de sesion fallido");
@@ -112,7 +126,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         logger.warn("Intento de inicio de sesion con campos incompletos");
     }
 }
-
 
     /**
      * Returns a short description of the servlet.
