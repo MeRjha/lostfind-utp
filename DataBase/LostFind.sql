@@ -271,6 +271,7 @@ CREATE TABLE `solicitud_reclamo` (
   `fechaSolicitud` date NOT NULL,
   `sustentoPropiedad` varchar(255) NOT NULL,
   `estado` varchar(30) NOT NULL,
+  `motivoRechazo` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`idSolicitud`),
   KEY `idObjetoEncontrado` (`idObjetoEncontrado`),
   KEY `idUsuario` (`idUsuario`),
@@ -287,7 +288,7 @@ CREATE TABLE `solicitud_reclamo` (
 
 LOCK TABLES `solicitud_reclamo` WRITE;
 /*!40000 ALTER TABLE `solicitud_reclamo` DISABLE KEYS */;
-INSERT INTO `solicitud_reclamo` VALUES (1,1,1,NULL,'2026-10-22','El celular tiene una funda negra','PENDIENTE');
+INSERT INTO `solicitud_reclamo` VALUES (1,1,1,NULL,'2026-10-22','El celular tiene una funda negra','PENDIENTE', NULL);
 /*!40000 ALTER TABLE `solicitud_reclamo` ENABLE KEYS */;
 UNLOCK TABLES;
 

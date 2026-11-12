@@ -110,4 +110,98 @@ public class ObjetoPerdidoDAO {
         }
         return null;
     }
+    
+    public List<ObjetoPerdido> obtenerReportesPendientesParaCoincidencia() {
+
+        List<ObjetoPerdido> objetosPerdidos = new ArrayList<>();
+
+        String sql = "SELECT "
+                + "op.idObjetoPerdido, "
+                + "op.idUsuario, "
+                + "op.fechaPerdida, "
+                + "o.idObjeto, "
+                + "o.imagen, "
+                + "o.categoria, "
+                + "o.nombre, "
+                + "o.color, "
+                + "o.marca, "
+                + "o.descripcion, "
+                + "o.lugarReferencia, "
+                + "o.fechaRegistro, "
+                + "o.estado "
+                + "FROM objeto_perdido op "
+                + "INNER JOIN reporte_objeto_perdido rp "
+                + "ON op.idObjetoPerdido = rp.idObjetoPerdido "
+                + "INNER JOIN objeto o "
+                + "ON op.idObjeto = o.idObjeto "
+                + "WHERE rp.estado = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "🕒 En búsqueda");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Date fechaPerdida = rs.getDate("fechaPerdida");
+
+                    ObjetoPerdido objeto = new ObjetoPerdido(
+                            fechaPerdida,
+                            rs.getString("categoria"),
+                            rs.getString("imagen"),
+                            rs.getString("nombre"),
+                            rs.getString("color"),
+                            rs.getString("marca"),
+                            rs.getString("descripcion"),
+                            rs.getString("lugarReferencia"),
+                            rs.getString("estado")
+                    );
+
+                    objeto.setIdObjetoPerdido(
+                            rs.getInt("idObjetoPerdido")
+                    );
+
+                    objeto.setIdUsuario(
+                            rs.getInt("idUsuario")
+                    );
+
+                    objeto.setIdObjeto(
+                            rs.getInt("idObjeto")
+                    );
+
+                    objeto.setFechaRegistro(
+                            rs.getDate("fechaRegistro")
+                    );
+
+                    objetosPerdidos.add(objeto);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtener reportes pendientes: " + e.getMessage());
+        }
+        return objetosPerdidos;
+    }
+    
+    public boolean actualizarEstadoReporteCoincidencia(int idObjetoPerdido) {
+
+        String sql = "UPDATE reporte_objeto_perdido "
+                + "SET estado = ? "
+                + "WHERE idObjetoPerdido = ? AND estado = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "✅ Coincidencia encontrada");
+            ps.setInt(2, idObjetoPerdido);
+            ps.setString(3, "🕒 En búsqueda");
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar estado del reporte: "
+                    + e.getMessage());
+            return false;
+        }
+    }
 }

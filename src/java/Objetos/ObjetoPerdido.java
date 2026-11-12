@@ -13,6 +13,8 @@ import java.util.Date;
 public class ObjetoPerdido extends Objeto {
 
     private Date fechaPerdida;
+    private int idObjetoPerdido;
+    private int idUsuario;
 
     public ObjetoPerdido(Date fechaPerdida, String categoria, String imagen, String nombre, String color, String marca, String descripcion, String lugarReferencia, String estado) {
         super(categoria, imagen, nombre, color, marca, descripcion, lugarReferencia, estado);
@@ -27,6 +29,20 @@ public class ObjetoPerdido extends Objeto {
         this.fechaPerdida = fechaPerdida;
     }
 
-    
+    public int getIdObjetoPerdido() {
+    return idObjetoPerdido;
+    }
+
+    public void setIdObjetoPerdido(int idObjetoPerdido) {
+        this.idObjetoPerdido = idObjetoPerdido;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 
 }
