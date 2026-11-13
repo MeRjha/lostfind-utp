@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package Servlets;
 
 import ClasesDAO.SolicitudReclamoDAO;
@@ -17,10 +14,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-/**
- *
- * @author Ariana
- */
+import java.util.UUID;
+
+
 @WebServlet(name = "GestionSolicitudesServlet", urlPatterns = {"/GestionSolicitudesServlet"})
 public class GestionSolicitudesServlet extends HttpServlet {
 
@@ -57,7 +53,14 @@ public class GestionSolicitudesServlet extends HttpServlet {
                     "No tienes permisos para acceder a esta sección.");
             return;
         }
-
+        HttpSession sesion = request.getSession();
+        String tokenCsrf =
+                (String) sesion.getAttribute("csrfTokenSAE");
+        if (tokenCsrf == null) {
+            tokenCsrf = UUID.randomUUID().toString();
+            sesion.setAttribute("csrfTokenSAE", tokenCsrf);
+        }
+        request.setAttribute("csrfTokenSAE", tokenCsrf);
         String estado = request.getParameter("estado");
         String categoria = request.getParameter("categoria");
         String fechaTexto = request.getParameter("fecha");
@@ -92,17 +95,19 @@ public class GestionSolicitudesServlet extends HttpServlet {
                 SolicitudReclamo seleccionada =
                         solicitudDAO.obtenerSolicitudPorId(idSolicitud);
 
-                if (seleccionada != null) {
-
-                    List<EvidenciaReclamo> evidencias =
-                            solicitudDAO.listarEvidenciasPorSolicitud(
-                                    idSolicitud);
-
-                    request.setAttribute("solicitudSeleccionada",
-                            seleccionada);
-
-                    request.setAttribute("evidencias", evidencias);
+                if (seleccionada == null) {
+                    response.sendError(
+                        HttpServletResponse.SC_NOT_FOUND,
+                        "No se encontró la solicitud de reclamo."
+                    );
+                    return;
                 }
+
+                List<EvidenciaReclamo> evidencias =
+                        solicitudDAO.listarEvidenciasPorSolicitud(idSolicitud);
+
+                request.setAttribute("solicitudSeleccionada", seleccionada);
+                request.setAttribute("evidencias", evidencias);
 
             } catch (NumberFormatException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST,
@@ -110,9 +115,14 @@ public class GestionSolicitudesServlet extends HttpServlet {
                 return;
             }
         }
+            if (request.getAttribute("solicitudSeleccionada") != null) {
 
-        request.getRequestDispatcher("/Sae.jsp")
-                .forward(request, response);
+                request.getRequestDispatcher("/DetalleReclamo.jsp")
+                        .forward(request, response);
+            } else {
+                request.getRequestDispatcher("/GestionReclamos.jsp")
+                        .forward(request, response);
+            }
     }
 
     @Override
@@ -127,48 +137,57 @@ public class GestionSolicitudesServlet extends HttpServlet {
                     "No tienes permisos para realizar esta acción.");
             return;
         }
+        HttpSession sesion = request.getSession(false);
 
+        String tokenSesion = sesion == null
+                ? null
+                : (String) sesion.getAttribute("csrfTokenSAE");
+
+        String tokenRecibido = request.getParameter("csrfToken");
+
+        if (tokenSesion == null
+                || tokenRecibido == null
+                || !java.security.MessageDigest.isEqual(
+                        tokenSesion.getBytes(
+                                java.nio.charset.StandardCharsets.UTF_8),
+                        tokenRecibido.getBytes(
+                                java.nio.charset.StandardCharsets.UTF_8))) {
+
+            response.sendError(
+                    HttpServletResponse.SC_FORBIDDEN,
+                    "Solicitud no autorizada: token CSRF inválido."
+            );
+            return;
+        }
         String accion = request.getParameter("accion");
         String idTexto = request.getParameter("idSolicitud");
-
         try {
-
             int idSolicitud = Integer.parseInt(idTexto);
-
             SolicitudReclamo solicitud =
                     solicitudDAO.obtenerSolicitudPorId(idSolicitud);
-
             if (solicitud == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND,
                         "No se encontró la solicitud.");
                 return;
             }
-
             if (!"PENDIENTE".equalsIgnoreCase(solicitud.getEstado())) {
                 response.sendError(HttpServletResponse.SC_CONFLICT,
                         "Esta solicitud ya fue resuelta.");
                 return;
             }
-
             String nuevoEstado;
-
             if ("aprobar".equalsIgnoreCase(accion)) {
                 nuevoEstado = "APROBADO";
-
             } else if ("rechazar".equalsIgnoreCase(accion)) {
                 nuevoEstado = "RECHAZADO";
-
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST,
                         "Acción no válida.");
                 return;
             }
-
             String motivoRechazo = null;
-
             if ("RECHAZADO".equals(nuevoEstado)) {
                 motivoRechazo = request.getParameter("motivoRechazo");
-
                 if (motivoRechazo == null || motivoRechazo.trim().isEmpty()) {
                     response.sendError(
                             HttpServletResponse.SC_BAD_REQUEST,
@@ -176,7 +195,6 @@ public class GestionSolicitudesServlet extends HttpServlet {
                     );
                     return;
                 }
-
                 motivoRechazo = motivoRechazo.trim();
 
                 if (motivoRechazo.length() > 500) {
