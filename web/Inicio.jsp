@@ -186,5 +186,6 @@
         </dialog>
 
         <script src="script.js" defer></script>
+        <script src="iconos.js" defer></script>
     </body>
 </html>

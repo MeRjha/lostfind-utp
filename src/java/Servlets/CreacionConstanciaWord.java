@@ -19,7 +19,7 @@ import jakarta.servlet.http.Part;
 import org.apache.poi.xwpf.usermodel.*;
 import java.io.InputStream;
 import org.apache.poi.util.Units;
-
+import ClasesDAO.SolicitudReclamoDAO;
 /**
  *
  * @author Axel
@@ -118,6 +118,57 @@ public class CreacionConstanciaWord extends HttpServlet {
                 );
             }
         }
+        
+                if ("PersonalSae".equalsIgnoreCase(usuario.getRol())) {
+            response.sendError(403, "El personal SAE no puede enviar reclamos");
+            return;
+        }
+
+        // Se lee la evidencia una sola vez (la usan la BD y el Word)
+        byte[] bytesEvidencia = null;
+        String urlEvidencia = null;
+        java.io.File archivoEvidencia = null;
+        if (evidencia != null && evidencia.getSize() > 0) {
+            String tipoEv = evidencia.getContentType();
+            String ext = "image/jpeg".equals(tipoEv) ? ".jpg" : "image/png".equals(tipoEv) ? ".png"
+                    : "application/pdf".equals(tipoEv) ? ".pdf" : null;
+            if (ext == null || evidencia.getSize() > 10L * 1024 * 1024) {
+                response.sendError(400, "Evidencia no valida (JPG, PNG o PDF de hasta 10 MB)");
+                return;
+            }
+            try (InputStream in = evidencia.getInputStream()) {
+                bytesEvidencia = in.readAllBytes();
+            }
+            java.io.File carpeta = new java.io.File(getServletContext().getRealPath("/evidencias"));
+            if (!carpeta.exists()) carpeta.mkdirs();
+            String nombreArchivo = java.util.UUID.randomUUID() + ext;
+            archivoEvidencia = new java.io.File(carpeta, nombreArchivo);
+            java.nio.file.Files.write(archivoEvidencia.toPath(), bytesEvidencia);
+            urlEvidencia = "evidencias/" + nombreArchivo;
+        }
+
+        String sustentoCompleto = sustento.trim();
+        if (detalleAdicional != null && !detalleAdicional.isBlank()) {
+            sustentoCompleto += "\n\nDetalle adicional: " + detalleAdicional.trim();
+        }
+        int idSolicitud = new SolicitudReclamoDAO().crearSolicitud(
+                usuario.getIdUsuario(), objetoEncontrado.getIdObjeto(), sustentoCompleto, urlEvidencia);
+
+        if (idSolicitud <= 0 && archivoEvidencia != null) {
+            archivoEvidencia.delete();   // 0 = peticion repetida: no se guarda otra copia
+        }
+        if (idSolicitud == -1) {
+            response.sendError(404, "El objeto no esta registrado como encontrado");
+            return;
+        }
+        if (idSolicitud == -2) {
+            response.sendError(409, "Este objeto ya fue entregado a otro estudiante");
+            return;
+        }
+        if (idSolicitud == -3) {
+            response.sendError(500, "No se pudo registrar la solicitud");
+            return;
+        }
 
         try (XWPFDocument documento = new XWPFDocument()) {
 
@@ -204,7 +255,7 @@ public class CreacionConstanciaWord extends HttpServlet {
                     XWPFParagraph parrafo = documento.createParagraph();
                     XWPFRun imagen = parrafo.createRun();
 
-                    try (InputStream entrada = evidencia.getInputStream()) {
+                    try (InputStream entrada = new java.io.ByteArrayInputStream(bytesEvidencia)) {
                         imagen.addPicture(
                                 entrada,
                                 tipoImagen,

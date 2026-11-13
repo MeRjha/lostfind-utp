@@ -214,6 +214,7 @@
 
         <script src="script.js"></script> 
           <script src="notificaciones.js" defer></script>
+          <script src="iconos.js" defer></script>
     </body>
 </html>
 

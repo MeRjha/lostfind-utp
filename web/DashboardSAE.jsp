@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="sae.css">
         <link rel="stylesheet" href="efectos.css">
+        <link rel="stylesheet" href="dashboard.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body class="paginaSAE" data-pagina="dashboard">
@@ -49,6 +50,7 @@
                     <ul class="nav-list">
                         <li><a href="DashboardSAE.jsp" class="activo">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp">Registrar objeto</a></li>
+                        <li><a href="ObjetosSAE.jsp">Objetos</a></li>
                         <li><a href="GestionSolicitudesServlet">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp">Reportes</a></li>
                     </ul>
@@ -118,7 +120,7 @@
                     <article class="cuadroTarjetas">
                         <div class="dashCabecera">
                             <h2 class="saeSubtitulo">Objetos recientes bajo custodia</h2>
-                            <a class="dashVer" href="ObjetosEncontrados.jsp">Ver todos ➡</a>
+                            <a class="dashVer" href="ObjetosSAE.jsp">Ver todos ➡</a>
                         </div>
                         <ul class="saeLista" id="listaRecientes"></ul>
                     </article>

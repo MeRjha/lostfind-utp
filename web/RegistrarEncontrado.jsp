@@ -50,6 +50,7 @@
                     <ul class="nav-list">
                         <li><a href="DashboardSAE.jsp">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp" class="activo">Registrar objeto</a></li>
+                        <li><a href="ObjetosSAE.jsp">Objetos</a></li>
                         <li><a href="GestionReclamos.jsp">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp">Reportes</a></li>
                     </ul>
