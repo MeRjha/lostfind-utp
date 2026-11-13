@@ -97,27 +97,32 @@
                 </div>
 
                 <section class="cuadroTarjetas saeFiltros">
-                    <select id="fPeriodo" aria-label="Periodo">
-                        <option value="30">Últimos 30 días</option>
-                        <option value="7">Últimos 7 días</option>
-                        <option value="90">Últimos 3 meses</option>
-                        <option value="0">Todo el tiempo</option>
+                    <select id="fAnio" aria-label="Año"></select>
+                    <select id="fMes" aria-label="Mes">
+                        <option value="todos">Todo el año</option>
+                        <option value="1">Enero</option><option value="2">Febrero</option>
+                        <option value="3">Marzo</option><option value="4">Abril</option>
+                        <option value="5">Mayo</option><option value="6">Junio</option>
+                        <option value="7">Julio</option><option value="8">Agosto</option>
+                        <option value="9">Septiembre</option><option value="10">Octubre</option>
+                        <option value="11">Noviembre</option><option value="12">Diciembre</option>
                     </select>
                     <select id="fCategoria" aria-label="Categoría">
                         <option value="">Todas las categorías</option>
-                        <option>Tecnologia</option>
-                        <option>Accesorios</option>
-                        <option>Ropa</option>
+                        <option>Tecnología</option>
                         <option>Documentos</option>
+                        <option>Accesorios</option>
+                        <option>Mochilas</option>
+                        <option>Ropa</option>
                         <option>Otros</option>
                     </select>
-                    <select id="fEstado" aria-label="Estado">
+                    <select id="fEstado" aria-label="Estado de reclamos">
                         <option value="">Todos los estados</option>
                         <option value="PENDIENTE">Reclamo pendiente</option>
                         <option value="APROBADO">Reclamo aprobado</option>
                         <option value="RECHAZADO">Reclamo rechazado</option>
                     </select>
-                    <button type="button" class="saeBtn" id="btnAplicar">Aplicar filtros</button>
+                    <button type="button" class="saeBtn" id="btnAplicar">Generar reporte</button>
                 </section>
 
                 <section class="saeGrid3" id="indicadores"></section>
@@ -136,18 +141,14 @@
                     </article>
                 </section>
 
-                <section class="saeDos">
+                <section>
                     <article class="cuadroTarjetas">
-                        <h2 class="saeSubtitulo">Registros y entregas por mes</h2>
+                        <h2 class="saeSubtitulo">Registros y reclamos aprobados por mes</h2>
                         <div class="saeColumnas" id="grafMeses"></div>
                         <div class="saeLeyendaFila">
                             <span><i class="reg"></i> Registrados</span>
-                            <span><i class="ent"></i> Entregados</span>
+                            <span><i class="ent"></i> Aprobados</span>
                         </div>
-                    </article>
-                    <article class="cuadroTarjetas">
-                        <h2 class="saeSubtitulo">Actividad reciente</h2>
-                        <ul class="saeTimeline" id="actividad"></ul>
                     </article>
                 </section>
 
@@ -167,5 +168,6 @@
 
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
+        <script src="iconos.js" defer></script>
     </body>
 </html>

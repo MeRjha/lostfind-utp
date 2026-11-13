@@ -94,16 +94,13 @@
     const ejemploDashboard = () => ({
         bajoCustodia: 12, reclamosPendientes: 3, coincidencias: 8, entregados: 5,
         recientes: [
-            {nombre: "Celular Samsung negro", categoria: "Tecnologia", fecha: "2026-10-21", imagen: "Imagenes/celular_samsung_negro.jpg"},
-            {nombre: "Audífonos JBL blancos", categoria: "Accesorios", fecha: "2026-10-20", imagen: "Imagenes/audifonos_jbl_blancos.jpg"},
-            {nombre: "Mochila Adidas negra", categoria: "Accesorios", fecha: "2026-10-19", imagen: "Imagenes/mochila_adidas_negra.jpg"}
-        ],
-        pendientes: [
-            {idSolicitud: 1, objeto: "Celular Samsung negro", estudiante: "Carlos Perez", fecha: "2026-10-22"},
-            {idSolicitud: 2, objeto: "Audífonos JBL blancos", estudiante: "Ana Rojas", fecha: "2026-10-23"},
-            {idSolicitud: 3, objeto: "Laptop Lenovo gris", estudiante: "Luis Torres", fecha: "2026-10-24"}
+            {idObjeto: 1, nombre: "Celular Samsung negro", lugar: "Biblioteca - piso 4", sede: "UTP Lima Sur", estado: "Disponible", fecha: "2026-10-21", imagen: "Imagenes/celular_samsung_negro.jpg"},
+            {idObjeto: 2, nombre: "Audífonos JBL blancos", lugar: "Aula A-207", sede: "UTP Lima Sur", estado: "Disponible", fecha: "2026-10-20", imagen: "Imagenes/audifonos_jbl_blancos.jpg"},
+            {idObjeto: 3, nombre: "Mochila Adidas negra", lugar: "Cafetería central", sede: "UTP Lima Sur", estado: "En revisión", fecha: "2026-10-19", imagen: "Imagenes/mochila_adidas_negra.jpg"}
         ]
     });
+
+    const dato = (icono, texto) => texto ? '<span class="dashDato">' + icono + " " + esc(texto) + "</span>" : "";
 
     async function dashboard() {
         const {datos: d, simulado} = await pedir("DashboardSAEServlet", {}, ejemploDashboard);
@@ -114,17 +111,38 @@
         $("#statEntregados").textContent = d.entregados;
 
         $("#listaRecientes").innerHTML = d.recientes.length
-                ? d.recientes.map(o => '<li class="saeItem"><img class="saeThumb" src="' + esc(o.imagen) + '" alt="">'
-                            + "<div><strong>" + esc(o.nombre) + "</strong><span>" + esc(o.categoria)
-                            + " · " + fecha(o.fecha) + "</span></div></li>").join("")
+                ? d.recientes.map(o => {
+                    const est = o.estado || "Disponible";
+                    return '<li class="dashItem"><img class="saeThumb" src="' + esc(o.imagen) + '" alt="">'
+                            + '<div class="dashInfo"><strong>' + esc(o.nombre) + "</strong>"
+                            + '<div class="dashDatos">' + dato("📍", o.lugar || o.categoria) + dato("🏢", o.sede)
+                            + dato("📅", o.fecha ? fecha(o.fecha) : "") + "</div></div>"
+                            + '<span class="saeEstado ' + (/revisi/i.test(est) ? "pendiente" : "aprobado") + '">' + esc(est) + "</span>"
+                            + '<a class="saeBtn saeBtnClaro saeBtnChico" href="ObjetosEncontrados.jsp">Detalle ➡</a></li>';
+                }).join("")
                 : '<li class="saeVacio">Sin registros recientes</li>';
 
-        $("#listaPendientes").innerHTML = d.pendientes.length
-                ? d.pendientes.map(p => '<li class="saeItem"><div><strong>' + esc(p.objeto) + "</strong><span>"
-                            + esc(p.estudiante) + " · " + fecha(p.fecha) + "</span></div>"
-                            + '<a class="saeBtn saeBtnChico" href="DetalleReclamo.jsp?id=' + encodeURIComponent(p.idSolicitud)
-                            + '">Revisar</a></li>').join("")
-                : '<li class="saeVacio">No hay reclamos pendientes</li>';
+        cargarActividad();
+    }
+
+    /* Actividad reciente (la entrega EstadisticasServlet en el campo "actividad") */
+    async function cargarActividad() {
+        const lista = $("#actividad");
+        if (!lista) return;
+        let items = [];
+        try {
+            const r = await fetch("EstadisticasServlet");
+            if (!r.ok) throw new Error(r.status);
+            items = (await r.json()).actividad || [];
+        } catch (e) {
+            items = [
+                {fecha: "2026-10-24", texto: "Reclamo #3 recibido (Laptop Lenovo gris)."},
+                {fecha: "2026-10-22", texto: "Reclamo #1 recibido (Celular Samsung negro)."},
+                {fecha: "2026-10-21", texto: "Objeto registrado: Celular Samsung negro."}];
+        }
+        lista.innerHTML = items.length
+                ? items.map(a => "<li><b>" + fecha(a.fecha) + "</b><span>" + esc(a.texto) + "</span></li>").join("")
+                : '<li class="saeVacio">Sin actividad reciente</li>';
     }
 
     /* ---------- Pantalla 10: Gestión de reclamos ---------- */
@@ -247,45 +265,48 @@
     }
 
     /* ---------- Pantalla 12: Reportes estadísticos ---------- */
+    const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    const etiquetaMes = m => MESES[parseInt(String(m).slice(5, 7), 10) - 1] || m;
+
     const ejemploStats = () => ({
-        indicadores: {registrados: 28, bajoCustodia: 12, entregados: 5, reclamosAprobados: 4, reclamosPendientes: 3, coincidencias: 8},
+        indicadores: {registrados: 28, objetosPerdidos: 12, coincidencias: 8,
+            reclamosAprobados: 4, reclamosPendientes: 3, reclamosRechazados: 2},
         porCategoria: [
-            {nombre: "Tecnologia", total: 11}, {nombre: "Accesorios", total: 8},
+            {nombre: "Tecnología", total: 11}, {nombre: "Accesorios", total: 8},
             {nombre: "Ropa", total: 5}, {nombre: "Documentos", total: 3}, {nombre: "Otros", total: 1}],
         porMes: [
-            {mes: "Jun", registrados: 3, entregados: 1}, {mes: "Jul", registrados: 5, entregados: 2},
-            {mes: "Ago", registrados: 6, entregados: 3}, {mes: "Sep", registrados: 8, entregados: 4},
-            {mes: "Oct", registrados: 12, entregados: 5}],
+            {mes: "2026-06", registrados: 3, aprobados: 1}, {mes: "2026-07", registrados: 5, aprobados: 2},
+            {mes: "2026-08", registrados: 6, aprobados: 3}, {mes: "2026-09", registrados: 8, aprobados: 4},
+            {mes: "2026-10", registrados: 12, aprobados: 5}],
         reclamosPorEstado: [
             {estado: "PENDIENTE", total: 3}, {estado: "APROBADO", total: 4}, {estado: "RECHAZADO", total: 2}],
-        actividad: [
-            {fecha: "2026-10-24", texto: "Reclamo #3 recibido (Laptop Lenovo gris)."},
-            {fecha: "2026-10-22", texto: "Reclamo #1 recibido (Celular Samsung negro)."},
-            {fecha: "2026-10-21", texto: "Objeto registrado: Celular Samsung negro."}]
+        actividad: []
     });
 
     const COLORES = {PENDIENTE: "#f0a500", APROBADO: "#1e9e5a", RECHAZADO: "#d64545"};
     const INDICADORES = [
-        ["registrados", "📦", "Objetos registrados"], ["bajoCustodia", "🗄️", "Bajo custodia"],
-        ["entregados", "✅", "Entregados"], ["reclamosAprobados", "👍", "Reclamos aprobados"],
-        ["reclamosPendientes", "⏳", "Reclamos pendientes"], ["coincidencias", "🔗", "Coincidencias generadas"]];
+        ["registrados", "📦", "Objetos registrados"], ["objetosPerdidos", "🔍", "Objetos perdidos"],
+        ["coincidencias", "🔗", "Coincidencias generadas"], ["reclamosAprobados", "✅", "Reclamos aprobados"],
+        ["reclamosPendientes", "⏳", "Reclamos pendientes"], ["reclamosRechazados", "✖", "Reclamos rechazados"]];
 
     function pintarStats(d) {
         $("#indicadores").innerHTML = INDICADORES.map(i =>
             '<article class="cuadroTarjetas saeStat"><span class="saeStatIcono">' + i[1] + "</span><div><b>"
-                    + esc(d.indicadores[i[0]]) + "</b><p>" + i[2] + "</p></div></article>").join("");
+                    + esc(d.indicadores[i[0]] ?? 0) + "</b><p>" + i[2] + "</p></div></article>").join("");
 
         const maxC = Math.max(1, ...d.porCategoria.map(c => c.total));
-        $("#grafCategoria").innerHTML = d.porCategoria.map(c =>
-            '<div class="saeBarra"><span>' + esc(c.nombre) + '</span><div class="saeBarraFondo"><i style="width:'
-                    + (c.total / maxC * 100) + '%"></i></div><b>' + c.total + "</b></div>").join("");
+        $("#grafCategoria").innerHTML = d.porCategoria.length
+                ? d.porCategoria.map(c =>
+                    '<div class="saeBarra"><span>' + esc(c.nombre) + '</span><div class="saeBarraFondo"><i style="width:'
+                            + (c.total / maxC * 100) + '%"></i></div><b>' + c.total + "</b></div>").join("")
+                : '<p class="saeVacio">Sin datos para los filtros elegidos</p>';
 
-        const maxM = Math.max(1, ...d.porMes.map(m => Math.max(m.registrados, m.entregados)));
+        const maxM = Math.max(1, ...d.porMes.map(m => Math.max(m.registrados, m.aprobados)));
         $("#grafMeses").innerHTML = d.porMes.map(m =>
             '<div class="saeMes"><div class="saeCols"><i class="reg" style="height:' + (m.registrados / maxM * 100)
                     + '%" title="Registrados: ' + m.registrados + '"></i><i class="ent" style="height:'
-                    + (m.entregados / maxM * 100) + '%" title="Entregados: ' + m.entregados + '"></i></div><span>'
-                    + esc(m.mes) + "</span></div>").join("");
+                    + (m.aprobados / maxM * 100) + '%" title="Aprobados: ' + m.aprobados + '"></i></div><span>'
+                    + esc(etiquetaMes(m.mes)) + "</span></div>").join("");
 
         const total = d.reclamosPorEstado.reduce((s, e) => s + e.total, 0);
         let acum = 0;
@@ -299,17 +320,31 @@
         $("#leyendaDonut").innerHTML = d.reclamosPorEstado.map(e =>
             '<li><i style="background:' + (COLORES[e.estado] || "#999") + '"></i>'
                     + esc((ESTADOS[e.estado] || [e.estado])[0]) + " <b>" + e.total + "</b></li>").join("");
-
-        $("#actividad").innerHTML = d.actividad.length
-                ? d.actividad.map(a => "<li><b>" + fecha(a.fecha) + "</b><span>" + esc(a.texto) + "</span></li>").join("")
-                : '<li class="saeVacio">Sin actividad en el periodo</li>';
     }
 
     async function reportes() {
+        const hoy = new Date();
+        const selAnio = $("#fAnio"), selMes = $("#fMes");
+        for (let a = hoy.getFullYear(); a >= hoy.getFullYear() - 3; a--)
+            selAnio.insertAdjacentHTML("beforeend", '<option value="' + a + '">' + a + "</option>");
+        selMes.value = String(hoy.getMonth() + 1);
+
         async function cargar() {
-            const {datos, simulado} = await pedir("EstadisticasServlet", {
-                periodo: $("#fPeriodo").value, categoria: $("#fCategoria").value, estado: $("#fEstado").value
-            }, ejemploStats);
+            const p = new URLSearchParams();
+            p.append("anio", selAnio.value);
+            if (selMes.value === "todos") for (let m = 1; m <= 12; m++) p.append("mes", m);
+            else p.append("mes", selMes.value);
+            if ($("#fCategoria").value) p.append("categoria", $("#fCategoria").value);
+            if ($("#fEstado").value) p.append("estado", $("#fEstado").value);
+            let datos, simulado = false;
+            try {
+                const r = await fetch("EstadisticasServlet?" + p.toString());
+                if (!r.ok) throw new Error(r.status);
+                datos = await r.json();
+            } catch (e) {
+                datos = ejemploStats();
+                simulado = true;
+            }
             aviso(simulado);
             pintarStats(datos);
         }

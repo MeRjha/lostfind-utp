@@ -140,5 +140,6 @@
 
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
+        <script src="iconos.js" defer></script>
     </body>
 </html>
