@@ -3,7 +3,7 @@
     if (document.body.dataset.pagina !== "registrar") return;
 
     const $ = (s, r = document) => r.querySelector(s);
-    const TIPOS = ["image/jpeg", "image/png", "image/webp"];
+    const TIPOS = ["image/jpeg", "image/png"];
     const MAX_FOTO = 5 * 1024 * 1024;
 
     const form = $("#formRegistro");
@@ -89,7 +89,7 @@
         if (!f) return quitarFoto();
         if (!TIPOS.includes(f.type)) {
             quitarFoto();
-            return avisoMensaje("Formato no permitido. Usa JPG, PNG o WEBP.");
+            return avisoMensaje("Formato no permitido. Usa JPG o PNG.");
         }
         if (f.size > MAX_FOTO) {
             quitarFoto();

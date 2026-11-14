@@ -239,4 +239,23 @@ public class SolicitudReclamoDAO {
             return -3;
         }
     }
+        /** Devuelve {sustento, urlEvidencia} de la solicitud del usuario para ese objeto, o null si no existe. */
+    public String[] obtenerSolicitudDeUsuario(int idUsuario, int idObjeto) {
+        String sql = "SELECT sr.sustentoPropiedad, "
+                + "(SELECT er.urlArchivo FROM evidencia_reclamo er WHERE er.idSolicitud = sr.idSolicitud "
+                + " ORDER BY er.idEvidencia LIMIT 1) "
+                + "FROM solicitud_reclamo sr JOIN objeto_encontrado oe ON sr.idObjetoEncontrado = oe.idObjetoEncontrado "
+                + "WHERE sr.idUsuario = ? AND sr.idObjetoEncontrado = ? ORDER BY sr.idSolicitud DESC LIMIT 1";
+        try (Connection con = ConexionBD.getInstancia().getConexionNueva();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idObjeto);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? new String[]{rs.getString(1), rs.getString(2)} : null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar la solicitud: " + e.getMessage());
+            return null;
+        }
+    }
 }

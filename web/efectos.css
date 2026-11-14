@@ -107,3 +107,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--botones); box-sh
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
                              animation-delay: 0s !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+.paginaDetalle .botonesReclamo .btnSecundario { background: transparent; color: var(--botones); border: 1px solid var(--botones); }
+.paginaDetalle .botonesReclamo .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }

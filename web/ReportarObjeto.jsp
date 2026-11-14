@@ -178,12 +178,12 @@
 
                                 <input class="archivoOculto" type="file"
                                        id="foto" name="foto"
-                                       accept=".jpg,.jpeg,.png,.webp">
+                                       accept=".jpg,.jpeg,.png">
 
                                 <label class="zonaFoto" for="foto">
                                     <span class="iconoFoto">📤</span>
                                     <strong>Subir archivo</strong>
-                                    <span id="nombreFoto">JPG, PNG o WEBP (máx. 5 MB)</span>
+                                    <span id="nombreFoto">JPG o PNG (máx. 5 MB)</span>
                                 </label>
                             </div>
 

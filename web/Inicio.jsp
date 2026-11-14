@@ -80,7 +80,8 @@
                                 <h4>Contraseña</h4>
                                 <a href=""><p style="color:#0B8FEA; font-weight: 600;">¿Olvidaste tu contraseña?</p></a>
                             </div>
-                            <input name="contraseña" type="password" placeholder="&#x1F512 contraseña"><br><br>
+                            <input name="contraseña" type="password" placeholder="&#x1F512 contraseña">
+                            <p class="avisoCampo" id="errorFormulario" role="alert" hidden></p><br><br>
                             <button class="btn">Iniciar sesión &#x2192;</button><br>
                             <div class="cuadro">
                                 <div>&#x1F6E1 Acceso exclusivo para miembros de la comunidad UTP</div>

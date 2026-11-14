@@ -9,7 +9,7 @@
     }
 
     const CSS = `
-.avisosContenedor{position:fixed;top:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:10px;width:min(380px,calc(100vw - 32px));pointer-events:none}
+.avisosContenedor{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:10px;width:min(380px,calc(100vw - 32px));pointer-events:none}
 .avisoToast{pointer-events:auto;display:flex;align-items:flex-start;gap:12px;padding:14px 14px 14px 16px;border-radius:.9rem;
   background:var(--tarjetas,#fff);color:var(--text,#00085e);border:1px solid var(--borde,#ddf9ff);border-left:6px solid var(--botones,#0B8FEA);
   box-shadow:0 10px 30px rgba(0,18,60,.22);animation:avisoEntra .22s ease-out}
@@ -31,9 +31,11 @@
 .avisoBtn:hover{filter:brightness(1.08)}
 .avisoBtn--claro{background:transparent;color:var(--botones,#0B8FEA)}
 .avisoBtn--peligro{background:#d64545;border-color:#d64545}
+.avisoCampo{margin:8px 0 0;padding:10px 12px;border-radius:.6rem;background:#fdecec;color:#b32d2d;border:1px solid #f3b9b9;font-size:.88rem;font-weight:500}
+input.campoError{border-color:#d64545!important;background:#fff6f6}
 @keyframes avisoEntra{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes avisoFade{from{opacity:0}to{opacity:1}}
-@media (max-width:560px){.avisosContenedor{top:10px;right:16px}.avisoBotones{flex-direction:column-reverse}.avisoBtn{width:100%}}
+@media (max-width:560px){.avisosContenedor{bottom:10px;right:16px}.avisoBotones{flex-direction:column-reverse}.avisoBtn{width:100%}}
 `;
 
     const estilo = document.createElement("style");
@@ -167,7 +169,21 @@
             return;
         }
         if (CODIGOS[codigo]) {
-            avisar(CODIGOS[codigo][1], CODIGOS[codigo][0]);
+            const enLinea = document.getElementById("errorFormulario");
+            if (enLinea && CODIGOS[codigo][0] === "error") {
+                const campos = enLinea.closest("form").querySelectorAll("input");
+                enLinea.textContent = CODIGOS[codigo][1];
+                enLinea.hidden = false;
+                campos.forEach(function (campo) {
+                    campo.classList.add("campoError");
+                    campo.addEventListener("input", function () {
+                        enLinea.hidden = true;
+                        campos.forEach(function (c) { c.classList.remove("campoError"); });
+                    });
+                });
+            } else {
+                avisar(CODIGOS[codigo][1], CODIGOS[codigo][0]);
+            }
         }
         parametros.delete("aviso");
         const resto = parametros.toString();

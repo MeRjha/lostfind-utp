@@ -183,11 +183,11 @@
                                     <div class="regCampo">
                                         <label for="foto">Foto del objeto <b>*</b></label>
                                         <input class="regArchivo" type="file" id="foto" name="foto"
-                                               accept=".jpg,.jpeg,.png,.webp">
+                                               accept=".jpg,.jpeg,.png">>
                                         <label class="regZonaFoto" for="foto">
                                             <span class="regIconoFoto">📤</span>
                                             <strong id="textoFoto">Subir archivo</strong>
-                                            <small>JPG, PNG o WEBP (máx. 5 MB)</small>
+                                            <small>JPG o PNG (máx. 5 MB)</small>
                                         </label>
                                     </div>
                                 </div>

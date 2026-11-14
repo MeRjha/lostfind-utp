@@ -68,10 +68,9 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
             }
             String tipo = foto.getContentType();
             String extension = "image/jpeg".equalsIgnoreCase(tipo) ? ".jpg"
-                    : "image/png".equalsIgnoreCase(tipo) ? ".png"
-                    : "image/webp".equalsIgnoreCase(tipo) ? ".webp" : null;
+                    : "image/png".equalsIgnoreCase(tipo) ? ".png" : null;
             if (extension == null) {
-                responder(response, 400, false, "Formato no permitido. Use JPG, PNG o WEBP."); return;
+                responder(response, 400, false, "Formato no permitido. Use JPG o PNG."); return;
             }
 
             String nombreArchivo = UUID.randomUUID() + extension;

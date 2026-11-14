@@ -210,27 +210,26 @@ function iniciarPerfilYReporte() {
             const archivo = foto.files[0];
 
             if (!archivo) {
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
             const tiposPermitidos = [
                 "image/jpeg",
-                "image/png",
-                "image/webp"
+                "image/png"
             ];
 
             if (!tiposPermitidos.includes(archivo.type)) {
                 avisar("Solo se permiten imágenes JPG, PNG o WEBP.", "aviso");
                 foto.value = "";
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
             if (archivo.size > 5 * 1024 * 1024) {
                 avisar("La foto no puede superar los 5 MB.", "aviso");
                 foto.value = "";
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
@@ -240,7 +239,7 @@ function iniciarPerfilYReporte() {
 
         formulario.addEventListener("reset", function () {
             contador.textContent = "0/500";
-            nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+            nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
         });
 
 
@@ -1315,36 +1314,75 @@ async function mostrarReportes() {
     }
 }
 
-async function descargarConstanciaWord() {
-
+async function enviarSolicitudReclamo() {
     const formulario = document.getElementById("formReclamo");
+    if (!formulario.reportValidity()) {
+        return;
+    }
+    const boton = document.getElementById("btnEnviarSolicitud");
+    boton.disabled = true;
 
     const datos = new FormData(formulario);
+    datos.append("accion", "enviar");
 
-    const respuesta = await fetch("CreacionConstanciaWord", {
-        method: "POST",
-        body: datos
-    });
-
-    if (!respuesta.ok) {
-        throw new Error("No se pudo generar la constancia");
+    try {
+        const respuesta = await fetch("CreacionConstanciaWord", {method: "POST", body: datos});
+        if (!respuesta.ok) {
+            const mensajes = {
+                400: "Revisa los datos: falta el sustento o la evidencia no es válida.",
+                401: "Tu sesión terminó. Vuelve a iniciar sesión.",
+                403: "Tu cuenta no puede enviar solicitudes de reclamo.",
+                404: "Este objeto ya no está disponible.",
+                409: "Este objeto ya fue entregado a otro estudiante."
+            };
+            avisar(mensajes[respuesta.status] || "No se pudo enviar la solicitud. Inténtalo de nuevo.", "error");
+            boton.disabled = false;
+            return;
+        }
+        const r = await respuesta.json();
+        avisar(r.yaExistia
+                ? "Ya habías enviado esta solicitud. Puedes descargar tu constancia."
+                : "Solicitud enviada. El SAE la revisará y te avisaremos del resultado.", "exito");
+        marcarSolicitudEnviada();
+    } catch (error) {
+        avisar("No se pudo conectar con el servidor.", "error");
+        boton.disabled = false;
     }
+}
 
-    const archivo = await respuesta.blob();
+function marcarSolicitudEnviada() {
+    const enviar = document.getElementById("btnEnviarSolicitud");
+    enviar.disabled = true;
+    enviar.textContent = "Solicitud enviada ✔";
+    document.getElementById("btnDescargarWord").disabled = false;
+    document.querySelectorAll("#formReclamo textarea, #formReclamo input").forEach(c => c.disabled = true);
+}
 
-    const url = URL.createObjectURL(archivo);
-
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = "Constancia_LostFind.docx";
-    enlace.click();
-
-    URL.revokeObjectURL(url);
+async function descargarConstanciaWord() {
+    const datos = new FormData();
+    datos.append("accion", "descargar");
+    try {
+        const respuesta = await fetch("CreacionConstanciaWord", {method: "POST", body: datos});
+        if (!respuesta.ok) {
+            avisar(respuesta.status === 409
+                    ? "Primero envía la solicitud de reclamo."
+                    : "No se pudo generar la constancia.", "error");
+            return;
+        }
+        const archivo = await respuesta.blob();
+        const url = URL.createObjectURL(archivo);
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "Constancia_LostFind.docx";
+        enlace.click();
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        avisar("No se pudo conectar con el servidor.", "error");
+    }
 }
 
 async function crearBotonesEnDetalle(objetoEncontrado) {
     const datos = new URLSearchParams();
-
     datos.append("objetoPerdido", JSON.stringify(objetoEncontrado));
 
     await fetch("GuardarObjetoServlet", {
@@ -1353,10 +1391,20 @@ async function crearBotonesEnDetalle(objetoEncontrado) {
     });
 
     document.getElementById("botonesDetalles").innerHTML = `
-                                <button type="submit" class="btn" onclick="descargarConstanciaWord()">
-                                    Enviar solicitud de reclamo →
-                                </button>
-`;
+        <button type="button" class="btn" id="btnEnviarSolicitud">Enviar solicitud de reclamo →</button>
+        <button type="button" class="btn btnSecundario" id="btnDescargarWord" disabled>Descargar constancia (Word)</button>`;
+
+    document.getElementById("btnEnviarSolicitud").addEventListener("click", enviarSolicitudReclamo);
+    document.getElementById("btnDescargarWord").addEventListener("click", descargarConstanciaWord);
+
+    // Si ya la había enviado antes (recargó la página), deja habilitada la descarga
+    try {
+        const r = await fetch("CreacionConstanciaWord?consulta=1");
+        if (r.ok && (await r.json()).existe) {
+            marcarSolicitudEnviada();
+        }
+    } catch (error) {
+    }
 }
 
 function mostrarDescripcionEstado(estado) {

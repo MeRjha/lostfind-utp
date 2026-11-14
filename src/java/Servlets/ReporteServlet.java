@@ -152,8 +152,7 @@ public class ReporteServlet extends HttpServlet {
 
             ImmutableMap<String, String> formatosPermitidos = ImmutableMap.of(
                     "image/jpeg", ".jpg",
-                    "image/png", ".png",
-                    "image/webp", ".webp"
+                    "image/png", ".png"
             );
 
             String extension = formatosPermitidos.get(foto.getContentType());
