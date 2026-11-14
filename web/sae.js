@@ -1,3 +1,14 @@
+/* Avisos propios de la página (reemplazan a alert y confirm del navegador): ver avisos.js */
+(function () {
+    if (!window.Avisos && !document.querySelector('script[src="avisos.js"]')) {
+        const s = document.createElement("script");
+        s.src = "avisos.js";
+        document.head.appendChild(s);
+    }
+    window.avisar = window.avisar || function (m, t) { return window.Avisos ? Avisos.avisar(m, t) : alert(m); };
+    window.confirmarAviso = window.confirmarAviso || function (m, o) { return window.Avisos ? Avisos.confirmar(m, o) : Promise.resolve(confirm(m)); };
+})();
+
 (function () {
     "use strict";
 
@@ -72,17 +83,7 @@
     }
 
     /* ---------- Pantalla 8: Dashboard ---------- */
-    const ejemploDashboard = () => ({
-        bajoCustodia: 12, reclamosPendientes: 3, coincidencias: 8, entregados: 5,
-        recientes: [
-            {idObjeto: 1, nombre: "Celular Samsung negro", lugar: "Biblioteca - piso 4", sede: "UTP Lima Sur", estado: "Disponible", fecha: "2026-10-21", imagen: "Imagenes/celular_samsung_negro.jpg"},
-            {idObjeto: 2, nombre: "Audífonos JBL blancos", lugar: "Aula A-207", sede: "UTP Lima Sur", estado: "Disponible", fecha: "2026-10-20", imagen: "Imagenes/audifonos_jbl_blancos.jpg"},
-            {idObjeto: 3, nombre: "Mochila Adidas negra", lugar: "Cafetería central", sede: "UTP Lima Sur", estado: "En revisión", fecha: "2026-10-19", imagen: "Imagenes/mochila_adidas_negra.jpg"}
-        ]
-                , pendientes: [
-            {idSolicitud: 1, objeto: "Celular Samsung negro", imagen: "Imagenes/celular_samsung_negro.jpg", estudiante: "Carlos Perez", fecha: "2026-10-22"}
-        ]
-    });
+    const ejemploDashboard = () => ({bajoCustodia: "–", reclamosPendientes: "–", coincidencias: "–", entregados: "–", recientes: [], pendientes: []});
 
     const dato = (icono, texto) => texto ? '<span class="dashDato">' + icono + " " + esc(texto) + "</span>" : "";
 
@@ -119,10 +120,7 @@
             if (!r.ok) throw new Error(r.status);
             items = (await r.json()).actividad || [];
         } catch (e) {
-            items = [
-                {fecha: "2026-10-24", texto: "Reclamo #3 recibido (Laptop Lenovo gris)."},
-                {fecha: "2026-10-22", texto: "Reclamo #1 recibido (Celular Samsung negro)."},
-                {fecha: "2026-10-21", texto: "Objeto registrado: Celular Samsung negro."}];
+            items = [];
         }
         lista.innerHTML = items.length
                 ? items.map(a => "<li><b>" + fecha(a.fecha) + "</b><span>" + esc(a.texto) + "</span></li>").join("")
@@ -131,41 +129,35 @@
 
     /* ---------- Reclamos: la lista y el detalle los dibuja el servidor (JSP) ---------- */
     /* En el detalle solo validamos y confirmamos antes de enviar el formulario. */
-    function detalle() {
+        function detalle() {
         const f = $("#formDecision");
         if (!f) return;
-        f.addEventListener("submit", e => {
-            const accion = e.submitter ? e.submitter.value : "";
-            const motivo = $("#motivoRechazo").value.trim();
-            if (accion === "rechazar" && !motivo) {
-                e.preventDefault();
-                toast("Escribe el motivo del rechazo.");
+        let confirmado = false;
+        f.addEventListener("submit", async e => {
+            if (confirmado) return;
+            e.preventDefault();
+            const boton = e.submitter;
+            const accion = boton ? boton.value : "";
+            if (accion === "rechazar" && !$("#motivoRechazo").value.trim()) {
+                avisar("Escribe el motivo del rechazo.", "aviso");
                 $("#motivoRechazo").focus();
                 return;
             }
-            const pregunta = accion === "aprobar" ? "¿Aprobar la devolución del objeto?" : "¿Rechazar esta solicitud?";
-            if (!confirm(pregunta)) e.preventDefault();
+            const aprobar = accion === "aprobar";
+            const quiere = await confirmarAviso(
+                    aprobar ? "Se aprobará la devolución del objeto al estudiante." : "Se rechazará esta solicitud y el estudiante verá el motivo.",
+                    {titulo: aprobar ? "¿Aprobar el reclamo?" : "¿Rechazar el reclamo?",
+                        aceptar: aprobar ? "Sí, aprobar" : "Sí, rechazar", cancelar: "Volver", peligro: !aprobar});
+            if (!quiere) return;
+            confirmado = true;
+            f.requestSubmit(boton);
         });
     }
-
     /* ---------- Pantalla 12: Reportes estadísticos ---------- */
     const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
     const etiquetaMes = m => MESES[parseInt(String(m).slice(5, 7), 10) - 1] || m;
 
-    const ejemploStats = () => ({
-        indicadores: {registrados: 28, objetosPerdidos: 12, coincidencias: 8,
-            reclamosAprobados: 4, reclamosPendientes: 3, reclamosRechazados: 2},
-        porCategoria: [
-            {nombre: "Tecnología", total: 11}, {nombre: "Accesorios", total: 8},
-            {nombre: "Ropa", total: 5}, {nombre: "Documentos", total: 3}, {nombre: "Otros", total: 1}],
-        porMes: [
-            {mes: "2026-06", registrados: 3, aprobados: 1}, {mes: "2026-07", registrados: 5, aprobados: 2},
-            {mes: "2026-08", registrados: 6, aprobados: 3}, {mes: "2026-09", registrados: 8, aprobados: 4},
-            {mes: "2026-10", registrados: 12, aprobados: 5}],
-        reclamosPorEstado: [
-            {estado: "PENDIENTE", total: 3}, {estado: "APROBADO", total: 4}, {estado: "RECHAZADO", total: 2}],
-        actividad: []
-    });
+    const ejemploStats = () => ({indicadores: {}, porCategoria: [], porMes: [], reclamosPorEstado: [], actividad: []});
 
     const COLORES = {PENDIENTE: "#f0a500", APROBADO: "#1e9e5a", RECHAZADO: "#d64545"};
     const INDICADORES = [
@@ -236,9 +228,82 @@
         cargar();
     }
 
+        /* ---------- Menú de usuario: Mi perfil y Configuración (tema) ---------- */
+    function iniciarMenuUsuario() {
+        const menu = $("#menuUsuario"), boton = $("#botonUsuario"), info = $("#InfoUsuario");
+        if (!menu || !boton || menu.querySelector("#verPerfil")) return;
+
+        $("#cerrarSesion").insertAdjacentHTML("beforebegin",
+                '<button type="button" id="verPerfil">👤 Mi perfil</button>'
+                + '<button type="button" id="verConfiguracion">⚙️ Configuración</button><hr>');
+
+        document.body.insertAdjacentHTML("beforeend",
+                '<dialog class="modalUsuario" id="modalUsuario">'
+                + '<div class="tituloModal"><h2 id="tituloModal">Mi perfil</h2>'
+                + '<button type="button" id="cerrarModal" aria-label="Cerrar">✕</button></div>'
+                + '<div id="vistaPerfil"></div>'
+                + '<div id="vistaConfiguracion" hidden><div class="cuadroAjustes">'
+                + '<div class="tituloAjustes"><span class="iconoAjustes">🎨</span><div><h3>Tema</h3>'
+                + '<p>Selecciona el tema de la aplicación.</p></div></div>'
+                + '<div class="opcionesTema">'
+                + '<label><input type="radio" name="tema" value="claro"> Claro</label>'
+                + '<label><input type="radio" name="tema" value="oscuro"> Oscuro</label>'
+                + '</div></div></div></dialog>');
+
+        const modal = $("#modalUsuario"), titulo = $("#tituloModal");
+        const vPerfil = $("#vistaPerfil"), vConfig = $("#vistaConfiguracion");
+
+        function abrir(tipo) {
+            menu.hidden = true;
+            boton.setAttribute("aria-expanded", "false");
+            vPerfil.hidden = tipo !== "perfil";
+            vConfig.hidden = tipo !== "configuracion";
+            titulo.textContent = tipo === "perfil" ? "Mi perfil" : "Configuración";
+            if (tipo === "perfil") {
+                let u = {};
+                try {
+                    u = JSON.parse(info.dataset.usuario);
+                } catch (e) {
+                }
+                const correo = String(u.correoInstitucional ?? "");
+                const nombre = String(u.nombre ?? "") + " " + String(u.apellido ?? "");
+                vPerfil.innerHTML = '<div class="datosPerfil"><img src="' + String(u.fotoPerfil ?? "") + '" alt="Foto de perfil">'
+                        + '<h3 class="nombreUsuario">' + nombre + "</h3><p>" + correo
+                        + '</p><span class="badge">Personal SAE UTP</span></div>'
+                        + '<h3 class="subtituloModal">Información personal</h3><div class="informacionPersonal">'
+                        + "<p><b>Nombre:</b> " + nombre + "</p><p><b>Correo:</b> " + correo + "</p>"
+                        + "<p><b>Código:</b> " + correo.split("@")[0] + "</p>"
+                        + "<p><b>Sede:</b> " + (u.sede ? u.sede.nombre : "-") + "</p>"
+                        + "<p><b>Tipo:</b> Personal SAE UTP</p></div>";
+            }
+            if (!modal.open) modal.showModal();
+        }
+
+        $("#verPerfil").addEventListener("click", () => abrir("perfil"));
+        $("#verConfiguracion").addEventListener("click", () => abrir("configuracion"));
+        $("#cerrarModal").addEventListener("click", () => modal.close());
+
+        let actual = "claro";
+        try {
+            actual = localStorage.getItem("temaLostFind") || "claro";
+        } catch (e) {
+        }
+        document.querySelectorAll('input[name="tema"]').forEach(r => {
+            r.checked = r.value === actual;
+            r.addEventListener("change", () => {
+                document.body.classList.toggle("temaOscuro", r.value === "oscuro");
+                try {
+                    localStorage.setItem("temaLostFind", r.value);
+                } catch (e) {
+                }
+            });
+        });
+    }
+
     /* ---------- Arranque ---------- */
     document.addEventListener("DOMContentLoaded", () => {
         iniciarBase();
+        iniciarMenuUsuario();
         const pagina = document.body.dataset.pagina;
         if (pagina === "dashboard") dashboard();
         else if (pagina === "detalle") detalle();

@@ -51,7 +51,7 @@
                         <li><a href="DashboardSAE.jsp">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp">Registrar objeto</a></li>
                         <li><a href="ObjetosSAE.jsp">Objetos</a></li>
-                        <li><a href="GestionReclamos.jsp">Reclamos</a></li>
+                        <li><a href="GestionSolicitudesServlet">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp" class="activo">Reportes</a></li>
                     </ul>
                 </nav>
@@ -94,7 +94,7 @@
                 </section>
 
                 <div class="saeAviso" id="saeAviso" hidden>
-                    Mostrando datos de ejemplo: el servicio aún no está conectado.
+                    No se pudieron cargar los datos. Verifica que el servidor esté activo y que hayas iniciado sesión como Personal SAE.
                 </div>
 
                 <section class="cuadroTarjetas saeFiltros">
@@ -167,6 +167,8 @@
             </div>
         </footer>
 
+        <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' hidden></div>
+                        
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
         <script src="iconos.js" defer></script>

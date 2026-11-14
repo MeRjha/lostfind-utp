@@ -12,6 +12,7 @@ public class SolicitudReclamoDAO {
     private static final String CONSULTA_BASE =
         "SELECT sr.idSolicitud, sr.idObjetoEncontrado, o.idObjeto, sr.idUsuario, sr.fechaSolicitud, " +
         "sr.sustentoPropiedad, sr.estado, sr.motivoRechazo, o.nombre AS nombreObjeto, o.categoria, o.imagen, " +
+        "o.color, o.marca, o.lugarReferencia, oe.fechaHallazgo, o.estado AS estadoObjeto, " +
         "u.nombre AS nombreEstudiante, u.apellido AS apellidoEstudiante, u.correoInstitucional, " +
         "sUsuario.nombre AS sedeEstudiante, sObjeto.nombre AS sedeObjeto " +
         "FROM solicitud_reclamo sr JOIN objeto_encontrado oe ON sr.idObjetoEncontrado = oe.idObjetoEncontrado " +
@@ -37,6 +38,11 @@ public class SolicitudReclamoDAO {
         s.setCorreoInstitucional(rs.getString("correoInstitucional"));
         s.setSedeEstudiante(rs.getString("sedeEstudiante"));
         s.setSedeObjeto(rs.getString("sedeObjeto"));
+        s.setColor(rs.getString("color"));
+        s.setMarca(rs.getString("marca"));
+        s.setLugarReferencia(rs.getString("lugarReferencia"));
+        s.setFechaHallazgo(rs.getDate("fechaHallazgo"));
+        s.setEstadoObjeto(rs.getString("estadoObjeto"));
         return s;
     }
 
@@ -120,9 +126,21 @@ public class SolicitudReclamoDAO {
                     ps.setString(3, motivoRechazo); ps.setInt(4, idSolicitud);
                     if (ps.executeUpdate() != 1) { con.rollback(); return false; }
                 }
+                                String nombreObjeto = "tu objeto", sedeObjeto = "tu sede";
+                try (PreparedStatement ps = con.prepareStatement(
+                        "SELECT o.nombre, s.nombre FROM objeto_encontrado oe INNER JOIN objeto o ON o.idObjeto = oe.idObjeto "
+                        + "INNER JOIN sede s ON s.idSede = o.idSede WHERE oe.idObjetoEncontrado = ?")) {
+                    ps.setInt(1, idObjetoEncontrado);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) { nombreObjeto = rs.getString(1); sedeObjeto = rs.getString(2); }
+                    }
+                }
                 String mensaje = "APROBADO".equals(nuevoEstado)
-                    ? "Tu solicitud de reclamo #" + idSolicitud + " fue aprobada por el personal SAE."
-                    : "Tu solicitud de reclamo #" + idSolicitud + " fue rechazada. Revisa el motivo en el detalle de tu solicitud.";
+                    ? "¡Tu reclamo de \"" + nombreObjeto + "\" fue aprobado! Acércate al SAE de " + sedeObjeto
+                        + " con tu carné y la constancia en Word para recoger tu objeto."
+                    : "Tu reclamo de \"" + nombreObjeto + "\" fue rechazado. Motivo: " + motivoRechazo;
+                if (mensaje.length() > 255) mensaje = mensaje.substring(0, 252) + "...";
+                
                 try (PreparedStatement ps = con.prepareStatement(
                         "INSERT INTO notificacion (idUsuario, mensaje, fechaEnvio, leida) VALUES (?, ?, CURRENT_DATE(), FALSE)")) {
                     ps.setInt(1, idUsuario); ps.setString(2, mensaje);
@@ -169,7 +187,7 @@ public class SolicitudReclamoDAO {
             try {
                 int idObjetoEncontrado;
                 try (PreparedStatement ps = con.prepareStatement(
-                        "SELECT idObjetoEncontrado FROM objeto_encontrado WHERE idObjeto = ? FOR UPDATE")) {
+                        "SELECT idObjetoEncontrado FROM objeto_encontrado WHERE idObjetoEncontrado = ? FOR UPDATE")) {
                     ps.setInt(1, idObjeto);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (!rs.next()) { con.rollback(); return -1; }

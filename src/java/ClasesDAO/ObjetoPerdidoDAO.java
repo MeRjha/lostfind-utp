@@ -134,11 +134,12 @@ public class ObjetoPerdidoDAO {
                 + "ON op.idObjetoPerdido = rp.idObjetoPerdido "
                 + "INNER JOIN objeto o "
                 + "ON op.idObjeto = o.idObjeto "
-                + "WHERE rp.estado = ?";
+                + "WHERE rp.estado IN (?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, "🕒 En búsqueda");
+            ps.setString(2, "✅ Coincidencia encontrada");
 
             try (ResultSet rs = ps.executeQuery()) {
 

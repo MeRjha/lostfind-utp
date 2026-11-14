@@ -26,6 +26,7 @@
         <title>LostFind - Gestión de reclamos</title>
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="sae.css">
+        <link rel="stylesheet" href="sae-reclamos.css">
         <link rel="stylesheet" href="efectos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
@@ -103,14 +104,14 @@
         </header>
 
         <main>
-            <div class="contenedorDashboard saeContenido">
+            <div class="contenedorDashboard saeContenido saeReclamos">
 
                 <section class="saeEncabezado">
                     <div class="saeTitulo">
-                        <span class="saeIcono">📋</span>
+                        <span class="saeIcono">📄</span>
                         <div>
-                            <h1>Gestión de reclamos</h1>
-                            <p>Revisa las solicitudes de los estudiantes y valida la devolución de cada objeto.</p>
+                            <h1>Gestión de solicitudes de reclamo</h1>
+                            <p>Revisa, filtra y gestiona las solicitudes enviadas por los estudiantes para recuperar objetos encontrados.</p>
                         </div>
                     </div>
                     <div class="saeAdmin">
@@ -122,38 +123,48 @@
                     </div>
                 </section>
 
-                <section class="cuadroTarjetas">
-                    <form class="saeFiltros" method="get" action="GestionSolicitudesServlet">
-                        <input type="search" name="busqueda" value="<%=esc(fBusqueda)%>"
-                               placeholder="🔍 Buscar por N.º, objeto o estudiante..." aria-label="Buscar reclamos">
-                        <select name="estado" aria-label="Filtrar por estado">
-                            <option value="">Todos los estados</option>
+                <form class="cuadroTarjetas reclamoFiltros" method="get" action="GestionSolicitudesServlet">
+                    <label>Estado
+                        <select name="estado">
+                            <option value="">Todos</option>
                             <option value="PENDIENTE"<%= "PENDIENTE".equals(fEstado) ? " selected" : "" %>>Pendiente</option>
                             <option value="APROBADO"<%= "APROBADO".equals(fEstado) ? " selected" : "" %>>Aprobado</option>
                             <option value="RECHAZADO"<%= "RECHAZADO".equals(fEstado) ? " selected" : "" %>>Rechazado</option>
                         </select>
-                        <select name="categoria" aria-label="Filtrar por categoría">
-                            <option value="">Todas las categorías</option>
+                    </label>
+                    <label>Categoría
+                        <select name="categoria">
+                            <option value="">Todas</option>
                             <% for (String c : categorias) { %>
                             <option value="<%=esc(c)%>"<%= c.equals(fCategoria) ? " selected" : "" %>><%=esc(c)%></option>
                             <% } %>
                         </select>
-                        <input type="date" name="fecha" value="<%=esc(fFecha)%>" aria-label="Fecha de solicitud">
-                        <button type="submit" class="saeBtn saeBtnChico">Filtrar</button>
-                        <a class="saeBtn saeBtnClaro saeBtnChico" href="GestionSolicitudesServlet">Limpiar</a>
-                        <span class="saeContador"><%=solicitudes.size()%> <%= solicitudes.size() == 1 ? "solicitud" : "solicitudes" %></span>
-                    </form>
-                </section>
+                    </label>
+                    <label>Fecha de solicitud
+                        <input type="date" name="fecha" value="<%=esc(fFecha)%>">
+                    </label>
+                    <label>Buscar solicitud
+                        <input type="search" name="busqueda" value="<%=esc(fBusqueda)%>" placeholder="Nombre del objeto o estudiante">
+                    </label>
+                    <div class="reclamoBtns">
+                        <button type="submit" class="saeBtn">🔍 Buscar</button>
+                        <a class="saeBtn saeBtnClaro" href="GestionSolicitudesServlet">Limpiar filtros</a>
+                    </div>
+                </form>
 
                 <section class="cuadroTarjetas saeTablaCaja">
+                    <div class="reclamoCabecera">
+                        <h2 class="reclamoTitulo"><span class="reclamoIco">📋</span> Solicitudes registradas</h2>
+                        <span class="saeContador">Mostrando <%=solicitudes.size()%> <%= solicitudes.size() == 1 ? "solicitud" : "solicitudes" %></span>
+                    </div>
                     <table class="saeTabla">
                         <thead>
                             <tr>
                                 <th>Objeto</th>
                                 <th>Estudiante</th>
-                                <th>Fecha de solicitud</th>
+                                <th>Fecha</th>
                                 <th>Estado</th>
-                                <th></th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -161,12 +172,18 @@
                             <tr><td colspan="5" class="saeVacio">No hay solicitudes con esos filtros</td></tr>
                             <% } for (SolicitudReclamo r : solicitudes) { %>
                             <tr>
-                                <td><div class="saeCeldaObjeto"><img class="saeThumb" src="<%=esc(r.getImagen())%>" alt="">
-                                        <strong><%=esc(r.getNombreObjeto())%></strong></div></td>
-                                <td><%=esc(r.getNombreEstudiante())%> <%=esc(r.getApellidoEstudiante())%></td>
-                                <td><%= r.getFechaSolicitud() == null ? "-" : fmt.format(r.getFechaSolicitud()) %></td>
+                                <td>
+                                    <div class="saeCeldaObjeto"><img class="saeThumb" src="<%=esc(r.getImagen())%>" alt="">
+                                        <div>
+                                            <strong><%=esc(r.getNombreObjeto())%></strong>
+                                            <div class="reclamoSede">📍 <%= r.getSedeObjeto() == null ? "-" : esc(r.getSedeObjeto()) %></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="reclamoCelda">👤 <%=esc(r.getNombreEstudiante())%> <%=esc(r.getApellidoEstudiante())%></div></td>
+                                <td><div class="reclamoCelda">📅 <%= r.getFechaSolicitud() == null ? "-" : fmt.format(r.getFechaSolicitud()) %></div></td>
                                 <td><%= etiqueta(r.getEstado()) %></td>
-                                <td><a class="saeBtn saeBtnChico" href="GestionSolicitudesServlet?idSolicitud=<%=r.getIdSolicitud()%>">Revisar</a></td>
+                                <td><a class="saeBtn saeBtnClaro saeBtnChico" href="GestionSolicitudesServlet?idSolicitud=<%=r.getIdSolicitud()%>">Revisar ➡</a></td>
                             </tr>
                             <% } %>
                         </tbody>

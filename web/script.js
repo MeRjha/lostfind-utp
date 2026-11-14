@@ -1,3 +1,14 @@
+/* Avisos propios de la página (reemplazan a alert y confirm del navegador): ver avisos.js */
+(function () {
+    if (!window.Avisos && !document.querySelector('script[src="avisos.js"]')) {
+        const s = document.createElement("script");
+        s.src = "avisos.js";
+        document.head.appendChild(s);
+    }
+    window.avisar = window.avisar || function (m, t) { return window.Avisos ? Avisos.avisar(m, t) : alert(m); };
+    window.confirmarAviso = window.confirmarAviso || function (m, o) { return window.Avisos ? Avisos.confirmar(m, o) : Promise.resolve(confirm(m)); };
+})();
+
 document.addEventListener("DOMContentLoaded", iniciarPerfilYReporte);
 document.addEventListener("DOMContentLoaded", iniciarReclamo);
 document.addEventListener("DOMContentLoaded", iniciarObjetosEncontrados);
@@ -210,14 +221,14 @@ function iniciarPerfilYReporte() {
             ];
 
             if (!tiposPermitidos.includes(archivo.type)) {
-                alert("Solo se permiten imágenes JPG, PNG o WEBP.");
+                avisar("Solo se permiten imágenes JPG, PNG o WEBP.", "aviso");
                 foto.value = "";
                 nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
                 return;
             }
 
             if (archivo.size > 5 * 1024 * 1024) {
-                alert("La foto no puede superar los 5 MB.");
+                avisar("La foto no puede superar los 5 MB.", "aviso");
                 foto.value = "";
                 nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
                 return;
@@ -243,6 +254,8 @@ function botonVerCoincidencias(boton) {
 }
 
 async function mostrarCoincidenciasDesdeObjetosPerdidos() {
+    const idUrl = new URLSearchParams(window.location.search).get("idObjetoPerdido");
+    if (idUrl && /^\d+$/.test(idUrl)) sessionStorage.setItem("idObjetoPerdido", idUrl);
     let idObjetoPerdido = sessionStorage.getItem("idObjetoPerdido");
     console.log("ID del ojeto Perdido: "+idObjetoPerdido);
     const datos = new URLSearchParams();
@@ -660,14 +673,14 @@ function iniciarReclamo() {
             const formatos = ["image/jpeg", "image/png", "application/pdf"];
 
             if (!formatos.includes(archivo.type)) {
-                alert("Solo puedes subir archivos JPG, PNG o PDF.");
+                avisar("Solo puedes subir archivos JPG, PNG o PDF.", "aviso");
                 this.value = "";
                 nombreEvidencia.textContent = "JPG, PNG o PDF (máx. 10 MB)";
                 return;
             }
 
             if (archivo.size > 10 * 1024 * 1024) {
-                alert("El archivo no puede superar los 10 MB.");
+                avisar("El archivo no puede superar los 10 MB.", "aviso");
                 this.value = "";
                 nombreEvidencia.textContent = "JPG, PNG o PDF (máx. 10 MB)";
                 return;
@@ -982,39 +995,6 @@ function iniciarObjetosPerdidos() {
                 document.getElementById("notificacionPerdidos").hidden = true;
             });
 
-    const botonesCancelar = document.querySelectorAll("[data-cancelar]");
-
-    botonesCancelar.forEach(function (boton) {
-
-        boton.addEventListener("click", function () {
-
-            const confirmar = confirm(
-                    "¿Deseas cancelar este reporte? Esta es una prueba visual."
-                    );
-
-            if (!confirmar) {
-                return;
-            }
-
-            const reporte = boton.closest(".reportePerdido");
-
-            const estado = reporte.querySelector(".etiquetaEstado");
-            const descripcion = reporte.querySelector(".descripcionEstado");
-
-            estado.className = "etiquetaEstado reporteCancelado";
-            estado.textContent = "🚫 Cancelado";
-            console.log("ID del botón:", boton.dataset.idObjetoPerdido);
-            cambiarEstadoReserva("🚫 Cancelado", boton.dataset.idObjetoPerdido);
-            descripcion.textContent =
-                    "El reporte fue cancelado en esta demostración.";
-
-            boton.remove();
-
-            alert("Estado actualizado solo en esta página de prueba.");
-        });
-
-    });
-
     const imagenesReportes = listaReportes.querySelectorAll("img");
 
     imagenesReportes.forEach(function (imagen) {
@@ -1049,15 +1029,60 @@ function iniciarObjetosPerdidos() {
 
     mostrarReportes();
 }
-function cambiarEstadoReserva(estado, idObjeto) {
+
+// Cancelar un reporte: un único listener en el documento (funciona aunque los botones se creen después)
+document.addEventListener("click", async function (evento) {
+    const boton = evento.target.closest("[data-cancelar]");
+    if (!boton) {
+        return;
+    }
+
+    const quiere = await confirmarAviso("Ya no se buscarán coincidencias para este reporte.", {
+        titulo: "¿Cancelar el reporte?",
+        aceptar: "Sí, cancelar",
+        cancelar: "No, volver",
+        peligro: true
+    });
+    if (!quiere) {
+        return;
+    }
+
+    boton.disabled = true;
+    const correcto = await cambiarEstadoReserva("🚫 Cancelado", boton.dataset.idObjetoPerdido);
+    if (!correcto) {
+        boton.disabled = false;
+        avisar("No se pudo cancelar el reporte. Inténtalo de nuevo.", "error");
+        return;
+    }
+
+    const reporte = boton.closest(".reportePerdido");
+    const estado = reporte.querySelector(".etiquetaEstado");
+    const descripcion = reporte.querySelector(".descripcionEstado");
+
+    estado.className = "etiquetaEstado reporteCancelado";
+    estado.textContent = "🚫 Cancelado";
+    if (descripcion) {
+        descripcion.textContent = "Cancelaste este reporte.";
+    }
+    boton.remove();
+    avisar("Reporte cancelado.", "exito");
+});
+
+
+async function cambiarEstadoReserva(estado, idObjeto) {
     const datos = new URLSearchParams();
     datos.append("idObjetoPerdido", idObjeto);
     datos.append("estado", estado);
 
-    fetch("CambiaEstadoReporteServlet", {
-        method: "POST",
-        body: datos
-    });
+    try {
+        const respuesta = await fetch("CambiaEstadoReporteServlet", {
+            method: "POST",
+            body: datos
+        });
+        return respuesta.ok;
+    } catch (error) {
+        return false;
+    }
 }
 //modales del nav
 document.addEventListener("DOMContentLoaded", iniciarAyudaInicio);

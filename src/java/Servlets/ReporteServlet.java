@@ -15,6 +15,7 @@ import Objetos.ObjetoPerdido;
 import Objetos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import ClasesDAO.NotificacionDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -165,19 +166,14 @@ public class ReporteServlet extends HttpServlet {
 
             String nombre = UUID.randomUUID().toString() + extension;
 
-            String carpeta = System.getProperty("user.home")
-                    + "/Documents/NetBeansProjects/lostfind-utp/web/Imagenes";
-
-            Path destino = Paths.get(carpeta, nombre);
+            Path destino = Singlenton.Subidas.carpeta().resolve(nombre);
 
             try {
-                Files.createDirectories(destino.getParent());
-
                 try (var entrada = foto.getInputStream()) {
                     Files.copy(entrada, destino, StandardCopyOption.REPLACE_EXISTING);
                 }
 
-                rutaImagen = "Imagenes/" + nombre;
+            rutaImagen = Singlenton.Subidas.PREFIJO + nombre;
 
                 logger.info("Fotografia del reporte guardada correctamente");
 
@@ -187,7 +183,12 @@ public class ReporteServlet extends HttpServlet {
             }
         }
 
-        logger.info("Reporte con fotografia adjunta: {}", rutaImagen != null);
+                logger.info("Reporte con fotografia adjunta: {}", rutaImagen != null);
+
+        if (rutaImagen == null) {
+            response.sendRedirect(request.getContextPath() + "/ReportarObjeto.jsp?aviso=foto-obligatoria");
+            return;
+        }
 
         ObjetoPerdido objetoPerdido = new ObjetoPerdido(
                 fechaPerdida,
@@ -261,17 +262,9 @@ public class ReporteServlet extends HttpServlet {
                         estado
                 );
 
-                logger.info("Registro del reporte sin coincidencias. Resultado: {}", estadoReporte);
+            logger.info("Registro del reporte sin coincidencias. Resultado: {}", estadoReporte);
 
-                response.getWriter().println(
-                        "<script> alert('Reporte realizado');</script>"
-                );
-
-                response.getWriter().println(
-                        "<script>window.location.href='"
-                        + request.getContextPath()
-                        + "/ReportarObjeto.jsp'; </script>"
-                );
+            response.sendRedirect(request.getContextPath() + "/ReportarObjeto.jsp?aviso=reporte-registrado");
 
             } else {
 
@@ -284,7 +277,13 @@ public class ReporteServlet extends HttpServlet {
                 );
 
                 logger.info("Registro del reporte con coincidencias. Resultado: {}", estadoReporte);
-
+                
+                int cantidad = listaCoincidencia.size();
+                new NotificacionDAO().registrarNotificacion(usuario.getIdUsuario(),
+                "¡Encontramos " + (cantidad == 1 ? "una posible coincidencia" : cantidad + " posibles coincidencias")
+                + " con tu objeto perdido: " + objetoPerdido.getNombre() + "! Haz clic para revisarlas.",
+                "Coincidencias.jsp?accion=coincidenciasPerdidos&idObjetoPerdido=" + objetoPerdido.getIdObjeto());
+                
                 request.getSession().setAttribute("listaCoincidencia", listaCoincidencia);
 
                 response.getWriter().println(
@@ -294,8 +293,9 @@ public class ReporteServlet extends HttpServlet {
                 );
             }
 
-        } else {
+                } else {
             logger.error("No se pudo registrar el objeto en la base de datos");
+            response.sendRedirect(request.getContextPath() + "/ReportarObjeto.jsp?aviso=reporte-error");
         }
     }
 

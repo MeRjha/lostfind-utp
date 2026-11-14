@@ -78,6 +78,9 @@ public class CambiaEstadoReporteServlet extends HttpServlet {
         System.out.println("Estado: "+estado+" id del objeto: "+idObjetoPerdido);
         String respuesta=new ReporteDAO().cambiarEstado(estado, idObjetoPerdido);
         System.out.println(respuesta);
+        if (!"Estado cambiado con exito".equals(respuesta)) {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, respuesta);
+        }
         
     }
 

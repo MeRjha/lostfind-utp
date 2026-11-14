@@ -51,7 +51,7 @@
                         <li><a href="DashboardSAE.jsp">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp" class="activo">Registrar objeto</a></li>
                         <li><a href="ObjetosSAE.jsp">Objetos</a></li>
-                        <li><a href="GestionReclamos.jsp">Reclamos</a></li>
+                        <li><a href="GestionSolicitudesServlet">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp">Reportes</a></li>
                     </ul>
                 </nav>
@@ -175,9 +175,9 @@
 
                                     <div class="regCampo">
                                         <label for="descripcion">Descripción <b>*</b></label>
-                                        <textarea id="descripcion" name="descripcion" maxlength="500" required
+                                        <textarea id="descripcion" name="descripcion" maxlength="255" required
                                                   placeholder="Describe el objeto con el mayor detalle posible…"></textarea>
-                                        <span class="regContador" id="contadorDescripcion">0/500</span>
+                                        <span class="regContador" id="contadorDescripcion">0/255</span>
                                     </div>
 
                                     <div class="regCampo">
@@ -254,7 +254,9 @@
                 </div>
             </div>
         </footer>
-
+                                            
+        <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' hidden></div>
+                                            
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
         <script src="registrar.js" defer></script>

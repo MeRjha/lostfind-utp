@@ -33,6 +33,13 @@ public class SolicitudReclamo {
     private String sedeEstudiante;
     private String sedeObjeto;
 
+    // Datos ampliados del objeto
+    private String color;
+    private String marca;
+    private String lugarReferencia;
+    private Date fechaHallazgo;
+    private String estadoObjeto;
+
     // Getters y setters
     public int getIdSolicitud() {
         return idSolicitud;
@@ -159,5 +166,45 @@ public class SolicitudReclamo {
 
     public void setMotivoRechazo(String motivoRechazo) {
         this.motivoRechazo = motivoRechazo;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getLugarReferencia() {
+        return lugarReferencia;
+    }
+
+    public void setLugarReferencia(String lugarReferencia) {
+        this.lugarReferencia = lugarReferencia;
+    }
+
+    public Date getFechaHallazgo() {
+        return fechaHallazgo;
+    }
+
+    public void setFechaHallazgo(Date fechaHallazgo) {
+        this.fechaHallazgo = fechaHallazgo;
+    }
+
+    public String getEstadoObjeto() {
+        return estadoObjeto;
+    }
+
+    public void setEstadoObjeto(String estadoObjeto) {
+        this.estadoObjeto = estadoObjeto;
     }
 }

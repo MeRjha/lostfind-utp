@@ -71,7 +71,7 @@
         $("#pvFecha").textContent = fecha(form.elements.fechaHallazgo.value);
         const op = selSede.options[selSede.selectedIndex];
         $("#pvSede").textContent = op && op.value ? op.textContent : "-";
-        $("#contadorDescripcion").textContent = form.elements.descripcion.value.length + "/500";
+        $("#contadorDescripcion").textContent = form.elements.descripcion.value.length + "/255";
     }
 
     function quitarFoto() {

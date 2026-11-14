@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="efectos.css">
         <link rel="stylesheet" href="sae.css">
+        <link rel="stylesheet" href="sae-reclamos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body class="paginaSAE" data-pagina="detalle">
@@ -104,78 +105,113 @@
         </header>
 
         <main>
-            <div class="contenedorDashboard saeContenido">
-
-                <a class="saeVolver" href="GestionSolicitudesServlet">← Volver a reclamos</a>
+            <div class="contenedorDashboard saeContenido saeReclamos">
+                <%
+                    String codigoSol = "REC-" + String.format("%04d", sol.getIdSolicitud());
+                    String correoEst = sol.getCorreoInstitucional() == null ? "" : sol.getCorreoInstitucional();
+                    String codigoEst = correoEst.contains("@") ? correoEst.substring(0, correoEst.indexOf('@')).toUpperCase() : "-";
+                    boolean aprobada = "APROBADO".equalsIgnoreCase(sol.getEstado());
+                    String fechaHall = sol.getFechaHallazgo() == null ? "-" : fmt.format(sol.getFechaHallazgo());
+                %>
 
                 <section class="saeEncabezado">
                     <div class="saeTitulo">
-                        <span class="saeIcono">🔎</span>
+                        <a class="saeRedondo" href="GestionSolicitudesServlet" aria-label="Volver a reclamos">←</a>
                         <div>
-                            <h1>Solicitud de reclamo #<%=sol.getIdSolicitud()%></h1>
-                            <p>Revisa el sustento y las evidencias antes de aprobar o rechazar la devolución.</p>
+                            <h1>Detalle de la solicitud de reclamo</h1>
+                            <p>Revisa la información enviada por el estudiante y valida si corresponde la devolución del objeto.</p>
                         </div>
                     </div>
-                    <div><%= etiqueta(sol.getEstado()) %></div>
+                    <div class="saeAdmin">
+                        <span>🛡️</span>
+                        <div>
+                            <strong>Acceso administrativo</strong>
+                            <p><%=sede%></p>
+                        </div>
+                    </div>
                 </section>
 
-                <section class="saeDos">
+                <section class="reclamoGrid">
 
                     <div class="saeColumna">
-                        <article class="cuadroTarjetas">
-                            <h2 class="saeSubtitulo">Datos de la solicitud</h2>
-                            <dl class="saeDatos">
-                                <div><dt>Estudiante</dt><dd><%=esc(nombreEst.trim())%></dd></div>
-                                <div><dt>Correo</dt><dd><%=esc(sol.getCorreoInstitucional())%></dd></div>
-                                <div><dt>Sede del estudiante</dt><dd><%= sol.getSedeEstudiante() == null ? "-" : esc(sol.getSedeEstudiante()) %></dd></div>
-                                <div><dt>Fecha de solicitud</dt><dd><%=fechaSol%></dd></div>
-                            </dl>
-                            <h3 class="saeMini">Sustento de propiedad</h3>
-                            <p class="saeSustento"><%=esc(sol.getSustentoPropiedad())%></p>
-                            <h3 class="saeMini">Evidencias adjuntas</h3>
-                            <div class="saeEvidencias">
-                                <% if (evidencias == null || evidencias.isEmpty()) { %>
-                                <p class="saeVacio">El estudiante no adjuntó evidencias.</p>
-                                <% } else { for (EvidenciaReclamo ev : evidencias) { %>
-                                <a href="<%=esc(ev.getUrlArchivo())%>" target="_blank" rel="noopener"><img src="<%=esc(ev.getUrlArchivo())%>" alt="Evidencia"></a>
-                                <% } } %>
+                        <article class="cuadroTarjetas reclamoCard">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">📄</span> Información de la solicitud</h2>
+                            <div class="reclamoCampos tres">
+                                <div><span class="reclamoEt">Código de solicitud</span><b class="reclamoGrande"><%=codigoSol%></b></div>
+                                <div><span class="reclamoEt">Fecha de solicitud</span><b>📅 <%=fechaSol%></b></div>
+                                <div><span class="reclamoEt">Estado</span><span><%= etiqueta(sol.getEstado()) %></span></div>
                             </div>
                         </article>
 
-                        <article class="cuadroTarjetas">
-                            <h2 class="saeSubtitulo">Historial del proceso</h2>
-                            <ul class="saeTimeline">
-                                <li><b><%=fechaSol%></b><span>El estudiante envió la solicitud de reclamo.</span></li>
-                                <% if (!pendiente) { %>
-                                <li><b>Resuelta</b><span>El SAE <%= "APROBADO".equalsIgnoreCase(sol.getEstado()) ? "aprobó" : "rechazó" %> la solicitud.<%= sol.getMotivoRechazo() == null ? "" : " Motivo: " + esc(sol.getMotivoRechazo()) %></span></li>
-                                <% } %>
-                            </ul>
+                        <article class="cuadroTarjetas reclamoCard">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">👤</span> Datos del estudiante</h2>
+                            <div class="reclamoCampos tres">
+                                <div><span class="reclamoEt">Nombre completo</span><b><%=esc(nombreEst.trim())%></b></div>
+                                <div><span class="reclamoEt">Código de estudiante</span><b><%=esc(codigoEst)%></b></div>
+                                <div><span class="reclamoEt">Correo institucional</span><b><%=esc(correoEst)%></b></div>
+                                <div><span class="reclamoEt">Sede</span><b>📍 <%= sol.getSedeEstudiante() == null ? "-" : esc(sol.getSedeEstudiante()) %></b></div>
+                            </div>
+                        </article>
+
+                        <article class="cuadroTarjetas reclamoCard">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">📦</span> Información del objeto</h2>
+                            <div class="reclamoObjeto">
+                                <img src="<%=esc(sol.getImagen())%>" alt="Foto del objeto">
+                                <dl class="reclamoFilas">
+                                    <div><dt>Nombre del objeto</dt><dd><%=esc(sol.getNombreObjeto())%></dd></div>
+                                    <div><dt>Categoría</dt><dd><%=esc(sol.getCategoria())%></dd></div>
+                                    <div><dt>Color</dt><dd><%= sol.getColor() == null || sol.getColor().isEmpty() ? "-" : esc(sol.getColor()) %></dd></div>
+                                    <div><dt>Marca o modelo</dt><dd><%= sol.getMarca() == null || sol.getMarca().isEmpty() ? "-" : esc(sol.getMarca()) %></dd></div>
+                                    <div><dt>Fecha de hallazgo</dt><dd><%=fechaHall%></dd></div>
+                                    <div><dt>Lugar de hallazgo</dt><dd><%= sol.getLugarReferencia() == null ? "-" : esc(sol.getLugarReferencia()) %></dd></div>
+                                    <div><dt>Sede del objeto</dt><dd><%= sol.getSedeObjeto() == null ? "-" : esc(sol.getSedeObjeto()) %></dd></div>
+                                    <div><dt>Estado actual</dt><dd><span class="reclamoPunto"></span><%= sol.getEstadoObjeto() == null ? "-" : esc(sol.getEstadoObjeto()) %></dd></div>
+                                </dl>
+                            </div>
                         </article>
                     </div>
 
                     <div class="saeColumna">
-                        <article class="cuadroTarjetas">
-                            <h2 class="saeSubtitulo">Objeto registrado</h2>
-                            <img class="saeFotoObjeto" src="<%=esc(sol.getImagen())%>" alt="Foto del objeto">
-                            <dl class="saeDatos">
-                                <div><dt>Objeto</dt><dd><%=esc(sol.getNombreObjeto())%></dd></div>
-                                <div><dt>Categoría</dt><dd><%=esc(sol.getCategoria())%></dd></div>
-                                <div><dt>Sede donde se encuentra</dt><dd><%= sol.getSedeObjeto() == null ? "-" : esc(sol.getSedeObjeto()) %></dd></div>
-                            </dl>
+                        <article class="cuadroTarjetas reclamoCard">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">💬</span> Sustento del estudiante</h2>
+                            <p class="saeSustento"><%=esc(sol.getSustentoPropiedad())%></p>
+                            <h3 class="reclamoSub"><span class="reclamoIco">🖼️</span> Imágenes de evidencia</h3>
+                            <% if (evidencias == null || evidencias.isEmpty()) { %>
+                            <p class="saeVacio">El estudiante no adjuntó evidencias.</p>
+                            <% } else { %>
+                            <div class="reclamoEvid">
+                                <% for (EvidenciaReclamo ev : evidencias) { %>
+                                <a href="<%=esc(ev.getUrlArchivo())%>" target="_blank" rel="noopener"><img src="<%=esc(ev.getUrlArchivo())%>" alt="Evidencia"></a>
+                                <% } %>
+                            </div>
+                            <% } %>
                         </article>
 
-                        <article class="cuadroTarjetas saeDecision">
-                            <h2 class="saeSubtitulo">Decisión del SAE</h2>
+                        <article class="cuadroTarjetas reclamoCard">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">🕒</span> Historial de la solicitud</h2>
+                            <div class="reclamoPasos">
+                                <div class="reclamoPaso hecho"><b>Solicitud enviada por el estudiante</b><small><%=fechaSol%></small></div>
+                                <div class="reclamoPaso <%= pendiente ? "actual" : "hecho" %>"><b>En revisión por el SAE</b></div>
+                                <% if (pendiente) { %>
+                                <div class="reclamoPaso"><b>Resultado de validación</b><small>Pendiente</small></div>
+                                <% } else { %>
+                                <div class="reclamoPaso hecho"><b>Solicitud <%= aprobada ? "aprobada" : "rechazada" %></b><%= sol.getMotivoRechazo() == null ? "" : "<small>Motivo: " + esc(sol.getMotivoRechazo()) + "</small>" %></div>
+                                <% } %>
+                            </div>
+                        </article>
+
+                        <article class="cuadroTarjetas reclamoCard saeDecision">
+                            <h2 class="reclamoTitulo"><span class="reclamoIco">✔️</span> Acciones</h2>
                             <form id="formDecision" method="post" action="GestionSolicitudesServlet">
                                 <input type="hidden" name="csrfToken" value="<%=esc(csrf)%>">
                                 <input type="hidden" name="idSolicitud" value="<%=sol.getIdSolicitud()%>">
                                 <label for="motivoRechazo">Motivo (obligatorio si rechazas)</label>
                                 <textarea id="motivoRechazo" name="motivoRechazo" rows="3" maxlength="500"<%= pendiente ? "" : " disabled" %>
                                           placeholder="Ej. Las características no coinciden con el objeto registrado."><%= pendiente ? "" : esc(sol.getMotivoRechazo()) %></textarea>
-                                <div class="saeBotones">
-                                    <button type="submit" name="accion" value="aprobar" class="saeBtn saeBtnVerde"<%= pendiente ? "" : " disabled" %>>✔ Aprobar</button>
-                                    <button type="submit" name="accion" value="rechazar" class="saeBtn saeBtnRojo"<%= pendiente ? "" : " disabled" %>>✖ Rechazar</button>
-                                    <a class="saeBtn saeBtnClaro" href="mailto:<%=esc(sol.getCorreoInstitucional())%>?subject=Reclamo%20LostFind%20%23<%=sol.getIdSolicitud()%>">✉ Contactar</a>
+                                <div class="reclamoAcciones">
+                                    <button type="submit" name="accion" value="aprobar" class="saeBtn btnAprobar"<%= pendiente ? "" : " disabled" %>>✔ Aprobar reclamo</button>
+                                    <button type="submit" name="accion" value="rechazar" class="saeBtn btnRechazar"<%= pendiente ? "" : " disabled" %>>✖ Rechazar reclamo</button>
+                                    <a class="saeBtn btnContactar" href="mailto:<%=esc(correoEst)%>?subject=Reclamo%20LostFind%20<%=codigoSol%>">💬 Contactar al estudiante</a>
                                 </div>
                             </form>
                             <% if (!pendiente) { %>

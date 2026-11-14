@@ -139,12 +139,12 @@ public class CreacionConstanciaWord extends HttpServlet {
             try (InputStream in = evidencia.getInputStream()) {
                 bytesEvidencia = in.readAllBytes();
             }
-            java.io.File carpeta = new java.io.File(getServletContext().getRealPath("/evidencias"));
-            if (!carpeta.exists()) carpeta.mkdirs();
+            java.io.File carpeta = Singlenton.Subidas.carpeta().toFile();
+            
             String nombreArchivo = java.util.UUID.randomUUID() + ext;
             archivoEvidencia = new java.io.File(carpeta, nombreArchivo);
             java.nio.file.Files.write(archivoEvidencia.toPath(), bytesEvidencia);
-            urlEvidencia = "evidencias/" + nombreArchivo;
+            urlEvidencia = Singlenton.Subidas.PREFIJO + nombreArchivo;
         }
 
         String sustentoCompleto = sustento.trim();

@@ -32,9 +32,13 @@ public class GestionGemini {
     private static final String URL
             = "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2:embedContent";
 
-    private static final Path CARPETA_IMAGENES = Path.of(
-            "C:/Users/Axel/Documents/NetBeansProjects/lostfind-utp/web/Imagenes"
-    ).toAbsolutePath().normalize();
+        private static Path carpetaImagenes() {
+        try {
+            return Singlenton.Subidas.carpeta();
+        } catch (java.io.IOException e) {
+            throw new java.io.UncheckedIOException(e);
+        }
+    }
 
     private static final long TAMANO_MAXIMO = 5L * 1024 * 1024;
     private static final HttpClient CLIENTE = HttpClient.newHttpClient();
@@ -49,9 +53,10 @@ public class GestionGemini {
             String descripcionPerdido, String imagenPerdido,
             String descripcionEncontrado, String imagenEncontrado) throws Exception {
 
-        Path fotoPerdida = buscarImagen(imagenPerdido, CARPETA_IMAGENES);
-        Path fotoEncontrada = buscarImagen(imagenEncontrado, CARPETA_IMAGENES);
-        boolean soloTexto = fotoPerdida == null && fotoEncontrada == null;
+        Path fotoPerdida = buscarImagen(imagenPerdido, carpetaImagenes());
+        Path fotoEncontrada = buscarImagen(imagenEncontrado, carpetaImagenes());
+        
+        boolean soloTexto = fotoPerdida == null || fotoEncontrada == null;
 
         logger.debug("Iniciando comparacion de objetos. Solo texto: {}", soloTexto);
 
@@ -122,8 +127,8 @@ public class GestionGemini {
             return 0;
         }
 
-        double[] a = generarEmbedding(descripcionPerdido, fotoPerdida, soloTexto);
-        double[] b = generarEmbedding(descripcionEncontrado, fotoEncontrada, soloTexto);
+        double[] a = generarEmbedding(descripcionPerdido, soloTexto ? null : fotoPerdida, soloTexto);
+        double[] b = generarEmbedding(descripcionEncontrado, soloTexto ? null : fotoEncontrada, soloTexto);
 
         if (a.length != b.length) {
             throw new IllegalStateException("Los embeddings tienen dimensiones diferentes");
@@ -157,6 +162,8 @@ public class GestionGemini {
 
         if (nombre.startsWith("Imagenes/")) {
             nombre = nombre.substring("Imagenes/".length());
+        } else if (nombre.startsWith("uploads/")) {
+            nombre = nombre.substring("uploads/".length());
         }
 
         Path archivoRelativo = Path.of(nombre);

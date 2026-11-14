@@ -87,6 +87,7 @@ CREATE TABLE `notificacion` (
   `idNotificacion` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
   `mensaje` varchar(255) NOT NULL,
+  `enlace` varchar(255) DEFAULT NULL,
   `fechaEnvio` date NOT NULL,
   `leida` tinyint(1) NOT NULL,
   PRIMARY KEY (`idNotificacion`),
@@ -101,7 +102,7 @@ CREATE TABLE `notificacion` (
 
 LOCK TABLES `notificacion` WRITE;
 /*!40000 ALTER TABLE `notificacion` DISABLE KEYS */;
-INSERT INTO `notificacion` VALUES (1,1,'Se encontro una posible coincidencia con tu objeto perdido','2026-10-22',0);
+INSERT INTO `notificacion` VALUES (1,1,'Se encontro una posible coincidencia con tu objeto perdido',NULL,'2026-10-22',0);
 /*!40000 ALTER TABLE `notificacion` ENABLE KEYS */;
 UNLOCK TABLES;
 

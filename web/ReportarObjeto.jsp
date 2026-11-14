@@ -174,7 +174,7 @@
                             </div>
 
                             <div class="campoReporte">
-                                <label for="foto">Foto opcional</label>
+                                <label for="foto">Foto del objeto (obligatoria)</label>
 
                                 <input class="archivoOculto" type="file"
                                        id="foto" name="foto"

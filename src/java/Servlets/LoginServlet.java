@@ -118,8 +118,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 
             logger.warn("Intento de inicio de sesion fallido");
 
-            response.getWriter().println("<script> alert('Correo y/o contraseña equivocadas');</script>");
-            response.getWriter().println("<script>window.location.href='" + request.getContextPath() + "'; </script>");
+            response.sendRedirect(request.getContextPath() + "/Inicio.jsp?aviso=credenciales");
         }
 
     } else {

@@ -23,25 +23,24 @@
         return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : "";
     };
 
-    /* Datos de ejemplo mientras NotificacionesServlet no exista */
-    const ejemplo = () => ({
-        noLeidas: 2,
-        items: [
-            {idNotificacion: 3, mensaje: "Tu reclamo del Celular Samsung negro fue aprobado. Acércate al SAE para recogerlo.", fechaEnvio: "2026-10-24", leida: false},
-            {idNotificacion: 2, mensaje: "Se encontró una posible coincidencia con tu objeto perdido.", fechaEnvio: "2026-10-22", leida: false},
-            {idNotificacion: 1, mensaje: "Tu reporte de objeto perdido fue registrado.", fechaEnvio: "2026-10-20", leida: true}
-        ]
-    });
+    /* Estilos del enlace de cada notificación */
+    const estilo = document.createElement("style");
+    estilo.textContent = ".notiLink{display:block;color:inherit;text-decoration:none}"
+            + ".notiItem.conEnlace{cursor:pointer}.notiItem.conEnlace:hover{filter:brightness(.96)}";
+    document.head.appendChild(estilo);
 
-    let estado = {noLeidas: 0, items: [], simulado: false};
+    /* Solo se aceptan enlaces internos a una página .jsp */
+    const enlaceSeguro = u => /^[\w.\-]+\.jsp(\?[\w=&%.\-]*)?$/.test(u || "") ? u : "";
+
+    let estado = {noLeidas: 0, items: []};
 
     async function cargar() {
         try {
             const r = await fetch("NotificacionesServlet", {method: "POST"});
             if (!r.ok) throw new Error(r.status);
-            estado = Object.assign(await r.json(), {simulado: false});
+            estado = await r.json();
         } catch (e) {
-            if (!estado.simulado) estado = Object.assign(ejemplo(), {simulado: true});
+            /* sin conexión: se conserva lo último que se mostró */
         }
         pintar();
     }
@@ -51,11 +50,15 @@
         globo.textContent = estado.noLeidas > 9 ? "9+" : estado.noLeidas;
 
         menu.innerHTML = '<div class="notiTitulo"><h3>Notificaciones</h3>'
-                + (estado.simulado ? "<small>Datos de ejemplo</small>" : "") + "</div>"
+                + "</div>"
                 + (estado.items.length
-                        ? '<ul class="notiLista">' + estado.items.map(n =>
-                            '<li class="notiItem' + (n.leida ? "" : " noLeida") + '">' + esc(n.mensaje)
-                                    + "<span>" + fecha(n.fechaEnvio) + "</span></li>").join("") + "</ul>"
+                        ? '<ul class="notiLista">' + estado.items.map(n => {
+                            const href = enlaceSeguro(n.enlace);
+                            const contenido = esc(n.mensaje) + "<span>" + fecha(n.fechaEnvio) + "</span>";
+                            return '<li class="notiItem' + (n.leida ? "" : " noLeida") + (href ? " conEnlace" : "") + '">'
+                                    + (href ? '<a class="notiLink" href="' + esc(href) + '">' + contenido + "</a>" : contenido)
+                                    + "</li>";
+                        }).join("") + "</ul>"
                         : '<p class="notiVacio">No tienes notificaciones.</p>');
     }
 

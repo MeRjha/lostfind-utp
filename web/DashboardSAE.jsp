@@ -94,7 +94,7 @@
                 </section>
 
                 <div class="saeAviso" id="saeAviso" hidden>
-                    Mostrando datos de ejemplo: el servicio aún no está conectado.
+                    No se pudieron cargar los datos. Verifica que el servidor esté activo y que hayas iniciado sesión como Personal SAE.
                 </div>
 
                 <section class="saeGrid4">
@@ -146,6 +146,8 @@
             </div>
         </footer>
 
+                       
+        <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' hidden></div>
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
         <script src="iconos.js" defer></script>
