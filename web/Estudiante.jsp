@@ -255,6 +255,7 @@
 
         <script src="script.js"></script>
         <script src="notificaciones.js" defer></script>
+        <script src="iconos.js" defer></script>
         <script>mostrarObjetosEncontradosRecientemente();</script>
     </body>
 </html>

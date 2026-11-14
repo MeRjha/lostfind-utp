@@ -49,6 +49,28 @@ public class CoincidenciaDAO {
         return null;
     }
 
+    /**
+     * Guarda una coincidencia a partir del id de la tabla objeto (el que devuelve
+     * RegistroObjetoEncontradoDAO), buscando por su cuenta el idObjetoEncontrado.
+     */
+    public boolean registrarCoincidencia(int idObjetoPerdido, int idObjeto, double porcentajeSimilitud) {
+                String sql = "INSERT INTO coincidencia (idObjetoPerdido, idObjetoEncontrado, porcentajeSimilitud) "
+                + "SELECT ?, oe.idObjetoEncontrado, ? FROM objeto_encontrado oe WHERE oe.idObjeto = ? "
+                + "AND NOT EXISTS (SELECT 1 FROM coincidencia c WHERE c.idObjetoPerdido = ? "
+                + "AND c.idObjetoEncontrado = oe.idObjetoEncontrado)";
+        try (Connection conexion = ConexionBD.getInstancia().getConexionNueva();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idObjetoPerdido);
+            ps.setDouble(2, porcentajeSimilitud);
+            ps.setInt(3, idObjeto);
+            ps.setInt(4, idObjetoPerdido);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error al registrar coincidencia: " + e.getMessage());
+            return false;
+        }
+    }
+
     public List<Coincidencia> obtenerCoincidenciasDeUnObjetoPerdido(ObjetoPerdido objetoPerdido) {
         try {
             List<Coincidencia> coincidencias = new ArrayList<>();

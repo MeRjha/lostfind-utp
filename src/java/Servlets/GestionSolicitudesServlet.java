@@ -214,9 +214,10 @@ public class GestionSolicitudesServlet extends HttpServlet {
             );
 
             if (actualizado) {
-                response.sendRedirect(
-                        request.getContextPath()
-                        + "/GestionSolicitudesServlet");
+                    response.sendRedirect(
+                    request.getContextPath()
+                        + "/GestionSolicitudesServlet?aviso="
+                        + ("APROBADO".equalsIgnoreCase(nuevoEstado) ? "reclamo-aprobado" : "reclamo-rechazado"));
             } else {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                         "No se pudo actualizar la solicitud.");

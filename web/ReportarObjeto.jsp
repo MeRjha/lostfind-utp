@@ -174,16 +174,16 @@
                             </div>
 
                             <div class="campoReporte">
-                                <label for="foto">Foto opcional</label>
+                                <label for="foto">Foto del objeto (obligatoria)</label>
 
                                 <input class="archivoOculto" type="file"
                                        id="foto" name="foto"
-                                       accept=".jpg,.jpeg,.png,.webp">
+                                       accept=".jpg,.jpeg,.png">
 
                                 <label class="zonaFoto" for="foto">
                                     <span class="iconoFoto">📤</span>
                                     <strong>Subir archivo</strong>
-                                    <span id="nombreFoto">JPG, PNG o WEBP (máx. 5 MB)</span>
+                                    <span id="nombreFoto">JPG o PNG (máx. 5 MB)</span>
                                 </label>
                             </div>
 
@@ -293,5 +293,6 @@
 
         <script src="script.js" defer></script>
           <script src="notificaciones.js" defer></script>
+                  <script src="iconos.js" defer></script>
     </body>
 </html>

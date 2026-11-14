@@ -1,0 +1,68 @@
+/* Pantalla "Registrar objeto encontrado". Usa las variables de estilos.css y las clases de sae.css. */
+
+.regLayout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.regLateral { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.regTarjeta { padding: 20px; }
+.regLayout > *, .regLateral > * { animation: fxAparecer 0.5s ease both; }
+.regLateral > :nth-child(2) { animation-delay: 0.1s; }
+
+/* Formulario */
+.regColumnas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.regCol { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.regCampo { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.regCampo > label:first-child { font-size: 0.85rem; font-weight: 600; }
+.regCampo > label b { color: #d64545; }
+.regCampo input:not([type="file"]), .regCampo select, .regCampo textarea {
+    width: 100%; padding: 11px 12px; font-size: 0.9rem; color: var(--text);
+    background: var(--input); border: 1px solid var(--borde); border-radius: 0.7rem; }
+.regCampo textarea { min-height: 125px; resize: vertical; }
+.regCampo input::placeholder, .regCampo textarea::placeholder { color: #8a98b0; }
+.regCampo .invalido { border-color: #d64545; box-shadow: 0 0 0 3px #d6454526; }
+.regContador { text-align: right; font-size: 0.75rem; opacity: 0.7; }
+
+.regArchivo { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.regZonaFoto { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px;
+               min-height: 105px; padding: 12px; text-align: center; cursor: pointer;
+               border: 2px dashed var(--cuadro); border-radius: 0.7rem; background: var(--input);
+               transition: border-color 0.2s ease, transform 0.2s ease; }
+.regZonaFoto:hover { border-color: var(--botones); transform: translateY(-2px); }
+.regZonaFoto strong { font-size: 0.88rem; color: var(--botones); overflow-wrap: anywhere; }
+.regZonaFoto small { font-size: 0.75rem; opacity: 0.7; }
+.regIconoFoto { font-size: 1.8rem; }
+.regArchivo:focus-visible + .regZonaFoto { outline: 2px solid var(--botones); }
+
+.regMensaje { margin-top: 14px; padding: 10px 14px; border-radius: 0.7rem; font-size: 0.9rem;
+              background: #fbdcdc; color: #9a2424; }
+.regMensaje.ok { background: #d8f4e4; color: #11693b; }
+.regBotones { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; margin-top: 18px; }
+.regBotones .saeBtn { padding: 13px; }
+
+/* Vista previa */
+.regPrevia { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: start; }
+.regFotoPrevia { position: relative; display: grid; place-items: center; height: 160px; overflow: hidden;
+                 border-radius: 0.7rem; background: var(--input); border: 1px solid var(--borde); font-size: 2.6rem; }
+.regFotoPrevia img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--input); }
+.regDatos { gap: 7px; }
+.regDatos dt { font-size: 0.8rem; }
+.regDatos dd { font-size: 0.85rem; overflow-wrap: anywhere; }
+
+/* Recomendaciones */
+.regTips { display: flex; flex-direction: column; gap: 12px; }
+.regTips li { display: flex; gap: 12px; align-items: flex-start; }
+.regTips li > span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+                     background: var(--primary); flex-shrink: 0; }
+.regTips strong { font-size: 0.9rem; }
+.regTips p { font-size: 0.8rem; line-height: 1.4; opacity: 0.8; }
+
+.temaOscuro .regMensaje { background: #5a2a2a; color: #ffd0d0; }
+.temaOscuro .regMensaje.ok { background: #1d493e; color: #d2f0e3; }
+
+@media (max-width: 1000px) {
+    .regLayout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .regColumnas { grid-template-columns: 1fr; gap: 14px; }
+    .regCol:first-child { margin-bottom: 0; }
+    .regPrevia { grid-template-columns: 1fr; }
+    .regBotones { grid-template-columns: 1fr; }
+}

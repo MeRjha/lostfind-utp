@@ -1,5 +1,6 @@
 package Servlets;
 
+import ClasesDAO.CoincidenciaDAO;
 import ClasesDAO.NotificacionDAO;
 import ClasesDAO.ObjetoPerdidoDAO;
 import ClasesDAO.RegistroObjetoEncontradoDAO;
@@ -67,22 +68,20 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
             }
             String tipo = foto.getContentType();
             String extension = "image/jpeg".equalsIgnoreCase(tipo) ? ".jpg"
-                    : "image/png".equalsIgnoreCase(tipo) ? ".png"
-                    : "image/webp".equalsIgnoreCase(tipo) ? ".webp" : null;
+                    : "image/png".equalsIgnoreCase(tipo) ? ".png" : null;
             if (extension == null) {
-                responder(response, 400, false, "Formato no permitido. Use JPG, PNG o WEBP."); return;
+                responder(response, 400, false, "Formato no permitido. Use JPG o PNG."); return;
             }
 
             String nombreArchivo = UUID.randomUUID() + extension;
-            String carpetaReal = getServletContext().getRealPath("/Imagenes");
-            if (carpetaReal == null) {
-                responder(response, 500, false, "No se pudo acceder a la carpeta de imágenes."); return;
-            }
-            Path carpeta = Paths.get(carpetaReal);
-            Files.createDirectories(carpeta);
+            
+            Path carpeta = Singlenton.Subidas.carpeta();
+                        
             rutaImagen = carpeta.resolve(nombreArchivo);
+            
             try (InputStream entrada = foto.getInputStream()) { Files.copy(entrada, rutaImagen); }
-            String rutaRelativa = "Imagenes/" + nombreArchivo;
+            
+            String rutaRelativa = Singlenton.Subidas.PREFIJO + nombreArchivo;
 
             ObjetoEncontrado objeto = new ObjetoEncontrado(
                     java.sql.Date.valueOf(fechaHallazgo), categoria.trim(), rutaRelativa, nombre.trim(),
@@ -94,7 +93,7 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
                 responder(response, 500, false, "No se pudo registrar el objeto. Verifique los datos."); return;
             }
             objetoGuardado = true;
-            buscarCoincidencias(objeto, carpeta);
+            buscarCoincidencias(objeto, idObjeto, carpeta);
 
             Map<String, Object> resultado = new HashMap<>();
             resultado.put("exito", true);
@@ -110,7 +109,7 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
         }
     }
 
-    private void buscarCoincidencias(ObjetoEncontrado objeto, Path carpeta) {
+    private void buscarCoincidencias(ObjetoEncontrado objeto, int idObjeto, Path carpeta) {
         try {
             ObjetoPerdidoDAO perdidosDAO = new ObjetoPerdidoDAO();
             NotificacionDAO notificacionesDAO = new NotificacionDAO();
@@ -121,11 +120,18 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
                             perdido.getDescripcion(), perdido.getImagen(),
                             objeto.getDescripcion(), objeto.getImagen(), carpeta);
                     System.out.println("Similitud con reporte " + perdido.getIdObjetoPerdido() + ": " + (similitud * 100) + "%");
-                    if (similitud >= 0.75 && perdidosDAO.actualizarEstadoReporteCoincidencia(perdido.getIdObjetoPerdido())) {
-                        String mensaje = "¡Encontramos una posible coincidencia con tu objeto perdido: "
-                                + perdido.getNombre() + "! Ingresa a LostFind para revisarla.";
-                        if (!notificacionesDAO.registrarNotificacion(perdido.getIdUsuario(), mensaje))
-                            System.out.println("No se pudo notificar al usuario " + perdido.getIdUsuario());
+                        if (similitud >= 0.75) {
+                        // Si el reporte ya estaba en "Coincidencia encontrada", el estado no cambia
+                        perdidosDAO.actualizarEstadoReporteCoincidencia(perdido.getIdObjetoPerdido());
+                        double porcentaje = Math.round(similitud * 10000.0) / 100.0;
+                        boolean nueva = new CoincidenciaDAO().registrarCoincidencia(perdido.getIdObjetoPerdido(), idObjeto, porcentaje);
+                        if (nueva) {
+                            String mensaje = "¡Encontramos una posible coincidencia con tu objeto perdido: "
+                                    + perdido.getNombre() + "! Haz clic para revisarla.";
+                            String enlace = "Coincidencias.jsp?accion=coincidenciasPerdidos&idObjetoPerdido=" + perdido.getIdObjetoPerdido();
+                            if (!notificacionesDAO.registrarNotificacion(perdido.getIdUsuario(), mensaje, enlace))
+                                System.out.println("No se pudo notificar al usuario " + perdido.getIdUsuario());
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println("Error al comparar el reporte " + perdido.getIdObjetoPerdido() + ": " + e.getMessage());

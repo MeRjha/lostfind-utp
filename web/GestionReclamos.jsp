@@ -1,5 +1,23 @@
-<%@page import="Objetos.Usuario"%>
+<%@page import="Objetos.Usuario, Objetos.SolicitudReclamo, java.util.List, java.text.SimpleDateFormat"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%!
+    private static String esc(Object o) {
+        if (o == null) return "";
+        return o.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                .replace("\"", "&quot;").replace("'", "&#39;");
+    }
+    private static String etiqueta(String estado) {
+        String e = estado == null ? "" : estado.toUpperCase();
+        String texto = "PENDIENTE".equals(e) ? "Pendiente" : "APROBADO".equals(e) ? "Aprobado"
+                : "RECHAZADO".equals(e) ? "Rechazado" : esc(estado);
+        return "<span class=\"saeEstado " + e.toLowerCase() + "\">" + texto + "</span>";
+    }
+    private static String param(jakarta.servlet.http.HttpServletRequest r, String n) {
+        String v = r.getParameter(n);
+        return v == null ? "" : v.trim();
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -8,6 +26,7 @@
         <title>LostFind - Gestión de reclamos</title>
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="sae.css">
+        <link rel="stylesheet" href="sae-reclamos.css">
         <link rel="stylesheet" href="efectos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
@@ -29,11 +48,22 @@
                     sede = usuario.getSede().getNombre();
                 }
             }
-            // TODO (backend): activar el control de acceso por rol
             if (usuario == null || !"PersonalSae".equals(usuario.getRol())) {
-            response.sendRedirect("Inicio.jsp");
-            return;
+                response.sendRedirect("Inicio.jsp");
+                return;
             }
+            // Esta pantalla se alimenta del servlet: si se abre directo, se redirige.
+            List<SolicitudReclamo> solicitudes = (List<SolicitudReclamo>) request.getAttribute("solicitudes");
+            if (solicitudes == null) {
+                response.sendRedirect("GestionSolicitudesServlet");
+                return;
+            }
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            String fBusqueda = param(request, "busqueda");
+            String fEstado = param(request, "estado");
+            String fCategoria = param(request, "categoria");
+            String fFecha = param(request, "fecha");
+            String[] categorias = {"Tecnología", "Documentos", "Accesorios", "Mochilas", "Ropa", "Otros"};
         %>
         <header class="header">
             <div class="contenedor barraCoincidencias">
@@ -50,6 +80,7 @@
                     <ul class="nav-list">
                         <li><a href="DashboardSAE.jsp">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp">Registrar objeto</a></li>
+                        <li><a href="ObjetosSAE.jsp">Objetos</a></li>
                         <li><a href="GestionReclamos.jsp" class="activo">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp">Reportes</a></li>
                     </ul>
@@ -73,14 +104,14 @@
         </header>
 
         <main>
-            <div class="contenedorDashboard saeContenido">
+            <div class="contenedorDashboard saeContenido saeReclamos">
 
                 <section class="saeEncabezado">
                     <div class="saeTitulo">
-                        <span class="saeIcono">📋</span>
+                        <span class="saeIcono">📄</span>
                         <div>
-                            <h1>Gestión de reclamos</h1>
-                            <p>Revisa las solicitudes de los estudiantes y valida la devolución de cada objeto.</p>
+                            <h1>Gestión de solicitudes de reclamo</h1>
+                            <p>Revisa, filtra y gestiona las solicitudes enviadas por los estudiantes para recuperar objetos encontrados.</p>
                         </div>
                     </div>
                     <div class="saeAdmin">
@@ -92,35 +123,70 @@
                     </div>
                 </section>
 
-                <div class="saeAviso" id="saeAviso" hidden>
-                    Mostrando datos de ejemplo: el servicio aún no está conectado.
-                </div>
-
-                <section class="cuadroTarjetas saeFiltros">
-                    <input type="search" id="buscarReclamo"
-                           placeholder="🔍 Buscar por objeto o estudiante..."
-                           aria-label="Buscar reclamos">
-                    <select id="filtroEstado" aria-label="Filtrar por estado">
-                        <option value="">Todos los estados</option>
-                        <option value="PENDIENTE">Pendiente</option>
-                        <option value="APROBADO">Aprobado</option>
-                        <option value="RECHAZADO">Rechazado</option>
-                    </select>
-                    <span class="saeContador" id="contadorReclamos"></span>
-                </section>
+                <form class="cuadroTarjetas reclamoFiltros" method="get" action="GestionSolicitudesServlet">
+                    <label>Estado
+                        <select name="estado">
+                            <option value="">Todos</option>
+                            <option value="PENDIENTE"<%= "PENDIENTE".equals(fEstado) ? " selected" : "" %>>Pendiente</option>
+                            <option value="APROBADO"<%= "APROBADO".equals(fEstado) ? " selected" : "" %>>Aprobado</option>
+                            <option value="RECHAZADO"<%= "RECHAZADO".equals(fEstado) ? " selected" : "" %>>Rechazado</option>
+                        </select>
+                    </label>
+                    <label>Categoría
+                        <select name="categoria">
+                            <option value="">Todas</option>
+                            <% for (String c : categorias) { %>
+                            <option value="<%=esc(c)%>"<%= c.equals(fCategoria) ? " selected" : "" %>><%=esc(c)%></option>
+                            <% } %>
+                        </select>
+                    </label>
+                    <label>Fecha de solicitud
+                        <input type="date" name="fecha" value="<%=esc(fFecha)%>">
+                    </label>
+                    <label>Buscar solicitud
+                        <input type="search" name="busqueda" value="<%=esc(fBusqueda)%>" placeholder="Nombre del objeto o estudiante">
+                    </label>
+                    <div class="reclamoBtns">
+                        <button type="submit" class="saeBtn">🔍 Buscar</button>
+                        <a class="saeBtn saeBtnClaro" href="GestionSolicitudesServlet">Limpiar filtros</a>
+                    </div>
+                </form>
 
                 <section class="cuadroTarjetas saeTablaCaja">
+                    <div class="reclamoCabecera">
+                        <h2 class="reclamoTitulo"><span class="reclamoIco">📋</span> Solicitudes registradas</h2>
+                        <span class="saeContador">Mostrando <%=solicitudes.size()%> <%= solicitudes.size() == 1 ? "solicitud" : "solicitudes" %></span>
+                    </div>
                     <table class="saeTabla">
                         <thead>
                             <tr>
                                 <th>Objeto</th>
                                 <th>Estudiante</th>
-                                <th>Fecha de solicitud</th>
+                                <th>Fecha</th>
                                 <th>Estado</th>
-                                <th></th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaReclamos"></tbody>
+                        <tbody>
+                            <% if (solicitudes.isEmpty()) { %>
+                            <tr><td colspan="5" class="saeVacio">No hay solicitudes con esos filtros</td></tr>
+                            <% } for (SolicitudReclamo r : solicitudes) { %>
+                            <tr>
+                                <td>
+                                    <div class="saeCeldaObjeto"><img class="saeThumb" src="<%=esc(r.getImagen())%>" alt="">
+                                        <div>
+                                            <strong><%=esc(r.getNombreObjeto())%></strong>
+                                            <div class="reclamoSede">📍 <%= r.getSedeObjeto() == null ? "-" : esc(r.getSedeObjeto()) %></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="reclamoCelda">👤 <%=esc(r.getNombreEstudiante())%> <%=esc(r.getApellidoEstudiante())%></div></td>
+                                <td><div class="reclamoCelda">📅 <%= r.getFechaSolicitud() == null ? "-" : fmt.format(r.getFechaSolicitud()) %></div></td>
+                                <td><%= etiqueta(r.getEstado()) %></td>
+                                <td><a class="saeBtn saeBtnClaro saeBtnChico" href="GestionSolicitudesServlet?idSolicitud=<%=r.getIdSolicitud()%>">Revisar ➡</a></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
                     </table>
                 </section>
 
@@ -140,5 +206,6 @@
 
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
+        <script src="iconos.js" defer></script>
     </body>
 </html>

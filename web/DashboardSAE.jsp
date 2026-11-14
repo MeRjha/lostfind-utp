@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="sae.css">
         <link rel="stylesheet" href="efectos.css">
+        <link rel="stylesheet" href="dashboard.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body class="paginaSAE" data-pagina="dashboard">
@@ -29,10 +30,9 @@
                     sede = usuario.getSede().getNombre();
                 }
             }
-             //TODO (backend): activar el control de acceso por rol
             if (usuario == null || !"PersonalSae".equals(usuario.getRol())) {
-            response.sendRedirect("Inicio.jsp");
-            return;
+                response.sendRedirect("Inicio.jsp");
+                return;
             }
         %>
         <header class="header">
@@ -50,7 +50,8 @@
                     <ul class="nav-list">
                         <li><a href="DashboardSAE.jsp" class="activo">Inicio</a></li>
                         <li><a href="RegistrarEncontrado.jsp">Registrar objeto</a></li>
-                        <li><a href="GestionReclamos.jsp">Reclamos</a></li>
+                        <li><a href="ObjetosSAE.jsp">Objetos</a></li>
+                        <li><a href="GestionSolicitudesServlet">Reclamos</a></li>
                         <li><a href="ReportesSAE.jsp">Reportes</a></li>
                     </ul>
                 </nav>
@@ -80,7 +81,7 @@
                         <span class="saeIcono">📊</span>
                         <div>
                             <h1>Panel del SAE</h1>
-                            <p>Resumen de la gestión de objetos y reclamos en la sede <%=sede%>.</p>
+                            <p>Administra los objetos encontrados, las solicitudes de reclamo y el seguimiento general del sistema LostFind.</p>
                         </div>
                     </div>
                     <div class="saeAdmin">
@@ -93,7 +94,7 @@
                 </section>
 
                 <div class="saeAviso" id="saeAviso" hidden>
-                    Mostrando datos de ejemplo: el servicio aún no está conectado.
+                    No se pudieron cargar los datos. Verifica que el servidor esté activo y que hayas iniciado sesión como Personal SAE.
                 </div>
 
                 <section class="saeGrid4">
@@ -103,7 +104,7 @@
                     </article>
                     <article class="cuadroTarjetas saeStat">
                         <span class="saeStatIcono">⏳</span>
-                        <div><b id="statPendientes">–</b><p>Reclamos pendientes</p></div>
+                        <div><b id="statPendientes">–</b><p>Solicitudes pendientes</p></div>
                     </article>
                     <article class="cuadroTarjetas saeStat">
                         <span class="saeStatIcono">🔗</span>
@@ -115,20 +116,19 @@
                     </article>
                 </section>
 
-                <section class="saeAcciones">
-                    <a class="saeBtn" href="RegistrarEncontrado.jsp">➕ Registrar objeto encontrado</a>
-                    <a class="saeBtn saeBtnClaro" href="GestionReclamos.jsp">📋 Gestionar reclamos</a>
-                    <a class="saeBtn saeBtnClaro" href="ReportesSAE.jsp">📈 Ver reportes</a>
-                </section>
-
                 <section class="saeDos">
                     <article class="cuadroTarjetas">
-                        <h2 class="saeSubtitulo">Registrados recientemente</h2>
+                        <div class="dashCabecera">
+                            <h2 class="saeSubtitulo">Objetos recientes bajo custodia</h2>
+                            <a class="dashVer" href="ObjetosSAE.jsp">Ver todos ➡</a>
+                        </div>
                         <ul class="saeLista" id="listaRecientes"></ul>
                     </article>
                     <article class="cuadroTarjetas">
-                        <h2 class="saeSubtitulo">Reclamos pendientes de revisión</h2>
-                        <ul class="saeLista" id="listaPendientes"></ul>
+                        <div class="dashCabecera">
+                            <h2 class="saeSubtitulo">Actividad reciente</h2>
+                        </div>
+                        <ul class="saeTimeline" id="actividad"></ul>
                     </article>
                 </section>
 
@@ -146,7 +146,10 @@
             </div>
         </footer>
 
+                       
+        <div id="InfoUsuario" data-usuario='${sessionScope.usuarioJson}' hidden></div>
         <div class="saeToast" id="saeToast" role="status" hidden></div>
         <script src="sae.js" defer></script>
+        <script src="iconos.js" defer></script>
     </body>
 </html>

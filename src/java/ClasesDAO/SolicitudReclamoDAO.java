@@ -12,9 +12,10 @@ public class SolicitudReclamoDAO {
     private static final String CONSULTA_BASE =
         "SELECT sr.idSolicitud, sr.idObjetoEncontrado, o.idObjeto, sr.idUsuario, sr.fechaSolicitud, " +
         "sr.sustentoPropiedad, sr.estado, sr.motivoRechazo, o.nombre AS nombreObjeto, o.categoria, o.imagen, " +
+        "o.color, o.marca, o.lugarReferencia, oe.fechaHallazgo, o.estado AS estadoObjeto, " +
         "u.nombre AS nombreEstudiante, u.apellido AS apellidoEstudiante, u.correoInstitucional, " +
         "sUsuario.nombre AS sedeEstudiante, sObjeto.nombre AS sedeObjeto " +
-        "FROM solicitud_reclamo sr JOIN objeto_encontrado oe ON sr.idObjetoEncontrado = oe.idObjeto " +
+        "FROM solicitud_reclamo sr JOIN objeto_encontrado oe ON sr.idObjetoEncontrado = oe.idObjetoEncontrado " +
         "JOIN objeto o ON oe.idObjeto = o.idObjeto JOIN usuario u ON sr.idUsuario = u.idUsuario " +
         "LEFT JOIN sede sUsuario ON u.idSede = sUsuario.idSede " +
         "LEFT JOIN sede sObjeto ON o.idSede = sObjeto.idSede ";
@@ -37,6 +38,11 @@ public class SolicitudReclamoDAO {
         s.setCorreoInstitucional(rs.getString("correoInstitucional"));
         s.setSedeEstudiante(rs.getString("sedeEstudiante"));
         s.setSedeObjeto(rs.getString("sedeObjeto"));
+        s.setColor(rs.getString("color"));
+        s.setMarca(rs.getString("marca"));
+        s.setLugarReferencia(rs.getString("lugarReferencia"));
+        s.setFechaHallazgo(rs.getDate("fechaHallazgo"));
+        s.setEstadoObjeto(rs.getString("estadoObjeto"));
         return s;
     }
 
@@ -120,9 +126,21 @@ public class SolicitudReclamoDAO {
                     ps.setString(3, motivoRechazo); ps.setInt(4, idSolicitud);
                     if (ps.executeUpdate() != 1) { con.rollback(); return false; }
                 }
+                                String nombreObjeto = "tu objeto", sedeObjeto = "tu sede";
+                try (PreparedStatement ps = con.prepareStatement(
+                        "SELECT o.nombre, s.nombre FROM objeto_encontrado oe INNER JOIN objeto o ON o.idObjeto = oe.idObjeto "
+                        + "INNER JOIN sede s ON s.idSede = o.idSede WHERE oe.idObjetoEncontrado = ?")) {
+                    ps.setInt(1, idObjetoEncontrado);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) { nombreObjeto = rs.getString(1); sedeObjeto = rs.getString(2); }
+                    }
+                }
                 String mensaje = "APROBADO".equals(nuevoEstado)
-                    ? "Tu solicitud de reclamo #" + idSolicitud + " fue aprobada por el personal SAE."
-                    : "Tu solicitud de reclamo #" + idSolicitud + " fue rechazada. Revisa el motivo en el detalle de tu solicitud.";
+                    ? "¡Tu reclamo de \"" + nombreObjeto + "\" fue aprobado! Acércate al SAE de " + sedeObjeto
+                        + " con tu carné y la constancia en Word para recoger tu objeto."
+                    : "Tu reclamo de \"" + nombreObjeto + "\" fue rechazado. Motivo: " + motivoRechazo;
+                if (mensaje.length() > 255) mensaje = mensaje.substring(0, 252) + "...";
+                
                 try (PreparedStatement ps = con.prepareStatement(
                         "INSERT INTO notificacion (idUsuario, mensaje, fechaEnvio, leida) VALUES (?, ?, CURRENT_DATE(), FALSE)")) {
                     ps.setInt(1, idUsuario); ps.setString(2, mensaje);
@@ -159,5 +177,85 @@ public class SolicitudReclamoDAO {
             }
         } catch (SQLException ex) { System.out.println("Error al listar evidencias: " + ex.getMessage()); }
         return lista;
+    }
+    
+        /** Devuelve el id creado (>0); 0 = ya tenías una pendiente; -1 = objeto no registrado;
+     *  -2 = objeto ya entregado; -3 = error. */
+    public int crearSolicitud(int idUsuario, int idObjeto, String sustento, String urlEvidencia) {
+        try (Connection con = ConexionBD.getInstancia().getConexionNueva()) {
+            con.setAutoCommit(false);
+            try {
+                int idObjetoEncontrado;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "SELECT idObjetoEncontrado FROM objeto_encontrado WHERE idObjetoEncontrado = ? FOR UPDATE")) {
+                    ps.setInt(1, idObjeto);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.next()) { con.rollback(); return -1; }
+                        idObjetoEncontrado = rs.getInt(1);
+                    }
+                }
+                try (PreparedStatement ps = con.prepareStatement(
+                        "SELECT estado FROM solicitud_reclamo WHERE idObjetoEncontrado = ? "
+                        + "AND (estado = 'APROBADO' OR (estado = 'PENDIENTE' AND idUsuario = ?)) ORDER BY estado")) {
+                    ps.setInt(1, idObjetoEncontrado);
+                    ps.setInt(2, idUsuario);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            boolean entregado = "APROBADO".equalsIgnoreCase(rs.getString(1));
+                            con.rollback();
+                            return entregado ? -2 : 0;
+                        }
+                    }
+                }
+                int idSolicitud;
+                try (PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO solicitud_reclamo (idObjetoEncontrado, idUsuario, fechaSolicitud, sustentoPropiedad, estado) "
+                        + "VALUES (?, ?, CURDATE(), ?, 'PENDIENTE')", Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, idObjetoEncontrado);
+                    ps.setInt(2, idUsuario);
+                    ps.setString(3, sustento);
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) { con.rollback(); return -3; }
+                        idSolicitud = rs.getInt(1);
+                    }
+                }
+                if (urlEvidencia != null) {
+                    try (PreparedStatement ps = con.prepareStatement(
+                            "INSERT INTO evidencia_reclamo (idSolicitud, urlArchivo, fechaSubida) VALUES (?, ?, CURDATE())")) {
+                        ps.setInt(1, idSolicitud);
+                        ps.setString(2, urlEvidencia);
+                        ps.executeUpdate();
+                    }
+                }
+                con.commit();
+                return idSolicitud;
+            } catch (SQLException ex) {
+                try { con.rollback(); } catch (SQLException e2) { ex.addSuppressed(e2); }
+                throw ex;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al crear solicitud: " + ex.getMessage());
+            return -3;
+        }
+    }
+        /** Devuelve {sustento, urlEvidencia} de la solicitud del usuario para ese objeto, o null si no existe. */
+    public String[] obtenerSolicitudDeUsuario(int idUsuario, int idObjeto) {
+        String sql = "SELECT sr.sustentoPropiedad, "
+                + "(SELECT er.urlArchivo FROM evidencia_reclamo er WHERE er.idSolicitud = sr.idSolicitud "
+                + " ORDER BY er.idEvidencia LIMIT 1) "
+                + "FROM solicitud_reclamo sr JOIN objeto_encontrado oe ON sr.idObjetoEncontrado = oe.idObjetoEncontrado "
+                + "WHERE sr.idUsuario = ? AND sr.idObjetoEncontrado = ? ORDER BY sr.idSolicitud DESC LIMIT 1";
+        try (Connection con = ConexionBD.getInstancia().getConexionNueva();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idObjeto);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? new String[]{rs.getString(1), rs.getString(2)} : null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar la solicitud: " + e.getMessage());
+            return null;
+        }
     }
 }

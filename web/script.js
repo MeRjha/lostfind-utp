@@ -1,3 +1,14 @@
+/* Avisos propios de la página (reemplazan a alert y confirm del navegador): ver avisos.js */
+(function () {
+    if (!window.Avisos && !document.querySelector('script[src="avisos.js"]')) {
+        const s = document.createElement("script");
+        s.src = "avisos.js";
+        document.head.appendChild(s);
+    }
+    window.avisar = window.avisar || function (m, t) { return window.Avisos ? Avisos.avisar(m, t) : alert(m); };
+    window.confirmarAviso = window.confirmarAviso || function (m, o) { return window.Avisos ? Avisos.confirmar(m, o) : Promise.resolve(confirm(m)); };
+})();
+
 document.addEventListener("DOMContentLoaded", iniciarPerfilYReporte);
 document.addEventListener("DOMContentLoaded", iniciarReclamo);
 document.addEventListener("DOMContentLoaded", iniciarObjetosEncontrados);
@@ -199,27 +210,26 @@ function iniciarPerfilYReporte() {
             const archivo = foto.files[0];
 
             if (!archivo) {
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
             const tiposPermitidos = [
                 "image/jpeg",
-                "image/png",
-                "image/webp"
+                "image/png"
             ];
 
             if (!tiposPermitidos.includes(archivo.type)) {
-                alert("Solo se permiten imágenes JPG, PNG o WEBP.");
+                avisar("Solo se permiten imágenes JPG, PNG o WEBP.", "aviso");
                 foto.value = "";
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
             if (archivo.size > 5 * 1024 * 1024) {
-                alert("La foto no puede superar los 5 MB.");
+                avisar("La foto no puede superar los 5 MB.", "aviso");
                 foto.value = "";
-                nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+                nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
                 return;
             }
 
@@ -229,7 +239,7 @@ function iniciarPerfilYReporte() {
 
         formulario.addEventListener("reset", function () {
             contador.textContent = "0/500";
-            nombreFoto.textContent = "JPG, PNG o WEBP (máx. 5 MB)";
+            nombreFoto.textContent = "JPG o PNG (máx. 5 MB)";
         });
 
 
@@ -243,6 +253,8 @@ function botonVerCoincidencias(boton) {
 }
 
 async function mostrarCoincidenciasDesdeObjetosPerdidos() {
+    const idUrl = new URLSearchParams(window.location.search).get("idObjetoPerdido");
+    if (idUrl && /^\d+$/.test(idUrl)) sessionStorage.setItem("idObjetoPerdido", idUrl);
     let idObjetoPerdido = sessionStorage.getItem("idObjetoPerdido");
     console.log("ID del ojeto Perdido: "+idObjetoPerdido);
     const datos = new URLSearchParams();
@@ -660,14 +672,14 @@ function iniciarReclamo() {
             const formatos = ["image/jpeg", "image/png", "application/pdf"];
 
             if (!formatos.includes(archivo.type)) {
-                alert("Solo puedes subir archivos JPG, PNG o PDF.");
+                avisar("Solo puedes subir archivos JPG, PNG o PDF.", "aviso");
                 this.value = "";
                 nombreEvidencia.textContent = "JPG, PNG o PDF (máx. 10 MB)";
                 return;
             }
 
             if (archivo.size > 10 * 1024 * 1024) {
-                alert("El archivo no puede superar los 10 MB.");
+                avisar("El archivo no puede superar los 10 MB.", "aviso");
                 this.value = "";
                 nombreEvidencia.textContent = "JPG, PNG o PDF (máx. 10 MB)";
                 return;
@@ -982,39 +994,6 @@ function iniciarObjetosPerdidos() {
                 document.getElementById("notificacionPerdidos").hidden = true;
             });
 
-    const botonesCancelar = document.querySelectorAll("[data-cancelar]");
-
-    botonesCancelar.forEach(function (boton) {
-
-        boton.addEventListener("click", function () {
-
-            const confirmar = confirm(
-                    "¿Deseas cancelar este reporte? Esta es una prueba visual."
-                    );
-
-            if (!confirmar) {
-                return;
-            }
-
-            const reporte = boton.closest(".reportePerdido");
-
-            const estado = reporte.querySelector(".etiquetaEstado");
-            const descripcion = reporte.querySelector(".descripcionEstado");
-
-            estado.className = "etiquetaEstado reporteCancelado";
-            estado.textContent = "🚫 Cancelado";
-            console.log("ID del botón:", boton.dataset.idObjetoPerdido);
-            cambiarEstadoReserva("🚫 Cancelado", boton.dataset.idObjetoPerdido);
-            descripcion.textContent =
-                    "El reporte fue cancelado en esta demostración.";
-
-            boton.remove();
-
-            alert("Estado actualizado solo en esta página de prueba.");
-        });
-
-    });
-
     const imagenesReportes = listaReportes.querySelectorAll("img");
 
     imagenesReportes.forEach(function (imagen) {
@@ -1049,15 +1028,60 @@ function iniciarObjetosPerdidos() {
 
     mostrarReportes();
 }
-function cambiarEstadoReserva(estado, idObjeto) {
+
+// Cancelar un reporte: un único listener en el documento (funciona aunque los botones se creen después)
+document.addEventListener("click", async function (evento) {
+    const boton = evento.target.closest("[data-cancelar]");
+    if (!boton) {
+        return;
+    }
+
+    const quiere = await confirmarAviso("Ya no se buscarán coincidencias para este reporte.", {
+        titulo: "¿Cancelar el reporte?",
+        aceptar: "Sí, cancelar",
+        cancelar: "No, volver",
+        peligro: true
+    });
+    if (!quiere) {
+        return;
+    }
+
+    boton.disabled = true;
+    const correcto = await cambiarEstadoReserva("🚫 Cancelado", boton.dataset.idObjetoPerdido);
+    if (!correcto) {
+        boton.disabled = false;
+        avisar("No se pudo cancelar el reporte. Inténtalo de nuevo.", "error");
+        return;
+    }
+
+    const reporte = boton.closest(".reportePerdido");
+    const estado = reporte.querySelector(".etiquetaEstado");
+    const descripcion = reporte.querySelector(".descripcionEstado");
+
+    estado.className = "etiquetaEstado reporteCancelado";
+    estado.textContent = "🚫 Cancelado";
+    if (descripcion) {
+        descripcion.textContent = "Cancelaste este reporte.";
+    }
+    boton.remove();
+    avisar("Reporte cancelado.", "exito");
+});
+
+
+async function cambiarEstadoReserva(estado, idObjeto) {
     const datos = new URLSearchParams();
     datos.append("idObjetoPerdido", idObjeto);
     datos.append("estado", estado);
 
-    fetch("CambiaEstadoReporteServlet", {
-        method: "POST",
-        body: datos
-    });
+    try {
+        const respuesta = await fetch("CambiaEstadoReporteServlet", {
+            method: "POST",
+            body: datos
+        });
+        return respuesta.ok;
+    } catch (error) {
+        return false;
+    }
 }
 //modales del nav
 document.addEventListener("DOMContentLoaded", iniciarAyudaInicio);
@@ -1290,36 +1314,75 @@ async function mostrarReportes() {
     }
 }
 
-async function descargarConstanciaWord() {
-
+async function enviarSolicitudReclamo() {
     const formulario = document.getElementById("formReclamo");
+    if (!formulario.reportValidity()) {
+        return;
+    }
+    const boton = document.getElementById("btnEnviarSolicitud");
+    boton.disabled = true;
 
     const datos = new FormData(formulario);
+    datos.append("accion", "enviar");
 
-    const respuesta = await fetch("CreacionConstanciaWord", {
-        method: "POST",
-        body: datos
-    });
-
-    if (!respuesta.ok) {
-        throw new Error("No se pudo generar la constancia");
+    try {
+        const respuesta = await fetch("CreacionConstanciaWord", {method: "POST", body: datos});
+        if (!respuesta.ok) {
+            const mensajes = {
+                400: "Revisa los datos: falta el sustento o la evidencia no es válida.",
+                401: "Tu sesión terminó. Vuelve a iniciar sesión.",
+                403: "Tu cuenta no puede enviar solicitudes de reclamo.",
+                404: "Este objeto ya no está disponible.",
+                409: "Este objeto ya fue entregado a otro estudiante."
+            };
+            avisar(mensajes[respuesta.status] || "No se pudo enviar la solicitud. Inténtalo de nuevo.", "error");
+            boton.disabled = false;
+            return;
+        }
+        const r = await respuesta.json();
+        avisar(r.yaExistia
+                ? "Ya habías enviado esta solicitud. Puedes descargar tu constancia."
+                : "Solicitud enviada. El SAE la revisará y te avisaremos del resultado.", "exito");
+        marcarSolicitudEnviada();
+    } catch (error) {
+        avisar("No se pudo conectar con el servidor.", "error");
+        boton.disabled = false;
     }
+}
 
-    const archivo = await respuesta.blob();
+function marcarSolicitudEnviada() {
+    const enviar = document.getElementById("btnEnviarSolicitud");
+    enviar.disabled = true;
+    enviar.textContent = "Solicitud enviada ✔";
+    document.getElementById("btnDescargarWord").disabled = false;
+    document.querySelectorAll("#formReclamo textarea, #formReclamo input").forEach(c => c.disabled = true);
+}
 
-    const url = URL.createObjectURL(archivo);
-
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = "Constancia_LostFind.docx";
-    enlace.click();
-
-    URL.revokeObjectURL(url);
+async function descargarConstanciaWord() {
+    const datos = new FormData();
+    datos.append("accion", "descargar");
+    try {
+        const respuesta = await fetch("CreacionConstanciaWord", {method: "POST", body: datos});
+        if (!respuesta.ok) {
+            avisar(respuesta.status === 409
+                    ? "Primero envía la solicitud de reclamo."
+                    : "No se pudo generar la constancia.", "error");
+            return;
+        }
+        const archivo = await respuesta.blob();
+        const url = URL.createObjectURL(archivo);
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "Constancia_LostFind.docx";
+        enlace.click();
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        avisar("No se pudo conectar con el servidor.", "error");
+    }
 }
 
 async function crearBotonesEnDetalle(objetoEncontrado) {
     const datos = new URLSearchParams();
-
     datos.append("objetoPerdido", JSON.stringify(objetoEncontrado));
 
     await fetch("GuardarObjetoServlet", {
@@ -1328,10 +1391,20 @@ async function crearBotonesEnDetalle(objetoEncontrado) {
     });
 
     document.getElementById("botonesDetalles").innerHTML = `
-                                <button type="submit" class="btn" onclick="descargarConstanciaWord()">
-                                    Enviar solicitud de reclamo →
-                                </button>
-`;
+        <button type="button" class="btn" id="btnEnviarSolicitud">Enviar solicitud de reclamo →</button>
+        <button type="button" class="btn btnSecundario" id="btnDescargarWord" disabled>Descargar constancia (Word)</button>`;
+
+    document.getElementById("btnEnviarSolicitud").addEventListener("click", enviarSolicitudReclamo);
+    document.getElementById("btnDescargarWord").addEventListener("click", descargarConstanciaWord);
+
+    // Si ya la había enviado antes (recargó la página), deja habilitada la descarga
+    try {
+        const r = await fetch("CreacionConstanciaWord?consulta=1");
+        if (r.ok && (await r.json()).existe) {
+            marcarSolicitudEnviada();
+        }
+    } catch (error) {
+    }
 }
 
 function mostrarDescripcionEstado(estado) {
