@@ -140,4 +140,48 @@ public class ObjetosEncontradosDAO {
         }
         return null;
     }
+    
+        /** Objetos en seguimiento: registrados por el SAE sin resolver y reportes de estudiantes
+     *  en búsqueda o con coincidencia. */
+    public List<ObjetoEncontrado> obtenerObjetosEnSeguimiento(int idSede) {
+        String cols = "o.idObjeto, o.imagen, o.categoria, o.nombre, o.color, o.marca, "
+                + "o.descripcion, o.lugarReferencia, o.fechaRegistro";
+        String sql = "SELECT " + cols + ", o.estado AS est, oe.fechaHallazgo AS fecha, 0 AS perdido "
+                + "FROM objeto o INNER JOIN objeto_encontrado oe ON o.idObjeto = oe.idObjeto "
+                + "WHERE o.idSede = ? AND o.estado <> 'ENCONTRADO' "
+                + "UNION ALL "
+                + "SELECT " + cols + ", r.estado AS est, op.fechaPerdida AS fecha, 1 AS perdido "
+                + "FROM objeto o INNER JOIN objeto_perdido op ON o.idObjeto = op.idObjeto "
+                + "INNER JOIN reporte_objeto_perdido r ON r.idObjetoPerdido = op.idObjetoPerdido "
+                + "WHERE o.idSede = ? AND (r.estado LIKE '%squeda%' OR r.estado LIKE '%oincidencia%') "
+                + "ORDER BY fecha DESC, idObjeto DESC";
+        List<ObjetoEncontrado> lista = new ArrayList<>();
+        try (Connection c = ConexionBD.getInstancia().getConexionNueva();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, idSede);
+            ps.setInt(2, idSede);
+            try (ResultSet res = ps.executeQuery()) {
+                while (res.next()) {
+                    String estado = res.getString("est");
+                    if (res.getInt("perdido") == 1) {
+                        estado = estado != null && estado.contains("squeda")
+                        ? "Perdido: en búsqueda" : "Perdido: con coincidencia";
+                    } else {
+                        estado = "Registrado por SAE";
+                    }
+                    ObjetoEncontrado o = new ObjetoEncontrado(res.getDate("fecha"),
+                            res.getString("categoria"), res.getString("imagen"), res.getString("nombre"),
+                            res.getString("color"), res.getString("marca"), res.getString("descripcion"),
+                            res.getString("lugarReferencia"), estado);
+                    o.setFechaRegistro(res.getDate("fechaRegistro"));
+                    o.setIdObjeto(res.getInt("idObjeto"));
+                    lista.add(o);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al listar objetos en seguimiento: " + e.getMessage());
+            return null;
+        }
+        return lista;
+    }
 }

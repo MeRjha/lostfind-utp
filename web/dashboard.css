@@ -35,3 +35,7 @@
 .paginaSAE .saeAdmin { flex-shrink: 0; }
 @media (max-width: 800px) { .paginaSAE .saeEncabezado { flex-wrap: wrap; } }
 
+/* Permite que la ubicación se parta en dos líneas en vez de pasar por debajo de la etiqueta */
+.dashDato { white-space: normal; }
+.dashInfo { overflow: hidden; }
+.dashItem .saeEstado { max-width: 140px; text-align: center; }

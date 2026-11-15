@@ -725,6 +725,22 @@ async function iniciarObjetosEncontrados() {
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
     }
+    
+        const categoriasUnicas = {};
+    objetos.forEach(function (o) {
+        const clave = normalizar(o.categoria || "");
+        if (clave && !categoriasUnicas[clave]) {
+            categoriasUnicas[clave] = o.categoria;
+        }
+    });
+    Object.values(categoriasUnicas)
+            .sort(function (a, b) { return a.localeCompare(b, "es"); })
+            .forEach(function (nombre) {
+                const opcion = document.createElement("option");
+                opcion.value = nombre;
+                opcion.textContent = nombre;
+                categoria.appendChild(opcion);
+            });
 
     function mostrarFecha(valor) {
         const partes = valor.split(" ");
@@ -749,12 +765,12 @@ async function iniciarObjetosEncontrados() {
 
             const coincideNombre = textoObjeto.includes(palabra);
             const coincideCategoria = categoria.value === "" ||
-                    objeto.categoria === categoria.value;
+                    normalizar(objeto.categoria) === normalizar(categoria.value);
 
 
 
             const coincideLugar = lugar.value === "" ||
-                    normalizar(objeto.lugarReferencia).includes(normalizar(lugar.value));
+            new RegExp(normalizar(lugar.value)).test(normalizar(objeto.lugarReferencia || ""));
 
             const coincideFecha = fecha.value === "" ||
                     mostrarFecha(objeto.fechaHallazgo) === fecha.value.toLowerCase();
@@ -820,7 +836,7 @@ async function iniciarObjetosEncontrados() {
 
                         <a class="enlaceDetalle"
                            href="ReportarObjeto.jsp">
-                            Solicitar Reclamo →
+                            Es mío, reportarlo →
                         </a>
 
                     </article>
@@ -1212,7 +1228,7 @@ async function mostrarObjetosEncontradosRecientemente() {
                                  alt="${objeto.nombre}">
                             <h3>${objeto.nombre}</h3>
                             <p>📍 Encontrada en ${objeto.lugarReferencia}.</p>
-                            <a href="ReportarObjeto.jsp" class="enlaceDetalle">Solicitar reclamo →</a>
+                            <a href="ReportarObjeto.jsp" class="enlaceDetalle">Es mío, reportarlo →</a>
                         </article> `;
         }
         document.getElementById("objetosRecientes").innerHTML = resultado;

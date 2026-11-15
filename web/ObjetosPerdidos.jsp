@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>LostFind - Objetos perdidos</title>
+        <title>LostFind - Mis reportes</title>
         <link rel="stylesheet" href="estilos.css?v=6">
         <link rel="stylesheet" href="efectos.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -30,8 +30,8 @@
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
-                        <li><a href="ObjetosPerdidos.jsp" class="activo">Objetos perdidos</a></li>
-                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
+                        <li><a href="ObjetosPerdidos.jsp" class="activo">Mis reportes</a></li>
+                        <li><a href="ReportarObjeto.jsp">Reportar pérdida</a></li>
                     </ul>
                 </nav>
 
@@ -86,7 +86,7 @@
                         <span class="iconoTituloPerdidos">📄</span>
 
                         <div>
-                            <h1>Objetos perdidos</h1>
+                            <h1>Mis reportes</h1>
                             <p>
                                 Revisa tus reportes de objetos perdidos.
                                 Puedes ver su estado y más detalles en cualquier momento.
@@ -110,14 +110,9 @@
 
                 <div class="opcionesPerdidos">
 
-                    <a href="ObjetosPerdidos.jsp" class="opcionActiva">
-                        Mis reportes
-                    </a>
-
-                    <a href="ReportarObjeto.jsp">
+                    <a href="ReportarObjeto.jsp" class="opcionActiva">
                         Reportar nuevo objeto
                     </a>
-
                 </div>
 
                 <form class="cuadroTarjetas buscadorPerdidos"
