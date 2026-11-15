@@ -30,8 +30,8 @@
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp" class="activo">Objetos encontrados</a></li>
-                        <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="ReportarObjeto.jsp">Buscar objeto</a></li>
+                        <li><a href="ObjetosPerdidos.jsp">Mis reportes</a></li>
+                        <li><a href="ReportarObjeto.jsp">Reportar pérdida</a></li>
                     </ul>
                 </nav>
 
@@ -133,14 +133,6 @@
 
                             <select id="filtroCategoria">
                                 <option value="">Todas</option>
-                                <option value="Accesorios">Accesorios</option>
-                                <option value="Mochilas">Mochilas</option>
-                                <option value="Celulares">Celulares</option>
-                                <option value="Tablets">Tablets</option>
-                                <option value="Electrónica">Electrónica</option>
-                                <option value="Ropa">Ropa</option>
-                                <option value="Útiles">Útiles</option>
-                                <option value="Otros">Otros</option>
                             </select>
                         </div>
 

@@ -100,7 +100,7 @@
                 <section class="saeGrid4">
                     <article class="cuadroTarjetas saeStat">
                         <span class="saeStatIcono">📦</span>
-                        <div><b id="statCustodia">–</b><p>Objetos bajo custodia</p></div>
+                        <div><b id="statCustodia">–</b><p>Objetos en seguimiento</p></div>
                     </article>
                     <article class="cuadroTarjetas saeStat">
                         <span class="saeStatIcono">⏳</span>
@@ -112,14 +112,14 @@
                     </article>
                     <article class="cuadroTarjetas saeStat">
                         <span class="saeStatIcono">✅</span>
-                        <div><b id="statEntregados">–</b><p>Objetos entregados</p></div>
+                        <div><b id="statEntregados">–</b><p>Reclamos aprobados</p></div>
                     </article>
                 </section>
 
                 <section class="saeDos">
                     <article class="cuadroTarjetas">
                         <div class="dashCabecera">
-                            <h2 class="saeSubtitulo">Objetos recientes bajo custodia</h2>
+                            <h2 class="saeSubtitulo">Objetos en seguimiento recientes</h2>
                             <a class="dashVer" href="ObjetosSAE.jsp">Ver todos ➡</a>
                         </div>
                         <ul class="saeLista" id="listaRecientes"></ul>

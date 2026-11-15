@@ -31,8 +31,8 @@
                     <ul class="nav-list">
                         <li><a href="Estudiante.jsp">Inicio</a></li>
                         <li><a href="ObjetosEncontrados.jsp">Objetos encontrados</a></li>
-                        <li><a href="ObjetosPerdidos.jsp">Objetos perdidos</a></li>
-                        <li><a href="ReportarObjeto.jsp" class="activo">Buscar objeto</a></li>
+                        <li><a href="ObjetosPerdidos.jsp">Mis reportes</a></li>
+                        <li><a href="ReportarObjeto.jsp" class="activo">Reportar pérdida</a></li>
                     </ul>
                 </nav>
 

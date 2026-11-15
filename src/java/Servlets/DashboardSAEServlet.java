@@ -49,15 +49,17 @@ public class DashboardSAEServlet extends HttpServlet {
             String nombreSede = usuario.getSede() == null ? "" : usuario.getSede().getNombre();
 
             Map<String, Object> json = new LinkedHashMap<>();
-            json.put("bajoCustodia", dao.contarObjetosBajoCustodia());
+            List<ObjetoEncontrado> seguimiento = usuario.getSede() == null ? null
+                    : new ObjetosEncontradosDAO().obtenerObjetosEnSeguimiento(usuario.getSede().getIdSede());
+            json.put("bajoCustodia", seguimiento == null ? 0 : seguimiento.size());
             json.put("reclamosPendientes", dao.contarReclamosPendientes());
             json.put("coincidencias", dao.contarCoincidencias());
             json.put("entregados", dao.contarObjetosAceptados());
 
             List<Map<String, Object>> recientes = new ArrayList<>();
             if (usuario.getSede() != null) {
-                List<ObjetoEncontrado> lista = new ObjetosEncontradosDAO()
-                        .obtenerObjetosRecientes(usuario.getSede().getIdSede());
+                List<ObjetoEncontrado> lista = seguimiento == null ? null
+                        : seguimiento.subList(0, Math.min(4, seguimiento.size()));
                 if (lista != null) {
                     for (ObjetoEncontrado o : lista) {
                         Map<String, Object> m = new LinkedHashMap<>();

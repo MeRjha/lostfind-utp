@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>LostFind - Objetos encontrados</title>
+        <title>LostFind - Objetos en seguimiento</title>
         <link rel="stylesheet" href="estilos.css?v=5">
         <link rel="stylesheet" href="sae.css">
         <link rel="stylesheet" href="objetos.css">
@@ -45,7 +45,7 @@
             List<ObjetoEncontrado> objetos = new ArrayList<>();
             boolean errorDatos = false;
             if (usuario.getSede() != null) {
-                List<ObjetoEncontrado> lista = new ObjetosEncontradosDAO().obtenerObjetos(usuario.getSede().getIdSede());
+                List<ObjetoEncontrado> lista = new ObjetosEncontradosDAO().obtenerObjetosEnSeguimiento(usuario.getSede().getIdSede());
                 if (lista == null) {
                     errorDatos = true;
                 } else {
@@ -101,8 +101,8 @@
                     <div class="saeTitulo">
                         <span class="saeIcono">📦</span>
                         <div>
-                            <h1>Objetos encontrados</h1>
-                            <p>Consulta los objetos que están bajo custodia del SAE en la sede <%=esc(sede)%>.</p>
+                            <h1>Objetos en seguimiento</h1>
+                            <p>Objetos reportados por estudiantes y registrados por el SAE que siguen en búsqueda o con coincidencia en la sede <%=esc(sede)%>.</p>
                         </div>
                     </div>
                     <div class="saeAdmin">
@@ -141,8 +141,8 @@
                             <tr>
                                 <th>Objeto</th>
                                 <th>Categoría</th>
-                                <th>Lugar de hallazgo</th>
-                                <th>Fecha de hallazgo</th>
+                                <th>Lugar</th>
+                                <th>Fecha</th>
                                 <th>Estado</th>
                                 <th></th>
                             </tr>
@@ -193,9 +193,9 @@
                         <div><dt>Categoría</dt><dd id="mCategoria"></dd></div>
                         <div><dt>Color</dt><dd id="mColor"></dd></div>
                         <div><dt>Marca o modelo</dt><dd id="mMarca"></dd></div>
-                        <div><dt>Lugar de hallazgo</dt><dd id="mLugar"></dd></div>
+                        <div><dt>Lugar</dt><dd id="mLugar"></dd></div>
                         <div><dt>Sede</dt><dd id="mSede"></dd></div>
-                        <div><dt>Fecha de hallazgo</dt><dd id="mFecha"></dd></div>
+                        <div><dt>Fecha</dt><dd id="mFecha"></dd></div>
                         <div><dt>Fecha de registro</dt><dd id="mRegistro"></dd></div>
                     </dl>
                     <h3 class="saeMini">Descripción</h3>
