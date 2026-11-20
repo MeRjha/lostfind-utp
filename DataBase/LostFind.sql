@@ -290,7 +290,7 @@ CREATE TABLE `solicitud_reclamo` (
 
 LOCK TABLES `solicitud_reclamo` WRITE;
 /*!40000 ALTER TABLE `solicitud_reclamo` DISABLE KEYS */;
-INSERT INTO `solicitud_reclamo` VALUES (1,1,1,NULL,'2026-10-22','El celular tiene una funda negra','PENDIENTE', NULL);
+INSERT INTO `solicitud_reclamo` VALUES (1,1,1,NULL,'2026-10-22','El celular tiene una funda negra','PENDIENTE',NULL,NULL);
 /*!40000 ALTER TABLE `solicitud_reclamo` ENABLE KEYS */;
 UNLOCK TABLES;
 
