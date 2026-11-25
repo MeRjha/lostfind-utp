@@ -130,7 +130,7 @@
                         <select id="fEstado" aria-label="Filtrar por estado">
                             <option value="">Todos los estados</option>
                         </select>
-                        <a class="saeBtn saeBtnChico" href="RegistrarEncontrado.jsp">➕ Registrar</a>
+                        <button type="button" class="saeBtn saeBtnChico" id="btnLimpiar">Limpiar</button>
                         <span class="saeContador" id="contador"><%=objetos.size()%> objetos</span>
                     </div>
                 </section>

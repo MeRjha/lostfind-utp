@@ -120,6 +120,7 @@
                                             <option value="Accesorios">Accesorios</option>
                                             <option value="Mochilas">Mochilas</option>
                                             <option value="Ropa">Ropa</option>
+                                            <option value="Útiles">Útiles</option>
                                             <option value="Otros">Otros</option>
                                         </select>
                                     </div>

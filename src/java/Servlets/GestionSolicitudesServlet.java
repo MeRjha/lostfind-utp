@@ -61,7 +61,7 @@ public class GestionSolicitudesServlet extends HttpServlet {
             sesion.setAttribute("csrfTokenSAE", tokenCsrf);
         }
         request.setAttribute("csrfTokenSAE", tokenCsrf);
-        String estado = request.getParameter("estado");
+        String estado = "PENDIENTE";
         String categoria = request.getParameter("categoria");
         String fechaTexto = request.getParameter("fecha");
         String busqueda = request.getParameter("busqueda");

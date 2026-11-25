@@ -39,3 +39,20 @@
 .dashDato { white-space: normal; }
 .dashInfo { overflow: hidden; }
 .dashItem .saeEstado { max-width: 140px; text-align: center; }
+
+/* ===== Panel SAE responsivo ===== */
+
+/* Tarjetas de cifras y bloques: se reparten solos según el ancho disponible */
+.saeGrid4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+.saeDos   { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+
+/* Cada objeto de la lista: el nombre siempre conserva espacio; etiqueta y botón bajan si hace falta */
+.dashItem { flex-wrap: wrap; }
+.dashInfo { flex: 1 1 150px; min-width: 150px; overflow: visible; }
+.dashItem .saeEstado { max-width: none; }
+.dashItem .saeBtn { margin-left: auto; }
+
+/* Encabezado: el cuadro "Acceso administrativo" baja debajo del título en pantallas medianas */
+@media (max-width: 1000px) {
+    .paginaSAE .saeEncabezado { flex-wrap: wrap; }
+}

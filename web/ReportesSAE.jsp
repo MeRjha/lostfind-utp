@@ -115,6 +115,7 @@
                         <option>Accesorios</option>
                         <option>Mochilas</option>
                         <option>Ropa</option>
+                        <option>Útiles</option>
                         <option>Otros</option>
                     </select>
                     <select id="fEstado" aria-label="Estado de reclamos">

@@ -63,7 +63,7 @@
             String fEstado = param(request, "estado");
             String fCategoria = param(request, "categoria");
             String fFecha = param(request, "fecha");
-            String[] categorias = {"Tecnología", "Documentos", "Accesorios", "Mochilas", "Ropa", "Otros"};
+            String[] categorias = {"Tecnología", "Documentos", "Accesorios", "Mochilas", "Ropa", "Útiles", "Otros"};
         %>
         <header class="header">
             <div class="contenedor barraCoincidencias">
@@ -123,15 +123,7 @@
                     </div>
                 </section>
 
-                <form class="cuadroTarjetas reclamoFiltros" method="get" action="GestionSolicitudesServlet">
-                    <label>Estado
-                        <select name="estado">
-                            <option value="">Todos</option>
-                            <option value="PENDIENTE"<%= "PENDIENTE".equals(fEstado) ? " selected" : "" %>>Pendiente</option>
-                            <option value="APROBADO"<%= "APROBADO".equals(fEstado) ? " selected" : "" %>>Aprobado</option>
-                            <option value="RECHAZADO"<%= "RECHAZADO".equals(fEstado) ? " selected" : "" %>>Rechazado</option>
-                        </select>
-                    </label>
+                <form class="cuadroTarjetas reclamoFiltros" method="get" action="GestionSolicitudesServlet">                   
                     <label>Categoría
                         <select name="categoria">
                             <option value="">Todas</option>

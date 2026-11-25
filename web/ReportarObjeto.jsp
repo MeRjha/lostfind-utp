@@ -130,6 +130,7 @@
                                     <option value="Accesorios">Accesorios</option>
                                     <option value="Mochilas">Mochilas</option>
                                     <option value="Ropa">Ropa</option>
+                                    <option value="Útiles">Útiles</option>
                                     <option value="Otros">Otros</option>
                                 </select>
                             </div>
@@ -142,8 +143,24 @@
 
                             <div class="campoReporte">
                                 <label for="color">Color</label>
-                                <input type="text" id="color" name="color"
-                                       placeholder="Ej. Azul" maxlength="50" required>
+                                <select id="color" name="color" required>
+                                    <option value="">Seleccionar color</option>
+                                    <option value="Negro">Negro</option>
+                                    <option value="Blanco">Blanco</option>
+                                    <option value="Gris">Gris</option>
+                                    <option value="Azul">Azul</option>
+                                    <option value="Rojo">Rojo</option>
+                                    <option value="Verde">Verde</option>
+                                    <option value="Amarillo">Amarillo</option>
+                                    <option value="Naranja">Naranja</option>
+                                    <option value="Marrón">Marrón</option>
+                                    <option value="Rosado">Rosado</option>
+                                    <option value="Morado">Morado</option>
+                                    <option value="Beige">Beige</option>
+                                    <option value="Plateado">Plateado</option>
+                                    <option value="Dorado">Dorado</option>
+                                    <option value="Varios colores">Varios colores</option>
+                                </select>
                             </div>
 
                             <div class="campoReporte">

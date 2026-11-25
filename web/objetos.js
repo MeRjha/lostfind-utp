@@ -40,6 +40,14 @@
     }
     $("#fBuscar").addEventListener("input", filtrar);
     $("#fCategoria").addEventListener("change", filtrar);
+    
+    $("#btnLimpiar").addEventListener("click", function () {
+    $("#fBuscar").value = "";
+    $("#fCategoria").value = "";
+    selEstado.value = "";
+    filtrar();
+    });
+    
     selEstado.addEventListener("change", filtrar);
 
     /* Detalle */
