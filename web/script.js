@@ -726,21 +726,13 @@ async function iniciarObjetosEncontrados() {
                 .replace(/[\u0300-\u036f]/g, "");
     }
     
-        const categoriasUnicas = {};
-    objetos.forEach(function (o) {
-        const clave = normalizar(o.categoria || "");
-        if (clave && !categoriasUnicas[clave]) {
-            categoriasUnicas[clave] = o.categoria;
-        }
-    });
-    Object.values(categoriasUnicas)
-            .sort(function (a, b) { return a.localeCompare(b, "es"); })
-            .forEach(function (nombre) {
-                const opcion = document.createElement("option");
-                opcion.value = nombre;
-                opcion.textContent = nombre;
-                categoria.appendChild(opcion);
-            });
+    ["Tecnología", "Documentos", "Accesorios", "Mochilas", "Ropa", "Útiles", "Otros"]
+        .forEach(function (nombre) {
+            const opcion = document.createElement("option");
+            opcion.value = nombre;
+            opcion.textContent = nombre;
+            categoria.appendChild(opcion);
+        });
 
     function mostrarFecha(valor) {
         const partes = valor.split(" ");

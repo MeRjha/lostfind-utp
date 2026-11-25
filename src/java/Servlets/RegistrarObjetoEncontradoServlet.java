@@ -117,8 +117,8 @@ public class RegistrarObjetoEncontradoServlet extends HttpServlet {
             for (ObjetoPerdido perdido : pendientes) {
                 try {
                     double similitud = GestionGemini.compararObjetos(
-                            perdido.getDescripcion(), perdido.getImagen(),
-                            objeto.getDescripcion(), objeto.getImagen(), carpeta);
+                            perdido.textoParaComparar(), perdido.getImagen(),
+                            objeto.textoParaComparar(), objeto.getImagen(), carpeta);
                     System.out.println("Similitud con reporte " + perdido.getIdObjetoPerdido() + ": " + (similitud * 100) + "%");
                         if (similitud >= 0.75) {
                         // Si el reporte ya estaba en "Coincidencia encontrada", el estado no cambia

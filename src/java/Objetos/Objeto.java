@@ -113,5 +113,12 @@ public abstract class Objeto {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
+    
+    public String textoParaComparar() {
+    return (nombre == null ? "" : nombre)
+            + ". Color: " + (color == null ? "" : color)
+            + ". Marca: " + (marca == null ? "" : marca)
+            + ". " + (descripcion == null ? "" : descripcion);
+}
+    
 }

@@ -226,11 +226,11 @@ public class ReporteServlet extends HttpServlet {
             objetosSimilares.forEach(objeto -> {
                 try {
                     double coincidencia = GestionGemini.compararObjetos(
-                            objetoPerdido.getDescripcion(),
-                            objetoPerdido.getImagen(),
-                            objeto.getDescripcion(),
-                            objeto.getImagen()
-                    );
+                                objetoPerdido.textoParaComparar(),
+                                objetoPerdido.getImagen(),
+                                objeto.textoParaComparar(),
+                                objeto.getImagen()
+                            );
 
                     coincidencia = coincidencia * 100;
                     coincidencia = Math.round(coincidencia * 100.0) / 100.0;
