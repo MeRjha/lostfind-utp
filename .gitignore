@@ -50,3 +50,14 @@ dist/
 
 # Permitir las librerías compartidas de LostFind
 !/libs/*.jar
+
+# Mantenimiento
+Mantenimiento/respaldos/
+Mantenimiento/Respaldos/
+Mantenimiento/temporal/
+LostFind_uploads/
+
+# Credenciales
+.env
+.env.local
+*.mylogin.cnf
