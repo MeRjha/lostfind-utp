@@ -1,131 +1,360 @@
+
 # LostFind
 
-Sistema web de gestión de objetos perdidos y encontrados para universidades, desarrollado como proyecto del curso Integrador I de la Universidad Tecnológica del Perú (UTP).
+Sistema web de gestión de objetos perdidos y encontrados desarrollado para la Universidad Tecnológica del Perú (UTP), como proyecto del curso Integrador I: Sistemas Software.
 
-Permite a los estudiantes reportar objetos perdidos, consultar los objetos encontrados por la universidad y ver las posibles coincidencias, calculadas automáticamente con un motor de similitud basado en IA.
+LostFind centraliza el registro, la búsqueda y la recuperación de objetos perdidos mediante un motor de coincidencias basado en inteligencia artificial. Asimismo, facilita la gestión de solicitudes de reclamo y el seguimiento de objetos por parte del Servicio de Atención al Estudiante (SAE).
 
-**Versión actual:** [v0.3.0](../../releases/tag/v0.3.0) (APF3)
+**Versión:** Proyecto Final - 2026.
 
 ## Funcionalidades
 
-- Inicio de sesión con correo institucional (Estudiante, Personal SAE y Docente).
-- Reporte de objetos perdidos con categoría, color, marca, descripción, lugar y foto opcional.
-- Consulta de reportes realizados y cambio de su estado.
-- Listado de objetos encontrados por sede.
-- Coincidencias entre objetos perdidos y encontrados, ordenadas por porcentaje de similitud (motor con IA).
-- Ficha detallada de cada coincidencia.
-- Generación de la constancia de solicitud de reclamo en Word.
-- Notificaciones en el encabezado.
+### Estudiantes y docentes
 
-## Tecnologías
+- Inicio de sesión con correo institucional.
+- Registro de objetos perdidos con fotografía opcional.
+- Consulta y seguimiento de reportes realizados.
+- Consulta de objetos encontrados por sede.
+- Comparación inteligente de objetos mediante Gemini.
+- Visualización de porcentajes de similitud.
+- Consulta detallada de coincidencias.
+- Registro de solicitudes de reclamo.
+- Presentación de evidencias de propiedad.
+- Generación de constancias de reclamo en Word.
+- Consulta de notificaciones.
 
-| Capa | Tecnología |
+### Personal SAE
+
+- Panel principal de administración.
+- Registro de objetos encontrados.
+- Gestión y seguimiento de objetos.
+- Gestión de solicitudes de reclamo.
+- Aprobación y rechazo de reclamos.
+- Gestión de notificaciones.
+- Consulta de reportes y estadísticas.
+
+## Tecnologías utilizadas
+
+| Recurso | Tecnología |
 |---|---|
 | Lenguaje | Java 21 |
-| Web | Servlets y JSP (Jakarta EE 10), HTML, CSS y JavaScript |
-| Servidor | Apache Tomcat 10 o superior |
+| Frontend | HTML, CSS, JavaScript y JSP |
+| Backend | Java Servlets y Jakarta EE |
+| Servidor | Apache Tomcat 10.1 |
 | Base de datos | MySQL 8 |
-| Librerías | Google Guava, Apache POI, Apache Commons, Gson, SLF4J/Logback, MySQL Connector/J |
-| Pruebas | JUnit 4.13.2 y hamcrest 1.3 |
-| IDE | NetBeans (proyecto Ant) |
+| Inteligencia artificial | API de Gemini |
+| Librerías | Google Guava, Apache POI, Apache Commons Lang, Gson y MySQL Connector/J |
+| Construcción y despliegue | Apache Ant y Maven |
+| Monitoreo | SLF4J, Logback y Apache Tomcat Manager |
+| Pruebas | JUnit 4 y Hamcrest |
+| Mantenimiento | PowerShell, mysqldump y Programador de tareas de Windows |
+| Documentación técnica | Javadoc |
+| Control de versiones | Git y GitHub |
+| IDE | Apache NetBeans |
 
-## Arquitectura
+## Arquitectura del sistema
 
-El código sigue una arquitectura por capas (MVC) con patrón DAO:
+LostFind utiliza el patrón MVC (Modelo-Vista-Controlador), el patrón DAO para separar el acceso a datos y el patrón Singleton para centralizar la gestión de conexiones.
 
+También aplica principios SOLID para favorecer la organización, reutilización y mantenimiento del código.
+
+### Estructura del proyecto
+
+```text
+lostfind-utp/
+├── DataBase/
+├── libs/
+├── Mantenimiento/
+├── nbproject/
+├── src/
+│   └── java/
+│       ├── Objetos/
+│       ├── ClasesDAO/
+│       ├── Gestiones/
+│       ├── Servlets/
+│       └── Singlenton/
+├── test/
+├── web/
+├── .gitignore
+├── build.xml
+├── pom.xml
+└── README.md
 ```
-src/java/
-├── Objetos/      Modelo (Usuario, Estudiante, PersonalSAE, Docente, Objeto,
-│                 ObjetoPerdido, ObjetoEncontrado, Coincidencia, Reporte, Sede)
-├── ClasesDAO/    Acceso a datos (6 DAO con PreparedStatement)
-├── Gestiones/    Lógica de negocio (autenticación y motor de coincidencias)
-├── Servlets/     Controladores
-└── Singlenton/   Conexión a la base de datos (patrón Singleton)
-web/              Vistas JSP, estilos y scripts
-DataBase/         Script SQL de la base de datos
-libs/             Librerías compartidas (incluye JUnit para las pruebas)
-test/             Pruebas unitarias y de integración
-```
+
+### Organización de los componentes
+
+- **Objetos:** clases del modelo de datos.
+- **ClasesDAO:** operaciones de acceso a MySQL.
+- **Gestiones:** lógica de negocio y comparación inteligente.
+- **Servlets:** procesamiento de solicitudes y controladores.
+- **Singlenton:** gestión de conexiones y almacenamiento de archivos.
+- **web:** interfaces gráficas, estilos y scripts.
+- **DataBase:** script SQL de la base de datos.
+- **libs:** librerías utilizadas por el proyecto.
+- **test:** pruebas automatizadas.
+- **Mantenimiento:** scripts y procedimientos de respaldo y restauración.
 
 ## Requisitos
 
-- JDK 21
-- NetBeans con soporte para Tomcat (o cualquier IDE que despliegue proyectos Ant)
-- Apache Tomcat 10 o superior
-- MySQL 8
-- Una clave de API de Gemini para el motor de coincidencias (variable `GEMINI_API`)
+- JDK 21.
+- Apache NetBeans.
+- Apache Tomcat 10.1.
+- Apache Maven.
+- MySQL 8.
+- MySQL Workbench.
+- Git.
+- Clave de API de Gemini.
+- PowerShell para el mantenimiento en Windows.
 
-## Instalación y ejecución
+## Instalación y configuración
 
-1. **Clonar el repositorio** en la carpeta indicada (ver *Notas de configuración*):
-   ```
-   git clone https://github.com/MeRjha/lostfind-utp.git
-   ```
-   Ruta esperada: `C:\Users\<tu-usuario>\Documents\NetBeansProjects\lostfind-utp`
+### 1. Clonar el repositorio
 
-2. **Crear la base de datos.** Con MySQL en ejecución, importar el script:
-   ```
-   mysql -u root -p < DataBase/LostFind.sql
-   ```
-   El script crea la base `bd_lostfind` y carga los datos de prueba.
+```bash
+git clone https://github.com/MeRjha/lostfind-utp.git
+cd lostfind-utp
+```
 
-3. **Configurar la conexión.** La conexión está definida en `src/java/Singlenton/ConexionBD.java`:
-   `jdbc:mysql://localhost:3306/Bd_LostFind` con usuario `root` y contraseña `root`. Ajústala a tu instalación de MySQL si es distinta.
+### 2. Configurar la base de datos
 
-4. **Definir la variable de entorno `GEMINI_API`** con tu clave de API, y reiniciar el IDE para que la tome.
+Importar el archivo:
 
-5. **Abrir el proyecto en NetBeans** (*File → Open Project*), configurar Tomcat como servidor y ejecutarlo (*Run*).
+```text
+DataBase/LostFind.sql
+```
 
-6. **Ingresar a la aplicación:**
-   ```
-   http://localhost:8080/LostFind_Final_/
-   ```
-   (cambia el puerto si tu Tomcat usa otro).
+El script permite crear la estructura de la base de datos `bd_lostfind` y cargar los datos de prueba.
 
-### Usuarios de prueba
+### 3. Configurar la conexión
 
-| Rol | Correo | Contraseña |
+Configurar los parámetros de conexión a MySQL utilizados por:
+
+```text
+src/java/Singlenton/ConexionBD.java
+```
+
+Las credenciales deben corresponder al entorno local y mantenerse protegidas.
+
+### 4. Configurar Gemini
+
+Crear la variable de entorno:
+
+```text
+GEMINI_API
+```
+
+Asignar una clave válida de la API de Gemini y reiniciar el entorno de desarrollo o servidor.
+
+### 5. Ejecutar la aplicación
+
+Abrir el proyecto en Apache NetBeans, configurar Apache Tomcat como servidor y ejecutar mediante la opción Run.
+
+Acceder a:
+
+```text
+http://localhost:8080/LostFind_Final_/
+```
+
+El puerto puede variar según la configuración del servidor.
+
+## Usuarios de prueba
+
+| Rol | Correo | Contraseña de prueba |
 |---|---|---|
 | Estudiante | carlos@utp.edu.pe | Demo1234 |
 | Personal SAE | maria@utp.edu.pe | Demo1234 |
 | Docente | luis@utp.edu.pe | Demo1234 |
 
-## Pruebas
+Estas cuentas están destinadas exclusivamente al entorno de pruebas.
 
-El proyecto incluye 12 pruebas con JUnit 4:
+## Almacenamiento de archivos
 
-- `test/Objetos/ObjetosModeloTest.java`: 8 pruebas unitarias del modelo.
-- `test/Gestiones/GestionAutenticacionTest.java`: 4 pruebas de integración de la autenticación (requieren MySQL con la base cargada).
+Las fotografías y evidencias subidas por los usuarios se almacenan en una carpeta externa al proyecto.
 
-Para ejecutarlas: clic derecho en el proyecto → **Test** (NetBeans).
+La ubicación predeterminada es:
 
-## Flujo de trabajo con Git
+```text
+C:\Users\<usuario>\LostFind_uploads
+```
 
-- `main`: versión estable, publicada con etiquetas (`v0.3.0`).
-- `develop`: integración del trabajo del equipo.
-- `feature/*` y `fix/*`: una rama por integrante o tema.
-- Todo cambio se incorpora mediante *pull request*.
-- Mensajes de commit con prefijos: `feat`, `fix`, `chore`, `test` y `merge`.
+También puede configurarse mediante la variable de entorno:
 
-## Notas de configuración
+```text
+LOSTFIND_UPLOADS
+```
 
-- **Ubicación de las imágenes.** Las fotos de los reportes se guardan en `Documents/NetBeansProjects/lostfind-utp/web/Imagenes` dentro de la carpeta del usuario, y el motor de coincidencias las lee de una ruta fija. Por eso el proyecto debe clonarse en esa ubicación; si no, las coincidencias se calculan solo con el texto de la descripción.
-- **Contraseñas y credenciales.** En esta versión las contraseñas de los usuarios de prueba se guardan en texto plano y las credenciales de MySQL están en `ConexionBD.java`. Están pendientes para una próxima versión.
+Esta configuración permite conservar los archivos durante los procesos de despliegue y mantenimiento.
 
-## Estado del proyecto
+## Pruebas de software
 
-Pendientes para las próximas versiones:
+El proyecto cuenta con pruebas unitarias, de integración, funcionales y de seguridad.
 
-- Almacenar las contraseñas con hash y sacar las credenciales del código.
-- Validación de solicitudes de reclamo por el Personal SAE.
-- Reportes estadísticos por sede.
-- Ampliar las pruebas automatizadas a los DAO y servlets.
+Las pruebas automatizadas desarrolladas con JUnit se distribuyen de la siguiente manera:
 
-## Equipo
+| Clase de prueba | Casos |
+|---|---:|
+| ObjetosModeloTest | 8 |
+| GestionAutenticacionTest | 4 |
+| ReclamoModeloTest | 4 |
+| SolicitudReclamoDAOTest | 8 |
+| NotificacionDAOTest | 3 |
+| SubidasTest | 3 |
+| Total | 30 |
 
-| Integrantes |
-|---|
-| Jhair Meza |
-| Anghela Callo |
-| Axel Chumpitaz |
-| Ariana Flores |
+La ejecución documentada de las 30 pruebas automatizadas obtuvo resultados satisfactorios, sin fallos ni errores.
+
+Para ejecutar las pruebas desde NetBeans, seleccionar el proyecto y utilizar la opción Test.
+
+Las pruebas de integración requieren una conexión activa con MySQL.
+
+## Seguridad
+
+La seguridad del sistema contempla los siguientes mecanismos:
+
+- Autenticación de usuarios.
+- Control de acceso según el rol.
+- Gestión y validación de sesiones.
+- Consultas parametrizadas mediante PreparedStatement.
+- Validación de campos obligatorios.
+- Restricción de formatos y tamaños de archivos.
+- Protección de rutas de almacenamiento.
+- Protección de contraseñas y credenciales.
+- Uso de variables de entorno para claves externas.
+- Registro de eventos e incidencias.
+
+Las pruebas de seguridad y sus resultados se documentan en el informe final del proyecto.
+
+## Despliegue
+
+LostFind utiliza Apache Maven para la construcción del archivo WAR y Apache Tomcat para el despliegue de la aplicación web.
+
+Para construir el proyecto:
+
+```bash
+mvn clean package
+```
+
+El archivo WAR generado se encuentra en la carpeta:
+
+```text
+target/
+```
+
+El archivo debe desplegarse en Apache Tomcat, verificando previamente la configuración de MySQL y las variables de entorno necesarias.
+
+El plan de despliegue contempla la preparación del entorno, construcción, instalación, validación del funcionamiento y recuperación ante errores.
+
+## Monitoreo
+
+El monitoreo de LostFind utiliza SLF4J, Logback y Apache Tomcat Manager.
+
+### Niveles de registro
+
+| Nivel | Descripción |
+|---|---|
+| INFO | Operaciones ejecutadas correctamente. |
+| WARN | Advertencias y situaciones anómalas. |
+| ERROR | Errores durante la ejecución. |
+| DEBUG | Información técnica del procesamiento. |
+
+### Indicadores de monitoreo
+
+- Disponibilidad de la aplicación.
+- Tiempos de respuesta.
+- Solicitudes y errores HTTP.
+- Consumo de memoria de la JVM.
+- Hilos de ejecución.
+- Incidencias del sistema.
+
+El plan de monitoreo permite realizar comprobaciones periódicas y detectar problemas de funcionamiento.
+
+## Mantenimiento
+
+El mantenimiento de LostFind contempla la automatización de respaldos de la base de datos MySQL y de los archivos subidos por los usuarios.
+
+Los procedimientos se organizan en la carpeta:
+
+```text
+Mantenimiento/
+```
+
+### Archivos de mantenimiento
+
+| Archivo | Descripción |
+|---|---|
+| respaldo.ps1 | Script de respaldo automatizado. |
+| restauracion.md | Procedimiento de restauración. |
+| tarea_programada.xml | Configuración de la tarea programada. |
+| README.md | Documentación del mantenimiento. |
+
+Los respaldos incluyen:
+
+- Exportación de la base de datos mediante mysqldump.
+- Copia de las fotografías y archivos subidos.
+- Organización de respaldos mediante fecha y hora.
+- Registro de resultados en un archivo log.
+
+La recuperación de la información se verifica mediante la restauración en una base de datos independiente, evitando modificar los registros originales.
+
+### Plan de mantenimiento
+
+| Actividad | Frecuencia |
+|---|---|
+| Respaldo de la base de datos y archivos | Diaria |
+| Revisión de registros de ejecución | Semanal |
+| Verificación del espacio disponible | Semanal |
+| Prueba de restauración | Mensual |
+| Revisión de respaldos antiguos | Mensual |
+| Corrección de errores | Cuando ocurra una incidencia |
+
+## Documentación técnica
+
+La documentación técnica comprende:
+
+- Diagramas de arquitectura MVC.
+- Diagramas de clases DAO.
+- Aplicación de principios SOLID.
+- Documentación de clases y métodos mediante Javadoc.
+- Informes de pruebas de software y seguridad.
+- Plan de despliegue.
+- Plan de monitoreo.
+- Plan de mantenimiento.
+
+## Control de versiones
+
+El proyecto utiliza Git y GitHub para gestionar el desarrollo colaborativo.
+
+### Organización de ramas
+
+- `main`: rama principal.
+- `develop`: rama de integración.
+- `feature/*`: desarrollo de funcionalidades.
+- `fix/*`: corrección de errores.
+
+Los cambios se incorporan mediante pull requests.
+
+### Convenciones de commits
+
+- `feat`: incorporación de funcionalidades.
+- `fix`: corrección de errores.
+- `docs`: actualización de documentación.
+- `test`: incorporación de pruebas.
+- `chore`: tareas de configuración y mantenimiento.
+
+## Equipo de desarrollo
+
+| Integrante | Responsabilidad |
+|---|---|
+| Ariana Flores Papel | Backend y pruebas |
+| Jhair Meza Acledo | Frontend |
+| Axel Chumpitaz Muñoz | Arquitectura, despliegue y monitoreo |
+| Anghela Callo Valdivia | Mantenimiento y organización del informe |
+
+## Información académica
+
+- **Universidad:** Universidad Tecnológica del Perú.
+- **Carrera:** Ingeniería de Sistemas e Informática.
+- **Curso:** Integrador I: Sistemas Software.
+- **Docente:** Hebert Alfonso Fajardo Casma.
+- **Entrega:** Proyecto Final.
+- **Año:** 2026.
