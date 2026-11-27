@@ -30,7 +30,7 @@ public class UsuarioDAO {
         try {
             PreparedStatement ps;
             ResultSet res;
-            ps = con.prepareStatement("select u.idUsuario,u.nombre,u.apellido,u.correoInstitucional,u.contraseña,u.fotoPerfil,u.rol,u.activo,u.idSede,s.nombre,s.ubicacion from usuario as u inner join Sede as s on u.idSede=s.idSede where correoInstitucional=?;");
+            ps = con.prepareStatement("select u.idUsuario,u.nombre,u.apellido,u.correoInstitucional,u.contraseña,u.fotoPerfil,u.rol,u.activo,u.idSede,s.nombre,s.ubicacion from usuario as u inner join sede as s on u.idSede=s.idSede where correoInstitucional=?;");
             ps.setString(1, correo);
             res = ps.executeQuery();
             if (res.next()) {
