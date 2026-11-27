@@ -220,6 +220,26 @@ Las pruebas de integración requieren una conexión activa con MySQL.
 
 Los resultados corresponden a la ejecución documentada en laboratorio y deben verificarse nuevamente después de realizar modificaciones en el sistema.
 
+### Validación final del proyecto
+
+El 27 de noviembre de 2026 se realizó una nueva validación de la versión actualizada del proyecto mediante Apache NetBeans, Ant y JUnit.
+
+| Indicador | Resultado |
+|---|---:|
+| Pruebas ejecutadas | 30 |
+| Pruebas aprobadas | 30 |
+| Fallos | 0 |
+| Errores | 0 |
+| Pruebas omitidas | 0 |
+| Porcentaje de aprobación | 100 % |
+
+La ejecución confirmó la conexión satisfactoria con MySQL y la aprobación de las 30 pruebas automatizadas.
+
+#### Evidencias de validación final
+
+- [Resultados de las pruebas](docs/evidencias/pruebas-finales-resultados.png).
+- [Consola de ejecución](docs/evidencias/pruebas-finales-consola.png).
+
 ## Seguridad
 
 La seguridad del sistema contempla los siguientes mecanismos:
